@@ -118,7 +118,7 @@ public class AuthService {
     public UserEntity checkRoleForUserContext() {
         UserEntity userContext = getUserEntityFromActualUserContext();
 
-        if (!userContext.getRole().equals(RoleEnum.ADMIN))
+        if (!userContext.getRole().equals(RoleEnum.ADMIN.getName()))
             throw new UserInvalidRoleException();
 
         return userContext;
