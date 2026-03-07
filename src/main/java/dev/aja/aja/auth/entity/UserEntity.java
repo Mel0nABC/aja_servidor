@@ -43,7 +43,7 @@ public class UserEntity {
 
     @Column(nullable = false)
     @Builder.Default
-    private RoleEnum role = RoleEnum.USER;
+    private String role = RoleEnum.USER.getName();
 
     @Builder.Default
     private boolean isActive = true;

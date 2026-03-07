@@ -73,7 +73,7 @@ public class UserEntityTest {
         this.userEntity = UserEntity.builder()
                 .username("adminTest")
                 .password(passwordEncoder.encode(password))
-                .role(RoleEnum.ADMIN)
+                .role(RoleEnum.ADMIN.getName())
                 .email("adminTest@adminTest.com")
                 .build();
 
@@ -108,7 +108,7 @@ public class UserEntityTest {
         UserEntity userEntity = UserEntity.builder()
                 .username("userTest")
                 .password(passwordEncoder.encode("1234"))
-                .role(RoleEnum.USER)
+                .role(RoleEnum.USER.getName())
                 .email("userTest@userTest.com")
                 .build();
 
@@ -134,7 +134,7 @@ public class UserEntityTest {
             UserEntity userEntity = UserEntity.builder()
                     .username("userTest")
                     .password(passwordEncoder.encode("1234"))
-                    .role(RoleEnum.USER)
+                    .role(RoleEnum.USER.getName())
                     .email("")
                     .build();
 
@@ -146,7 +146,7 @@ public class UserEntityTest {
             UserEntity userEntity = UserEntity.builder()
                     .username("userTest2")
                     .password(passwordEncoder.encode("1234"))
-                    .role(RoleEnum.USER)
+                    .role(RoleEnum.USER.getName())
                     .email("")
                     .build();
 
@@ -168,7 +168,7 @@ public class UserEntityTest {
             UserEntity userEntity = UserEntity.builder()
                     .username("123")
                     .password(passwordEncoder.encode("1234"))
-                    .role(RoleEnum.USER)
+                    .role(RoleEnum.USER.getName())
                     .email("userTest@userTest.com")
                     .build();
 
@@ -180,7 +180,7 @@ public class UserEntityTest {
             UserEntity userEntity = UserEntity.builder()
                     .username("123")
                     .password(passwordEncoder.encode("1234"))
-                    .role(RoleEnum.USER)
+                    .role(RoleEnum.USER.getName())
                     .email("userTest@userTest2.com")
                     .build();
 
@@ -198,7 +198,7 @@ public class UserEntityTest {
         UserEntity userEntity = UserEntity.builder()
                 .username("123")
                 .password(passwordEncoder.encode("1234"))
-                .role(RoleEnum.USER)
+                .role(RoleEnum.USER.getName())
                 .email("userTest@userTest.com")
                 .build();
 
@@ -233,7 +233,7 @@ public class UserEntityTest {
         UserEntity userEntity = UserEntity.builder()
                 .username("123")
                 .password(passwordEncoder.encode("1234"))
-                .role(RoleEnum.USER)
+                .role(RoleEnum.USER.getName())
                 .email("userTest@userTest.com")
                 .build();
 

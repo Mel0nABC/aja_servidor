@@ -1,5 +1,8 @@
 package dev.aja.aja.config;
 
+import java.util.List;
+
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -14,6 +17,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
+import dev.aja.aja.auth.RoleEnum;
+import dev.aja.aja.auth.entity.UserEntity;
 import dev.aja.aja.auth.repository.UserEntityRepository;
 
 /**
@@ -84,7 +89,7 @@ public class SecurityConfig {
                 .map(user -> User.builder()
                         .username(user.getUsername())
                         .password(user.getPassword())
-                        .roles(user.getRole().getName())
+                        .roles(user.getRole())
                         .build())
                 .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
 
@@ -108,25 +113,25 @@ public class SecurityConfig {
      *                             entidad UserEntity
      * @return
      */
-    // @Bean
-    // CommandLineRunner runner(UserEntityRepository userEntityRepository) {
-    //     // https://docs.spring.io/spring-data/jpa/reference/jpa/getting-started.html
-    //     return args -> {
-    //         UserEntity admin = UserEntity.builder()
-    //                 .username("admin")
-    //                 .password(passwordEncoder().encode("1234"))
-    //                 .email("admin@aja.dev")
-    //                 .role(RoleEnum.ADMIN)
-    //                 .build();
+    @Bean
+    CommandLineRunner runner(UserEntityRepository userEntityRepository) {
+        // https://docs.spring.io/spring-data/jpa/reference/jpa/getting-started.html
+        return args -> {
+            UserEntity admin = UserEntity.builder()
+                    .username("admin")
+                    .password(passwordEncoder().encode("1234"))
+                    .email("admin@aja.dev")
+                    .role(RoleEnum.ADMIN.getName())
+                    .build();
 
-    //         UserEntity user = UserEntity.builder()
-    //                 .username("user")
-    //                 .password(passwordEncoder().encode("1234"))
-    //                 .email("user@aja.dev")
-    //                 .role(RoleEnum.USER)
-    //                 .build();
+            UserEntity user = UserEntity.builder()
+                    .username("user")
+                    .password(passwordEncoder().encode("1234"))
+                    .email("user@aja.dev")
+                    .role(RoleEnum.USER.getName())
+                    .build();
 
-    //         userEntityRepository.saveAll(List.of(admin, user));
-    //     };
-    // }
+            userEntityRepository.saveAll(List.of(admin, user));
+        };
+    }
 }
