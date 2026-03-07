@@ -10,7 +10,10 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.stereotype.Service;
 
+import dev.aja.aja.auth.RoleEnum;
 import dev.aja.aja.auth.entity.UserEntity;
+import dev.aja.aja.auth.exception.UserAlreadyExistException;
+import dev.aja.aja.auth.exception.UserInvalidRoleException;
 import dev.aja.aja.auth.repository.UserEntityRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -54,10 +57,6 @@ public class AuthService {
      */
     public UserEntity login(String username, String password, HttpServletRequest request) {
 
-        System.out.println("PETICIÓN DE LOGIN DEL USUARIO:");
-        System.out.println("Username: " + username);
-        System.out.println("Password: " + password);
-
         // Identificamos el usuario
         Authentication auth = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(username, password));
@@ -84,8 +83,6 @@ public class AuthService {
         if (SecurityContextHolder.getContext().getAuthentication() != null)
             return false;
 
-        System.out.println("LOGOUT");
-
         return true;
     }
 
@@ -94,6 +91,10 @@ public class AuthService {
      * que está con sesión iniciada. Obtenemos el username del contexto actual
      * 
      * @return entidad UserEntity con la información del usuario del contexto
+     * 
+     * @throws UsernameNotFoundException, si el usuario del actual contexto no
+     *                                    existe
+     * 
      */
     public UserEntity getUserEntityFromActualUserContext() {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -101,6 +102,125 @@ public class AuthService {
 
         if (userOptional.isEmpty())
             throw new UsernameNotFoundException("User not found: " + username);
+
+        return userOptional.get();
+    }
+
+    /**
+     * Comprobamos si el usuario del contexto actual es admin
+     * 
+     * @return devuelve USerEntity si es admin o lanza excepción si no lo es.
+     * 
+     * @throws UserInvalidRoleException, si el usuario del actual contexto no es
+     *                                   admin
+     * 
+     */
+    public UserEntity checkRoleForUserContext() {
+        UserEntity userContext = getUserEntityFromActualUserContext();
+
+        if (!userContext.getRole().equals(RoleEnum.ADMIN))
+            throw new UserInvalidRoleException();
+
+        return userContext;
+    }
+
+    /**
+     * Añadimos nuevo usuario, realizamos validaciones del usuario del contexto que
+     * lo añade y que no exista nada repetido. Validamos manualmente para evitar
+     * excepciones de DataIntegrity
+     * 
+     * @param userEntity usuario para añadir
+     * 
+     * @return Devolvemos la entidad obtenida de la base de datos
+     * 
+     * @throws UserAlreadyExistException, si el nombre de usuario o email ya existen
+     * 
+     */
+    public UserEntity addUser(UserEntity userEntity) {
+
+        checkRoleForUserContext();
+
+        Optional<UserEntity> userUsernameOptional = userEntityRepository.findByUsername(userEntity.getUsername());
+
+        if (!userUsernameOptional.isEmpty())
+            throw new UserAlreadyExistException("El nombre de usuario que quieres añadir ya existe");
+
+        Optional<UserEntity> userMailOptional = userEntityRepository.findByEmail(userEntity.getEmail());
+
+        if (!userMailOptional.isEmpty())
+            throw new UserAlreadyExistException("El email de usuario que quieres añadir ya existe");
+
+        userEntityRepository.save(userEntity);
+
+        Optional<UserEntity> checkExist = userEntityRepository.findByUsername(userEntity.getUsername());
+
+        if (checkExist.isEmpty())
+            return null;
+
+        return checkExist.get();
+
+    }
+
+    /**
+     * Eliminar usuario proporcionando su id
+     * 
+     * @param id UserEntity id
+     * 
+     * @return devuelve false si el usuario no fue eliminado, true si sí.
+     */
+    public Boolean delUSer(Long id) {
+        checkRoleForUserContext();
+
+        Optional<UserEntity> userEntity = userEntityRepository.findById(id);
+
+        if (userEntity.isEmpty())
+            throw new UsernameNotFoundException(null);
+
+        userEntityRepository.delete(userEntity.get());
+
+        userEntity = userEntityRepository.findById(id);
+
+        if (!userEntity.isEmpty())
+            return false;
+
+        return true;
+
+    }
+
+    /**
+     * Actualizar UserEntity
+     * 
+     * @param userEntity userEntity del usuario a actualizar
+     * 
+     * @throws UsernameNotFoundException, si el usuario no existe
+     */
+    public void updateUser(UserEntity userEntity) {
+        checkRoleForUserContext();
+
+        Optional<UserEntity> userEntityDB = userEntityRepository.findById(userEntity.getId());
+
+        if (userEntityDB.isEmpty())
+            throw new UsernameNotFoundException(null);
+
+        userEntityRepository.save(userEntity);
+    }
+
+    /**
+     * Proporcionamos el UserEntity de usuario que se proporciona su id
+     * 
+     * @param id UserEntity id
+     * 
+     * @return Devolvemos un UserEntity si todo ha ido bien
+     * 
+     * @throws UsernameNotFoundException, si el usuario no existe
+     */
+    public UserEntity getUser(Long id) {
+        checkRoleForUserContext();
+
+        Optional<UserEntity> userOptional = userEntityRepository.findById(id);
+
+        if (userOptional.isEmpty())
+            throw new UsernameNotFoundException("");
 
         return userOptional.get();
     }

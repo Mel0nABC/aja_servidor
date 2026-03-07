@@ -15,4 +15,6 @@ import dev.aja.aja.auth.entity.UserEntity;
 public interface UserEntityRepository extends JpaRepository<UserEntity, Long> {
     // https://docs.spring.io/spring-data/jpa/reference/data-commons/repositories/definition.html
     Optional<UserEntity> findByUsername(String username);
+
+    Optional<UserEntity> findByEmail(String mail);
 }

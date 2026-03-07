@@ -8,6 +8,9 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import dev.aja.aja.auth.exception.UserAlreadyExistException;
+import dev.aja.aja.auth.exception.UserInvalidRoleException;
+
 /**
  * Aquí implementamos de una manera centralizada toda la gestión de todas las
  * excepciones que queramos capturar. Con esto nos ahorarmos ir haciendo
@@ -31,5 +34,33 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Map<String, Object>> userNotFound() {
         return ResponseEntity
                 .ok(Map.of("success", false, "message", "El usuario al que intentas acceder, no existe"));
+    }
+
+    /**
+     * Respuesta para la exception UserInvalidRoleException si el usuario que está
+     * generando la acción no tiene un role adecuado para ésta
+     * 
+     * @return retornamos un diccionario, success indica cuál ha sido el resultado y
+     *         message el contenido. En este caso el contenido de message es un
+     *         texto de advertencia
+     */
+    @ExceptionHandler(UserInvalidRoleException.class)
+    public ResponseEntity<Map<String, Object>> checkRole() {
+        return ResponseEntity
+                .ok(Map.of("success", false, "message", "No tienes permiso para realizar esta acción"));
+    }
+
+    /**
+     * Respuesta para la exception UserAlreadyExistException si se está añadiendo un
+     * nuevo usuario, se avisará y se cancelará la acción
+     * 
+     * @return retornamos un diccionario, success indica cuál ha sido el resultado y
+     *         message el contenido. En este caso el contenido de message es un
+     *         texto de advertencia
+     */
+    @ExceptionHandler(UserAlreadyExistException.class)
+    public ResponseEntity<Map<String, Object>> userExist(Exception e) {
+        return ResponseEntity
+                .ok(Map.of("success", false, "message", e.getMessage()));
     }
 }

@@ -21,6 +21,9 @@
         ❌ - MessageEntity
     ❌ - DTO's??
         ✅ - UserEntityDTO
-❌ - 
-❌ - 
-❌ - 
+❌ - Implementar JWT
+❌ - Realizar TEST
+        ✅ - UserEntity
+        ❌ - TopicEntity
+        ❌ - PostEntity
+        ❌ - MessageEntity
