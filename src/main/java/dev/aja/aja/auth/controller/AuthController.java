@@ -136,4 +136,17 @@ public class AuthController {
         return ResponseEntity.ok(Map.of("success", true, "message", "Usuario eliminado satisfactoriamente"));
     }
 
+    /**
+     * 
+     * Obtener la lista de usuarios que hay en la base de datos.
+     * 
+     * @return retornamos un diccionario, success indica cuál ha sido el resultado y
+     *         message el contenido. En este caso el contenido de respuesta válida
+     *         es una lista de UserEntityDTO
+     */
+    @GetMapping("/user")
+    public ResponseEntity<Map<String, Object>> getAllUSers() {
+        return ResponseEntity.ok(Map.of("success", true, "message", authService.getAllUSersDTO()));
+    }
+
 }

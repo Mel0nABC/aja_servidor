@@ -1,5 +1,6 @@
 package dev.aja.aja.auth.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.security.authentication.AuthenticationManager;
@@ -12,6 +13,7 @@ import org.springframework.security.web.context.HttpSessionSecurityContextReposi
 import org.springframework.stereotype.Service;
 
 import dev.aja.aja.auth.RoleEnum;
+import dev.aja.aja.auth.dto.UserEntityDTO;
 import dev.aja.aja.auth.entity.UserEntity;
 import dev.aja.aja.auth.exception.UserAlreadyExistException;
 import dev.aja.aja.auth.exception.UserInvalidRoleException;
@@ -116,7 +118,7 @@ public class AuthService {
      *                                   admin
      * 
      */
-    public UserEntity checkRoleForUserContext() {
+    public UserEntity checkRoleAdminFromUserContext() {
         UserEntity userContext = getUserEntityFromActualUserContext();
 
         if (!userContext.getRole().equals(RoleEnum.ADMIN.getName()))
@@ -139,7 +141,7 @@ public class AuthService {
      */
     public void addUser(UserEntity userEntity) {
 
-        checkRoleForUserContext();
+        checkRoleAdminFromUserContext();
 
         Optional<UserEntity> userUsernameOptional = userEntityRepository.findByUsername(userEntity.getUsername());
 
@@ -164,7 +166,7 @@ public class AuthService {
      * @return devuelve false si el usuario no fue eliminado, true si sí.
      */
     public void delUSer(Long id) {
-        checkRoleForUserContext();
+        checkRoleAdminFromUserContext();
 
         Optional<UserEntity> userEntity = userEntityRepository.findById(id);
 
@@ -182,7 +184,7 @@ public class AuthService {
      * @throws UsernameNotFoundException, si el usuario no existe
      */
     public void editUser(UserEntity userEntity) {
-        checkRoleForUserContext();
+        checkRoleAdminFromUserContext();
 
         Optional<UserEntity> userEntityDB = userEntityRepository.findById(userEntity.getId());
 
@@ -207,7 +209,7 @@ public class AuthService {
      * @throws UsernameNotFoundException, si el usuario no existe
      */
     public UserEntity getUser(Long id) {
-        checkRoleForUserContext();
+        checkRoleAdminFromUserContext();
 
         Optional<UserEntity> userOptional = userEntityRepository.findById(id);
 
@@ -215,6 +217,19 @@ public class AuthService {
             throw new UsernameNotFoundException("");
 
         return userOptional.get();
+    }
+
+    /**
+     * Para obtener todos los usuarios, sólo con role dmin
+     * 
+     * @return lista de usuarios
+     */
+    public List<UserEntityDTO> getAllUSersDTO() {
+
+        checkRoleAdminFromUserContext();
+
+        return userEntityRepository.findAll().stream().map(UserEntity::toDTO).toList();
+
     }
 
     /**
