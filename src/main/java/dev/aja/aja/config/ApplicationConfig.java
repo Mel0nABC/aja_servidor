@@ -11,10 +11,9 @@ import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 
 /**
- * Clase donde vamos a especificar la configuración, de manera programática,
- * toda la configuración de nuestra aplicación.
- * que tenemos, ubicación de los datos, configuración de spring donde ubicamos
- * datos ..
+ * Clase donde vamos a especificar la configuración, de manera programática de
+ * nuestra aplicación. Qué tenemos, ubicación de los datos, configuración de
+ * spring dónde ubicamos datos, etcétera
  */
 @Configuration
 public class ApplicationConfig {
@@ -61,7 +60,7 @@ public class ApplicationConfig {
         // Properties to recreate tables when restart application.
         Properties prop = new Properties();
         // prop.setProperty("hibernate.hbm2ddl.auto", "create-drop");
-        prop.setProperty("hibernate.hbm2ddl.auto", "create");
+        // prop.setProperty("hibernate.hbm2ddl.auto", "create");
         factory.setJpaProperties(prop);
         return factory;
     }

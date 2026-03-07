@@ -1,6 +1,7 @@
 package dev.aja.aja.auth.entity;
 
 import dev.aja.aja.auth.RoleEnum;
+import dev.aja.aja.auth.dto.UserEntityDTO;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -41,5 +42,15 @@ public class UserEntity {
 
     @Builder.Default
     private boolean isActive = true;
+
+    public UserEntityDTO toDTO() {
+        return UserEntityDTO.builder()
+                .id(this.id)
+                .username(this.username)
+                .email(this.email)
+                .role(this.role)
+                .isActive(this.isActive)
+                .build();
+    }
 
 }

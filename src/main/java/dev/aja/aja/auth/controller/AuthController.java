@@ -3,7 +3,6 @@ package dev.aja.aja.auth.controller;
 import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,26 +30,22 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<Map<String, Object>> login(@RequestParam String username, @RequestParam String password,
             HttpServletRequest request) {
-
-        authService.login(username, password, request);
-
-        return ResponseEntity.ok(Map.of("success", true, "message", "Has realizado petición a login"));
+        return ResponseEntity
+                .ok(Map.of("success", true, "message", authService.login(username, password, request).toDTO()));
     }
 
     @PostMapping("/logout")
     public ResponseEntity<Map<String, Object>> logout() {
-
-        authService.logout();
-
-        return ResponseEntity.ok(Map.of("success", true, "message", "Has realizado petición de logout"));
+        return ResponseEntity.ok(Map.of("success", true, "message", authService.logout()));
     }
 
     @PostMapping("/test")
     public ResponseEntity<Map<String, Object>> test() {
 
-        System.out.println(SecurityContextHolder.getContext().getAuthentication().getName());
+        String username = authService.getUserEntityFromActualUserContext().getUsername();
 
-        return ResponseEntity.ok(Map.of("success", true, "message", "HAS ACCEDIDO A TEST AUTHENTICADO"));
+        return ResponseEntity.ok(
+                Map.of("success", true, "message", "HAS ACCEDIDO A TEST AUTHENTICADO, ERES EL USUARIO: " + username));
     }
 
 }
