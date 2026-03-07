@@ -1,0 +1,25 @@
+
+
+❌
+✅
+
+
+❌ - Implementar login y logout, con usuarios básicos en memoria
+    ✅ - Controller
+        ✅ - Login
+        ✅ - logout
+    ✅ - Password encoder
+    ✅ - Userdetails
+    ✅ - SecurityFilterChain
+    ✅ - AuthenticationManager
+    ✅ - Service
+    ✅ - DataSource
+    ❌ - Entidades de cada feature
+        ✅ - UserEntity
+        ❌ - TopicEntity
+        ❌ - PostEntity
+        ❌ - MessageEntity
+    ❌ - DTO's??
+❌ - 
+❌ - 
+❌ - 
