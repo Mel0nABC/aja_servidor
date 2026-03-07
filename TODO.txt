@@ -33,3 +33,12 @@
 ❌ - Forum
 ❌ - topic
 ❌ - post
+
+
+Controlador
+Entidad para usuario, UserEntity
+Service para UserEntity
+DataSource, almacenar usuarios en base de datos
+Security, implementar seguridad en los endpoints
+Implementar GlobarExceptionHandler
+Realizar comentarios para javadoc

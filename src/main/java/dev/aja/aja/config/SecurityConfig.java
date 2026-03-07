@@ -51,6 +51,7 @@ public class SecurityConfig {
                 .logout((logout) -> logout.disable())
                 .authorizeHttpRequests((authorize) -> authorize
                         .requestMatchers("/api/auth/health", "/api/auth/login").permitAll()
+                        .requestMatchers("/api/auth/user/**").hasRole(RoleEnum.ADMIN.getName())
                         .anyRequest().authenticated())
                 .build();
     }
