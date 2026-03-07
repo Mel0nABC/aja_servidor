@@ -2,9 +2,12 @@ package dev.aja.aja;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
@@ -109,10 +112,12 @@ public class UserEntityTest {
                 .email("userTest@userTest.com")
                 .build();
 
-        UserEntity user = authService.addUser(userEntity);
+        authService.addUser(userEntity);
 
-        assertNotNull(user);
-        assertEquals(userEntity.getUsername(), user.getUsername());
+        Optional<UserEntity> userOption = userEntityRepository.findByUsername(userEntity.getUsername());
+
+        assertFalse(userOption.isEmpty());
+        assertEquals(userEntity.getUsername(), userOption.get().getUsername());
     }
 
     /**
@@ -197,11 +202,19 @@ public class UserEntityTest {
                 .email("userTest@userTest.com")
                 .build();
 
-        UserEntity user = authService.addUser(userEntity);
+        authService.addUser(userEntity);
 
-        assertNotNull(user);
+        Optional<UserEntity> userOptional = userEntityRepository.findByUsername(userEntity.getUsername());
 
-        assertTrue(authService.delUSer(user.getId()));
+        assertFalse(userOptional.isEmpty());
+
+        UserEntity user = userOptional.get();
+
+        authService.delUSer(user.getId());
+
+        Optional<UserEntity> userOption = userEntityRepository.findByUsername(user.getUsername());
+
+        assertTrue(userOption.isEmpty());
 
         assertThrows(UsernameNotFoundException.class, () -> {
             authService.delUSer(user.getId());
@@ -224,13 +237,17 @@ public class UserEntityTest {
                 .email("userTest@userTest.com")
                 .build();
 
-        UserEntity user = authService.addUser(userEntity);
+        authService.addUser(userEntity);
 
-        assertNotNull(user);
+        Optional<UserEntity> userOptional = userEntityRepository.findByUsername(userEntity.getUsername());
+
+        assertFalse(userOptional.isEmpty());
+
+        UserEntity user = userOptional.get();
 
         user.setEmail("");
 
-        authService.updateUser(userEntity);
+        authService.editUser(userEntity);
 
         assertNotNull(authService.getUser(user.getId()));
 

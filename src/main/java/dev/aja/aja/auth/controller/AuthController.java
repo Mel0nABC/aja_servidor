@@ -3,12 +3,17 @@ package dev.aja.aja.auth.controller;
 import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import dev.aja.aja.auth.entity.UserEntity;
 import dev.aja.aja.auth.service.AuthService;
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -87,6 +92,30 @@ public class AuthController {
 
         return ResponseEntity.ok(
                 Map.of("success", true, "message", "HAS ACCEDIDO A TEST AUTHENTICADO, ERES EL USUARIO: " + username));
+    }
+
+    @PostMapping("/user")
+    public ResponseEntity<Map<String, Object>> addUser(@RequestBody UserEntity userEntity) {
+
+        authService.addUser(userEntity);
+
+        return ResponseEntity.ok(Map.of("success", true, "message", "Usuario añadido satisfactoriamente"));
+    }
+
+    @PutMapping("/user")
+    public ResponseEntity<Map<String, Object>> editUser(@RequestBody UserEntity userEntity) {
+
+        authService.editUser(userEntity);
+
+        return ResponseEntity.ok(Map.of("success", true, "message", "Usurio editado satisfactoriamente"));
+    }
+
+    @DeleteMapping("/user/{id}")
+    public ResponseEntity<Map<String, Object>> deleteUser(@PathVariable Long id) {
+
+        authService.delUSer(id);
+
+        return ResponseEntity.ok(Map.of("success", true, "message", "Usuario eliminado satisfactoriamente"));
     }
 
 }

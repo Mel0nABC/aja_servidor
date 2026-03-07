@@ -136,7 +136,7 @@ public class AuthService {
      * @throws UserAlreadyExistException, si el nombre de usuario o email ya existen
      * 
      */
-    public UserEntity addUser(UserEntity userEntity) {
+    public void addUser(UserEntity userEntity) {
 
         checkRoleForUserContext();
 
@@ -151,14 +151,6 @@ public class AuthService {
             throw new UserAlreadyExistException("El email de usuario que quieres añadir ya existe");
 
         userEntityRepository.save(userEntity);
-
-        Optional<UserEntity> checkExist = userEntityRepository.findByUsername(userEntity.getUsername());
-
-        if (checkExist.isEmpty())
-            return null;
-
-        return checkExist.get();
-
     }
 
     /**
@@ -168,7 +160,7 @@ public class AuthService {
      * 
      * @return devuelve false si el usuario no fue eliminado, true si sí.
      */
-    public Boolean delUSer(Long id) {
+    public void delUSer(Long id) {
         checkRoleForUserContext();
 
         Optional<UserEntity> userEntity = userEntityRepository.findById(id);
@@ -177,14 +169,6 @@ public class AuthService {
             throw new UsernameNotFoundException(null);
 
         userEntityRepository.delete(userEntity.get());
-
-        userEntity = userEntityRepository.findById(id);
-
-        if (!userEntity.isEmpty())
-            return false;
-
-        return true;
-
     }
 
     /**
@@ -194,7 +178,7 @@ public class AuthService {
      * 
      * @throws UsernameNotFoundException, si el usuario no existe
      */
-    public void updateUser(UserEntity userEntity) {
+    public void editUser(UserEntity userEntity) {
         checkRoleForUserContext();
 
         Optional<UserEntity> userEntityDB = userEntityRepository.findById(userEntity.getId());
