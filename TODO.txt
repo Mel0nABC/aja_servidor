@@ -5,9 +5,10 @@
 
 
 ❌ - Implementar login y logout, con usuarios básicos en memoria
-    ✅ - Controller
+    ❌ - Controller
         ✅ - Login
         ✅ - logout
+        ❌ - Acciones de usuario
     ✅ - Password encoder
     ✅ - Userdetails
     ✅ - SecurityFilterChain
@@ -27,3 +28,8 @@
         ❌ - TopicEntity
         ❌ - PostEntity
         ❌ - MessageEntity
+
+
+❌ - Forum
+❌ - topic
+❌ - post
