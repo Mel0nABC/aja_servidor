@@ -14,6 +14,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * Clase donde se implementa toda la información del usuario. Al usar
+ * annotations de Lombok, es innnecesario declarar constructores, getters,
+ * setters, etcére
+ */
 @Builder
 @Data
 @Getter

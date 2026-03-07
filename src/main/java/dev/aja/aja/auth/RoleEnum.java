@@ -1,5 +1,9 @@
 package dev.aja.aja.auth;
 
+/**
+ * Se crea este enum para asegurarnos que no va a haber errores en las opciones
+ * de role para UserEntity
+ */
 public enum RoleEnum {
     ADMIN("ADMIN"),
     USER("USER");

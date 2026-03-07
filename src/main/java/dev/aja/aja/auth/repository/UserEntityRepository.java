@@ -7,8 +7,12 @@ import org.springframework.stereotype.Repository;
 
 import dev.aja.aja.auth.entity.UserEntity;
 
-// https://docs.spring.io/spring-data/jpa/reference/data-commons/repositories/definition.html
+/**
+ * Interface para acceder a los métodos de consulta de la base de datos de las
+ * entidades de UserEntity
+ */
 @Repository
 public interface UserEntityRepository extends JpaRepository<UserEntity, Long> {
+    // https://docs.spring.io/spring-data/jpa/reference/data-commons/repositories/definition.html
     Optional<UserEntity> findByUsername(String username);
 }
