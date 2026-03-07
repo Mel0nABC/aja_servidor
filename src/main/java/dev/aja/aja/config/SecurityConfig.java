@@ -131,7 +131,7 @@ public class SecurityConfig {
                     .role(RoleEnum.USER.getName())
                     .build();
 
-            userEntityRepository.saveAll(List.of(admin, user));
+            // userEntityRepository.saveAll(List.of(admin, user));
         };
     }
 }

@@ -7,6 +7,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.stereotype.Service;
 
@@ -150,6 +151,8 @@ public class AuthService {
         if (!userMailOptional.isEmpty())
             throw new UserAlreadyExistException("El email de usuario que quieres añadir ya existe");
 
+        userEntity.setPassword(passwordEncoder().encode(userEntity.getPassword()));
+
         userEntityRepository.save(userEntity);
     }
 
@@ -186,6 +189,11 @@ public class AuthService {
         if (userEntityDB.isEmpty())
             throw new UsernameNotFoundException(null);
 
+        UserEntity user = userEntityDB.get();
+
+        if (!user.getPassword().equals(userEntity.getPassword()))
+            user.setPassword(passwordEncoder().encode(userEntity.getPassword()));
+
         userEntityRepository.save(userEntity);
     }
 
@@ -207,6 +215,15 @@ public class AuthService {
             throw new UsernameNotFoundException("");
 
         return userOptional.get();
+    }
+
+    /**
+     * Implementación del sistema de codificación de contraseñas.
+     * 
+     * @return objeto BCryptPasswordEncoder para coficiar contraseñas
+     */
+    public BCryptPasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 
 }

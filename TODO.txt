@@ -8,7 +8,7 @@
     ❌ - Controller
         ✅ - Login
         ✅ - logout
-        ❌ - Acciones de usuario
+        ❌ - Acciones de usuario, PONER REQUESTMATCHERS POR ROLES 
     ✅ - Password encoder
     ✅ - Userdetails
     ✅ - SecurityFilterChain
