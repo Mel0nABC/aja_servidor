@@ -95,6 +95,19 @@ public class UserController {
 
     /**
      * 
+     * Obtener el usuario que hay en la base de datos.
+     * 
+     * @return Retornamos un DTO de UserEntity, success indica cuál ha sido el
+     *         resultado y message el contenido. En este caso el contenido de
+     *         respuesta válida es una lista de UserEntityDTO
+     */
+    @GetMapping("/user/{id}")
+    public ResponseEntity<Map<String, Object>> getUsers(@PathVariable Long id) {
+        return ResponseEntity.ok(Map.of("success", true, "message", userService.getUserDTO(id)));
+    }
+
+    /**
+     * 
      * Obtener la lista de usuarios que hay en la base de datos.
      * 
      * @return retornamos un diccionario, success indica cuál ha sido el resultado y
@@ -103,6 +116,6 @@ public class UserController {
      */
     @GetMapping("/user")
     public ResponseEntity<Map<String, Object>> getAllUSers() {
-        return ResponseEntity.ok(Map.of("success", true, "message", userService.getAllUSersDTO()));
+        return ResponseEntity.ok(Map.of("success", true, "message", userService.getAllUSerDTO()));
     }
 }

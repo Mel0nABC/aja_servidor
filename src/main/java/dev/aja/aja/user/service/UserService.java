@@ -156,15 +156,14 @@ public class UserService {
      * 
      * @throws UsernameNotFoundException, si el usuario no existe
      */
-    public UserEntity getUser(Long id) {
-        checkRoleAdminFromUserContext();
+    public UserEntityDTO getUserDTO(Long id) {
 
         Optional<UserEntity> userOptional = userEntityRepository.findById(id);
 
         if (userOptional.isEmpty())
             throw new UsernameNotFoundException("");
 
-        return userOptional.get();
+        return userOptional.get().toDTO();
     }
 
     /**
@@ -172,7 +171,7 @@ public class UserService {
      * 
      * @return lista de usuarios
      */
-    public List<UserEntityDTO> getAllUSersDTO() {
+    public List<UserEntityDTO> getAllUSerDTO() {
 
         checkRoleAdminFromUserContext();
 

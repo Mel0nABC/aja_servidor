@@ -249,7 +249,7 @@ public class UserEntityTest {
 
         userService.editUser(userEntity);
 
-        assertNotNull(userService.getUser(user.getId()));
+        assertNotNull(userService.getUserDTO(user.getId()));
 
     }
 
