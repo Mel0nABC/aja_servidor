@@ -1,11 +1,11 @@
-package dev.aja.aja.auth.repository;
+package dev.aja.aja.user.repository;
 
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import dev.aja.aja.auth.entity.UserEntity;
+import dev.aja.aja.user.entity.UserEntity;
 
 /**
  * Interface para acceder a los métodos de consulta de la base de datos de las

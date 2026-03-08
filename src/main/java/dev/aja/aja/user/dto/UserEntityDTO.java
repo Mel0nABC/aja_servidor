@@ -1,4 +1,4 @@
-package dev.aja.aja.auth.dto;
+package dev.aja.aja.user.dto;
 
 import lombok.Builder;
 

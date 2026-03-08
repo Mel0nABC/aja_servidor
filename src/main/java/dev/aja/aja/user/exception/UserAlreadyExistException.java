@@ -1,4 +1,4 @@
-package dev.aja.aja.auth.exception;
+package dev.aja.aja.user.exception;
 
 public class UserAlreadyExistException extends RuntimeException {
 

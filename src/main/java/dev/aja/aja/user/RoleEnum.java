@@ -1,4 +1,4 @@
-package dev.aja.aja.auth;
+package dev.aja.aja.user;
 
 /**
  * Se crea este enum para asegurarnos que no va a haber errores en las opciones

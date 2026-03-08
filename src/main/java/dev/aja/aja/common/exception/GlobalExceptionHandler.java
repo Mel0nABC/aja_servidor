@@ -8,8 +8,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import dev.aja.aja.auth.exception.UserAlreadyExistException;
-import dev.aja.aja.auth.exception.UserInvalidRoleException;
+import dev.aja.aja.user.exception.UserAlreadyExistException;
+import dev.aja.aja.user.exception.UserInvalidRoleException;
 
 /**
  * Aquí implementamos de una manera centralizada toda la gestión de todas las

@@ -1,7 +1,7 @@
-package dev.aja.aja.auth.entity;
+package dev.aja.aja.user.entity;
 
-import dev.aja.aja.auth.RoleEnum;
-import dev.aja.aja.auth.dto.UserEntityDTO;
+import dev.aja.aja.user.RoleEnum;
+import dev.aja.aja.user.dto.UserEntityDTO;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

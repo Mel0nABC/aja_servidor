@@ -23,11 +23,11 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.context.TestConstructor;
 
-import dev.aja.aja.auth.RoleEnum;
-import dev.aja.aja.auth.entity.UserEntity;
-import dev.aja.aja.auth.exception.UserAlreadyExistException;
-import dev.aja.aja.auth.repository.UserEntityRepository;
-import dev.aja.aja.auth.service.AuthService;
+import dev.aja.aja.user.RoleEnum;
+import dev.aja.aja.user.entity.UserEntity;
+import dev.aja.aja.user.exception.UserAlreadyExistException;
+import dev.aja.aja.user.repository.UserEntityRepository;
+import dev.aja.aja.user.service.UserService;
 import jakarta.transaction.Transactional;
 
 /**
@@ -39,7 +39,7 @@ import jakarta.transaction.Transactional;
 @Transactional
 public class UserEntityTest {
 
-    private final AuthService authService;
+    private final UserService userService;
     private final BCryptPasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final UserEntityRepository userEntityRepository;
@@ -53,9 +53,9 @@ public class UserEntityTest {
      * @param authenticationManager
      * @param userEntityRepository
      */
-    public UserEntityTest(AuthService authService, BCryptPasswordEncoder passwordEncoder,
+    public UserEntityTest(UserService userService, BCryptPasswordEncoder passwordEncoder,
             AuthenticationManager authenticationManager, UserEntityRepository userEntityRepository) {
-        this.authService = authService;
+        this.userService = userService;
         this.passwordEncoder = passwordEncoder;
         this.authenticationManager = authenticationManager;
         this.userEntityRepository = userEntityRepository;
@@ -112,7 +112,7 @@ public class UserEntityTest {
                 .email("userTest@userTest.com")
                 .build();
 
-        authService.addUser(userEntity);
+        userService.addUser(userEntity);
 
         Optional<UserEntity> userOption = userEntityRepository.findByUsername(userEntity.getUsername());
 
@@ -138,7 +138,7 @@ public class UserEntityTest {
                     .email("")
                     .build();
 
-            authService.addUser(userEntity);
+            userService.addUser(userEntity);
         });
 
         assertDoesNotThrow(() -> {
@@ -150,7 +150,7 @@ public class UserEntityTest {
                     .email("")
                     .build();
 
-            authService.addUser(userEntity);
+            userService.addUser(userEntity);
         });
     }
 
@@ -172,7 +172,7 @@ public class UserEntityTest {
                     .email("userTest@userTest.com")
                     .build();
 
-            authService.addUser(userEntity);
+            userService.addUser(userEntity);
         });
 
         assertDoesNotThrow(() -> {
@@ -184,7 +184,7 @@ public class UserEntityTest {
                     .email("userTest@userTest2.com")
                     .build();
 
-            authService.addUser(userEntity);
+            userService.addUser(userEntity);
         });
     }
 
@@ -202,7 +202,7 @@ public class UserEntityTest {
                 .email("userTest@userTest.com")
                 .build();
 
-        authService.addUser(userEntity);
+        userService.addUser(userEntity);
 
         Optional<UserEntity> userOptional = userEntityRepository.findByUsername(userEntity.getUsername());
 
@@ -210,14 +210,14 @@ public class UserEntityTest {
 
         UserEntity user = userOptional.get();
 
-        authService.delUSer(user.getId());
+        userService.delUSer(user.getId());
 
         Optional<UserEntity> userOption = userEntityRepository.findByUsername(user.getUsername());
 
         assertTrue(userOption.isEmpty());
 
         assertThrows(UsernameNotFoundException.class, () -> {
-            authService.delUSer(user.getId());
+            userService.delUSer(user.getId());
         });
 
     }
@@ -237,7 +237,7 @@ public class UserEntityTest {
                 .email("userTest@userTest.com")
                 .build();
 
-        authService.addUser(userEntity);
+        userService.addUser(userEntity);
 
         Optional<UserEntity> userOptional = userEntityRepository.findByUsername(userEntity.getUsername());
 
@@ -247,9 +247,9 @@ public class UserEntityTest {
 
         user.setEmail("");
 
-        authService.editUser(userEntity);
+        userService.editUser(userEntity);
 
-        assertNotNull(authService.getUser(user.getId()));
+        assertNotNull(userService.getUser(user.getId()));
 
     }
 
