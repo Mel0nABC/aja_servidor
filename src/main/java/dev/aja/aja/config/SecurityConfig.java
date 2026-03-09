@@ -1,5 +1,15 @@
 package dev.aja.aja.config;
 
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.security.KeyFactory;
+import java.security.interfaces.RSAPrivateKey;
+import java.security.interfaces.RSAPublicKey;
+import java.security.spec.PKCS8EncodedKeySpec;
+import java.security.spec.X509EncodedKeySpec;
+import java.util.Base64;
+import java.util.UUID;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -7,13 +17,25 @@ import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
+import org.springframework.security.oauth2.jwt.JwtEncoder;
+import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
+import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import com.nimbusds.jose.jwk.JWKSet;
+import com.nimbusds.jose.jwk.RSAKey;
+import com.nimbusds.jose.jwk.source.JWKSource;
+import com.nimbusds.jose.proc.SecurityContext;
+
+import dev.aja.aja.auth.filter.JwtAuthenticationFilter;
 import dev.aja.aja.user.RoleEnum;
 import dev.aja.aja.user.repository.UserEntityRepository;
 
@@ -39,9 +61,14 @@ public class SecurityConfig {
      *                   quien llama este método.
      */
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http, JwtAuthenticationFilter jwtAuthenticationFilter)
+            throws Exception {
         // https://docs.spring.io/spring-security/reference/servlet/authentication/passwords/index.html
         return http
+                .sessionManagement(session -> session
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .addFilterBefore(jwtAuthenticationFilter,
+                        UsernamePasswordAuthenticationFilter.class)
                 .csrf((crfs) -> crfs.disable())
                 .formLogin((form) -> form.disable())
                 .logout((logout) -> logout.disable())
@@ -50,6 +77,82 @@ public class SecurityConfig {
                         .requestMatchers("/api/user/**").hasRole(RoleEnum.ADMIN.getName())
                         .anyRequest().authenticated())
                 .build();
+    }
+
+    /**
+     * Codigicador para poder generar el JWT
+     * 
+     * @param jwkSource
+     * @return
+     */
+    @Bean
+    public JwtEncoder jwtEncoder(JWKSource<SecurityContext> jwkSource) {
+        return new NimbusJwtEncoder(jwkSource);
+    }
+
+    /**
+     * 
+     * Mediante la clave privada y la publica, creamos par de claves
+     * 
+     * @param privateKey clave private
+     * @param publicKey  clave pública
+     * @return par de claves
+     */
+    @Bean
+    public JWKSource<SecurityContext> jwkSource(RSAPrivateKey privateKey, RSAPublicKey publicKey) {
+        RSAKey rsaKey = new RSAKey.Builder(publicKey)
+                .privateKey(privateKey)
+                .keyID(UUID.randomUUID().toString())
+                .build();
+        JWKSet jwkSet = new JWKSet(rsaKey);
+        return (jwkSelector, securityContext) -> jwkSelector.select(jwkSet);
+    }
+
+    /**
+     * Para poder obtener la información de nuestro JWT
+     * 
+     * @param publicKey clave privada para decodificar
+     * @return Objeto JwtDecoder con toda la información decodificada
+     */
+    @Bean
+    public JwtDecoder jwtDecoder(RSAPublicKey publicKey) {
+        return NimbusJwtDecoder.withPublicKey(publicKey).build();
+    }
+
+    /**
+     * Obtenemos la clave privada generada en loca, filtramos limpiando texto que no
+     * es necesario
+     * 
+     * @return
+     * @throws Exception
+     */
+    @Bean
+    public RSAPrivateKey privateKey() throws Exception {
+        String privateKeyContent = Files.readString(Paths.get("clave_privada.pem"))
+                .replace("-----BEGIN PRIVATE KEY-----", "")
+                .replace("-----END PRIVATE KEY-----", "")
+                .replaceAll("\\s", "");
+        byte[] decoded = Base64.getDecoder().decode(privateKeyContent);
+        PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(decoded);
+        return (RSAPrivateKey) KeyFactory.getInstance("RSA").generatePrivate(keySpec);
+    }
+
+    /**
+     * Obtenemos la clave pública generada en loca, filtramos limpiando texto que no
+     * es necesario
+     * 
+     * @return
+     * @throws Exception
+     */
+    @Bean
+    public RSAPublicKey publicKey() throws Exception {
+        String key = Files.readString(Paths.get("clave_publica.pem"));
+        key = key.replace("-----BEGIN PUBLIC KEY-----", "")
+                .replace("-----END PUBLIC KEY-----", "")
+                .replaceAll("\\s", "");
+        byte[] decoded = Base64.getDecoder().decode(key);
+        X509EncodedKeySpec spec = new X509EncodedKeySpec(decoded);
+        return (RSAPublicKey) KeyFactory.getInstance("RSA").generatePublic(spec);
     }
 
     /**

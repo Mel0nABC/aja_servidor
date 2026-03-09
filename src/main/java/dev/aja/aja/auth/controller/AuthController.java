@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import dev.aja.aja.auth.service.AuthService;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 /**
  * Clase que nos va a gestionar todos los endpoints referentes a authenicación,
@@ -45,9 +46,10 @@ public class AuthController {
      */
     @PostMapping("/login")
     public ResponseEntity<Map<String, Object>> login(@RequestParam String username, @RequestParam String password,
-            HttpServletRequest request) {
+            HttpServletRequest request, HttpServletResponse response) {
         return ResponseEntity
-                .ok(Map.of("success", true, "message", authService.login(username, password, request).toDTO()));
+                .ok(Map.of("success", true, "message",
+                        authService.login(username, password, request, response).toDTO()));
     }
 
     /**
@@ -59,8 +61,8 @@ public class AuthController {
      *         con true o false respectivamente
      */
     @PostMapping("/logout")
-    public ResponseEntity<Map<String, Object>> logout() {
-        return ResponseEntity.ok(Map.of("success", true, "message", authService.logout()));
+    public ResponseEntity<Map<String, Object>> logout(HttpServletResponse response) {
+        return ResponseEntity.ok(Map.of("success", true, "message", authService.logout(response)));
     }
 
     /**
