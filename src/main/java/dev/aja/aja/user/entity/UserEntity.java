@@ -46,7 +46,7 @@ public class UserEntity {
     private String role = RoleEnum.USER.getName();
 
     @Builder.Default
-    private boolean isActive = true;
+    private Boolean isActive = true;
 
     public UserEntityDTO toDTO() {
         return UserEntityDTO.builder()
