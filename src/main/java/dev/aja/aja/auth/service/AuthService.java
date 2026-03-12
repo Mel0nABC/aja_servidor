@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -67,6 +68,9 @@ public class AuthService {
 
         Authentication auth = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(username, password));
+
+        if (!userService.getUserEntityFromActualUserContext().getIsActive())
+            throw new DisabledException("Tu usuario está deshabilitado, consulta por mail con un admin");
 
         if (auth != null && auth.isAuthenticated() &&
                 !"anonymousUser".equals(auth.getPrincipal())) {

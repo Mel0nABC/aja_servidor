@@ -5,6 +5,7 @@ import java.util.Map;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -64,5 +65,21 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Map<String, Object>> userExist(Exception e) {
         return ResponseEntity
                 .status(HttpStatus.CONFLICT).body(Map.of("success", false, "message", e.getMessage()));
+    }
+
+    /**
+     * Cuando un usuario está deshabilitado, con isActive = false, se lanza esta
+     * excepción
+     * 
+     * @param e, enviamos la excepción inyectándola como parámetro para obtener el
+     *           mensaje
+     * @return retornamos un diccionario, success indica cuál ha sido el resultado y
+     *         message el contenido. En este caso el contenido de message es un
+     *         texto de advertencia
+     */
+    @ExceptionHandler(DisabledException.class)
+    public ResponseEntity<Map<String, Object>> userIsDisabled(Exception e) {
+        return ResponseEntity
+                .status(HttpStatus.UNAUTHORIZED).body(Map.of("success", false, "message", e.getMessage()));
     }
 }

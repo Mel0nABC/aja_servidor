@@ -12,11 +12,10 @@
     ✅ - Password encoder
     ✅ - Userdetails
     ✅ - SecurityFilterChain
-        ❌ - Restringir acceso por isActive
+        ✅ - Restringir acceso por isActive
     ✅ - AuthenticationManager
     ✅ - Service
     ✅ - DataSource
-    ❌ - Entidades de cada feature
         ✅ - UserEntity
         ❌ - TopicEntity
         ❌ - PostEntity
@@ -26,7 +25,7 @@
 ✅ - Implementar JWT
 ❌ - Realizar TEST
         ✅ - AuthController
-        ❌ - UserController
+        ✅ - UserController
         ✅ - UserEntity
         ❌ - TopicEntity
         ❌ - PostEntity
