@@ -4,14 +4,15 @@
 ✅
 
 
-❌ - Implementar login y logout, con usuarios básicos en memoria
-    ❌ - Controller
+✅ - Implementar login y logout, con usuarios básicos en memoria
+    ✅ - Controller
         ✅ - Login
         ✅ - logout
-        ❌ - Acciones de usuario, PONER REQUESTMATCHERS POR ROLES 
+        ✅ - Acciones de usuario, PONER REQUESTMATCHERS POR ROLES 
     ✅ - Password encoder
     ✅ - Userdetails
     ✅ - SecurityFilterChain
+        ❌ - Restringir acceso por isActive
     ✅ - AuthenticationManager
     ✅ - Service
     ✅ - DataSource
@@ -22,8 +23,10 @@
         ❌ - MessageEntity
     ❌ - DTO's??
         ✅ - UserEntityDTO
-❌ - Implementar JWT
+✅ - Implementar JWT
 ❌ - Realizar TEST
+        ✅ - AuthController
+        ❌ - UserController
         ✅ - UserEntity
         ❌ - TopicEntity
         ❌ - PostEntity

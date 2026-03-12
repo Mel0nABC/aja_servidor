@@ -2,6 +2,7 @@ package dev.aja.aja.common.exception;
 
 import java.util.Map;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -32,8 +33,8 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler({ UsernameNotFoundException.class, BadCredentialsException.class })
     public ResponseEntity<Map<String, Object>> userNotFound() {
-        return ResponseEntity
-                .ok(Map.of("success", false, "message", "El usuario al que intentas acceder, no existe"));
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(Map.of("success", false, "message", "El usuario al que intentas acceder, no existe"));
     }
 
     /**
@@ -47,7 +48,8 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(UserInvalidRoleException.class)
     public ResponseEntity<Map<String, Object>> checkRole() {
         return ResponseEntity
-                .ok(Map.of("success", false, "message", "No tienes permiso para realizar esta acción"));
+                .status(HttpStatus.FORBIDDEN)
+                .body(Map.of("success", false, "message", "No tienes permiso para realizar esta acción"));
     }
 
     /**
@@ -61,6 +63,6 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(UserAlreadyExistException.class)
     public ResponseEntity<Map<String, Object>> userExist(Exception e) {
         return ResponseEntity
-                .ok(Map.of("success", false, "message", e.getMessage()));
+                .status(HttpStatus.CONFLICT).body(Map.of("success", false, "message", e.getMessage()));
     }
 }

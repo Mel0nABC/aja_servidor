@@ -10,6 +10,7 @@ import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
 import java.util.UUID;
 
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -201,7 +202,7 @@ public class SecurityConfig {
      * @return objeto BCryptPasswordEncoder para coficiar contraseñas
      */
     @Bean
-    public BCryptPasswordEncoder passwordEncoder() {
+    public static BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
@@ -213,25 +214,39 @@ public class SecurityConfig {
      *                             entidad UserEntity
      * @return
      */
-    // @Bean
-    // CommandLineRunner runner(UserEntityRepository userEntityRepository) {
-    // // https://docs.spring.io/spring-data/jpa/reference/jpa/getting-started.html
-    // return args -> {
-    // UserEntity admin = UserEntity.builder()
-    // .username("admin")
-    // .password(passwordEncoder().encode("1234"))
-    // .email("admin@aja.dev")
-    // .role(RoleEnum.ADMIN.getName())
-    // .build();
+    @Bean
+    CommandLineRunner runner(UserEntityRepository userEntityRepository) {
+        // https://docs.spring.io/spring-data/jpa/reference/jpa/getting-started.html
+        return args -> {
+            // UserEntity admin = UserEntity.builder()
+            // .username("admin")
+            // .password(passwordEncoder().encode("1234"))
+            // .email("admin@aja.dev")
+            // .role(RoleEnum.ADMIN.getName())
+            // .build();
 
-    // UserEntity user = UserEntity.builder()
-    // .username("user")
-    // .password(passwordEncoder().encode("1234"))
-    // .email("user@aja.dev")
-    // .role(RoleEnum.USER.getName())
-    // .build();
+            // UserEntity user = UserEntity.builder()
+            // .username("user")
+            // .password(passwordEncoder().encode("1234"))
+            // .email("user@aja.dev")
+            // .role(RoleEnum.USER.getName())
+            // .build();
 
-    // userEntityRepository.saveAll(List.of(admin, user));
-    // };
-    // }
+            // userEntityRepository.saveAll(List.of(admin, user));
+
+            // List<UserEntity> userList = new ArrayList<>();
+
+            // for (int i = 0; i < 100; i++) {
+            //     userList.add(UserEntity.builder()
+            //             .username("User" + i)
+            //             .password(passwordEncoder().encode("1234"))
+            //             .email("user" + i + "@aja.dev")
+            //             .role(RoleEnum.USER.getName())
+            //             .build());
+            // }
+
+            // userEntityRepository.saveAll(userList);
+
+        };
+    }
 }
