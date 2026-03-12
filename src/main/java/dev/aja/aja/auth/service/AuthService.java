@@ -69,9 +69,6 @@ public class AuthService {
         Authentication auth = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(username, password));
 
-        if (!userService.getUserEntityFromActualUserContext().getIsActive())
-            throw new DisabledException("Tu usuario está deshabilitado, consulta por mail con un admin");
-
         if (auth != null && auth.isAuthenticated() &&
                 !"anonymousUser".equals(auth.getPrincipal())) {
             System.out.println("IDENTIFICADO");
@@ -85,6 +82,9 @@ public class AuthService {
         }
 
         SecurityContextHolder.getContext().setAuthentication(auth);
+
+        if (!userService.getUserEntityFromActualUserContext().getIsActive())
+            throw new DisabledException("Tu usuario está deshabilitado, consulta por mail con un admin");
 
         return userService.getUserEntityFromActualUserContext();
     }
