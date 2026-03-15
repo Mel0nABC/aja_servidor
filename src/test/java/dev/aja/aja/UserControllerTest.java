@@ -206,4 +206,73 @@ public class UserControllerTest {
 
     }
 
+    /**
+     * Enviamos un username de más de 20 carácteres para forzar que se lance la
+     * excepción IllegalARgumentException que tenemos aplicada en UserService en su
+     * método addUser
+     */
+    @Order(4)
+    @Test
+    public void addNewUserWithBigUsername() {
+        try {
+
+            UserEntity userBigUsername = UserEntity.builder()
+                    .username(
+                            "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+                    .password(SecurityConfig.passwordEncoder().encode("1234"))
+                    .email("user4@mel0n.dev")
+                    .isActive(true)
+                    .role(RoleEnum.ADMIN.getName())
+                    .build();
+
+            mockMvc.perform(post("/api/user")
+                    .cookie(cookie)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(userBigUsername)))
+                    .andExpect(status().isOk())
+                    .andExpect(result -> assertTrue(
+                            result.getResolvedException() instanceof IllegalArgumentException));
+
+        } catch (JacksonException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Enviamos un username de más de 65 carácteres para forzar que se lance la
+     * excepción IllegalARgumentException que tenemos aplicada en UserService en su
+     * método addUser. Se ha utilizado 65 carácteres, porque el SHA256 del hash de
+     * contraseña aplica 64 de tamaño máximo
+     */
+    @Order(5)
+    @Test
+    public void addNewUserWithBigPassword() {
+        try {
+
+            UserEntity userBigUsername = UserEntity.builder()
+                    .username(
+                            "abc")
+                    .password("f9K2mX8vQzR4bLp7TnJ1sV6wGhD0aCeY3uBqMzE5rLkNpSxFoWjUiaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+                    .email("user4@mel0n.dev")
+                    .isActive(true)
+                    .role(RoleEnum.ADMIN.getName())
+                    .build();
+
+            mockMvc.perform(post("/api/user")
+                    .cookie(cookie)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(userBigUsername)))
+                    .andExpect(status().isOk())
+                    .andExpect(result -> assertTrue(
+                            result.getResolvedException() instanceof IllegalArgumentException));
+
+        } catch (JacksonException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 }

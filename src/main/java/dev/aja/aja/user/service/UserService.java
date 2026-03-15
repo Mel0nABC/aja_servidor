@@ -25,6 +25,8 @@ import dev.aja.aja.user.repository.UserEntityRepository;
 public class UserService {
 
     private final UserEntityRepository userEntityRepository;
+    public static final int USERNAME_SIZE = 20;
+    public static final int PASSWORD_SIZE = 65;
 
     /**
      * 
@@ -85,6 +87,8 @@ public class UserService {
 
         checkRoleAdminFromUserContext();
 
+        checkArgumentSize(userEntity);
+
         Optional<UserEntity> userUsernameOptional = userEntityRepository.findByUsername(userEntity.getUsername());
 
         if (!userUsernameOptional.isEmpty())
@@ -126,6 +130,8 @@ public class UserService {
      */
     public void editUser(UserEntity userEntity) {
         checkRoleAdminFromUserContext();
+
+        checkArgumentSize(userEntity);
 
         Optional<UserEntity> userEntityDB = userEntityRepository.findById(userEntity.getId());
 
@@ -178,6 +184,24 @@ public class UserService {
      */
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    /**
+     * Se comprueba si username o password exceden de un tamaño máximo
+     * 
+     * @param userEntity instancia de UserEntity para obtener tamaño de username y
+     *                   password
+     */
+    public void checkArgumentSize(UserEntity userEntity) {
+
+        if (userEntity.getUsername().length() > USERNAME_SIZE)
+            throw new IllegalArgumentException(
+                    "El nombre de usuario es demasiado largo, no puede exceder de " + USERNAME_SIZE);
+
+        if (userEntity.getPassword().length() > PASSWORD_SIZE)
+
+            throw new IllegalArgumentException(
+                    "La contraseña es demasiado larga, no puede exceder de " + PASSWORD_SIZE);
     }
 
 }

@@ -2,6 +2,7 @@ package dev.aja.aja.user.entity;
 
 import dev.aja.aja.user.RoleEnum;
 import dev.aja.aja.user.dto.UserEntityDTO;
+import dev.aja.aja.user.service.UserService;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -36,10 +37,10 @@ public class UserEntity {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Column(unique = true, nullable = false)
+    @Column(unique = true, nullable = false, length = UserService.USERNAME_SIZE)
     private String username;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = UserService.PASSWORD_SIZE)
     private String password;
 
     @Column(unique = true, nullable = false)
