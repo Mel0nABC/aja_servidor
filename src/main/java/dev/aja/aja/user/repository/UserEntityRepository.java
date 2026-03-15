@@ -14,7 +14,22 @@ import dev.aja.aja.user.entity.UserEntity;
 @Repository
 public interface UserEntityRepository extends JpaRepository<UserEntity, Long> {
     // https://docs.spring.io/spring-data/jpa/reference/data-commons/repositories/definition.html
+
+    /**
+     * Para obtener la información del usuario mediante su nombre de usuario
+     * 
+     * @param username nombre de usuario para buscar
+     * @return devolvemos objeto tipo Optional, que puede estar vacio o contener el
+     *         UserEntity, pero nunca será null
+     */
     Optional<UserEntity> findByUsername(String username);
 
+    /**
+     * Para obtener la información del usuario mediante su correo electrónico
+     * 
+     * @param mail correo electrónico del usuario para buscar
+     * @return devolvemos objeto tipo Optional, que puede estar vacio o contener el
+     *         UserEntity, pero nunca será null
+     */
     Optional<UserEntity> findByEmail(String mail);
 }

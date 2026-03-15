@@ -43,9 +43,8 @@ public class UserService {
      * 
      * @return entidad UserEntity con la información del usuario del contexto
      * 
-     * @throws UsernameNotFoundException, si el usuario del actual contexto no
-     *                                    existe
-     * 
+     * @throws UsernameNotFoundException si el usuario del actual contexto no
+     *                                   existe
      */
     public UserEntity getUserEntityFromActualUserContext() {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -62,9 +61,8 @@ public class UserService {
      * 
      * @return devuelve USerEntity si es admin o lanza excepción si no lo es.
      * 
-     * @throws UserInvalidRoleException, si el usuario del actual contexto no es
-     *                                   admin
-     * 
+     * @throws UserInvalidRoleException si el usuario del actual contexto no es
+     *                                  admin
      */
     public UserEntity checkRoleAdminFromUserContext() {
         UserEntity userContext = getUserEntityFromActualUserContext();
@@ -81,11 +79,7 @@ public class UserService {
      * excepciones de DataIntegrity
      * 
      * @param userEntity usuario para añadir
-     * 
-     * @return Devolvemos la entidad obtenida de la base de datos
-     * 
-     * @throws UserAlreadyExistException, si el nombre de usuario o email ya existen
-     * 
+     * @throws UserAlreadyExistException si el nombre de usuario o email ya existen
      */
     public void addUser(UserEntity userEntity) {
 
@@ -109,9 +103,8 @@ public class UserService {
     /**
      * Eliminar usuario proporcionando su id
      * 
-     * @param id UserEntity id
-     * 
-     * @return devuelve false si el usuario no fue eliminado, true si sí.
+     * @param id identificador del usuario a eliminar
+     * @throws UsernameNotFoundException si el usuario no existe
      */
     public void delUSer(Long id) {
         checkRoleAdminFromUserContext();
@@ -129,7 +122,7 @@ public class UserService {
      * 
      * @param userEntity userEntity del usuario a actualizar
      * 
-     * @throws UsernameNotFoundException, si el usuario no existe
+     * @throws UsernameNotFoundException si el usuario no existe
      */
     public void editUser(UserEntity userEntity) {
         checkRoleAdminFromUserContext();
@@ -154,7 +147,7 @@ public class UserService {
      * 
      * @return Devolvemos un UserEntity si todo ha ido bien
      * 
-     * @throws UsernameNotFoundException, si el usuario no existe
+     * @throws UsernameNotFoundException si el usuario no existe
      */
     public UserEntityDTO getUserDTO(Long id) {
 

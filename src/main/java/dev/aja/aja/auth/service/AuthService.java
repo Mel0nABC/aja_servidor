@@ -33,16 +33,20 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
     private final UserService userService;
     private final JwtEncoder jwtEncoder;
+    /**
+     * Constante para indicar el nombre de la cookie que se usará para el JWT TOKEN
+     */
     public static final String JWT_TOKEN_COOKIE_NAME = "JWT_TOKEN";
     private final int UNIT_EXPIRATION_TOKEN = 3;
 
     /**
-     * 
      * Constructor para implementar inyección de dependencias necesarias
      * 
      * @param authenticationManager inyección para authenticar el usuario
      * @param userService           inyección para servicio de usuario, obtenemos
      *                              acceso a la lígica referente a usuarios
+     * @param jwtEncoder            Bean de instancia JwtEncoder para poder crear el
+     *                              JWT_TOKEN
      */
     public AuthService(AuthenticationManager authenticationManager, UserService userService, JwtEncoder jwtEncoder) {
         this.authenticationManager = authenticationManager;
@@ -59,6 +63,7 @@ public class AuthService {
      * @param password contraseña del usuario que quiere hacer login
      * @param request  request con la información de la petición HTTP actual,
      *                 headers, body, etcétera.
+     * @param response objeto con el que se creará la respuesta al cliente
      * 
      * @return devuelve una entidad UserEntity con toda la información del usuario
      *         que acaba de iniciar sessión
@@ -114,6 +119,7 @@ public class AuthService {
     /**
      * Eliminamos el contexto de la sesión actual y permitimos el logout del usuario
      * 
+     * @param response objeto con el que se creará la respuesta al cliente
      * @return true si todo ha salido bien, false si algo ha ocurrido
      */
     public boolean logout(HttpServletResponse response) {

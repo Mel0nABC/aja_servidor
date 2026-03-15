@@ -1,10 +1,13 @@
 package dev.aja.aja.config;
 
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.security.KeyFactory;
+import java.security.NoSuchAlgorithmException;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
+import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
@@ -49,14 +52,23 @@ import dev.aja.aja.user.repository.UserEntityRepository;
 public class SecurityConfig {
 
     /**
+     * Constructor creado para ignorar warnings cuando se crea javadoc
+     */
+    public SecurityConfig() {
+    }
+
+    /**
      * Método que se genera como Bean para tenerlo en el contexto de la aplicación,
      * se encarga del filtrado de las entradas a nuestros end points. Aplica medidas
      * de seguridad, como deshabilitar csrf
      * como no necesitamos un formulario de login y logout, están deshabilitados
      * también.
      * 
-     * @param http, inyección de HttpSecurity para poder configurar el
-     *              SecurityFilterChain
+     * @param http                    inyección de HttpSecurity para poder
+     *                                configurar el
+     *                                SecurityFilterChain
+     * @param jwtAuthenticationFilter filtro para generar authenticación si existe
+     *                                un JWT_TOKEN válido
      * @return devuelve HttpSecurity para que spring lo obtenga
      * @throws Exception delegamos cualquier excepción que pudiera producirse a
      *                   quien llama este método.
@@ -81,10 +93,14 @@ public class SecurityConfig {
     }
 
     /**
-     * Codigicador para poder generar el JWT
-     * 
-     * @param jwkSource
-     * @return
+     * Crea el componente encargado de codificar y firmar los JSON Web Tokens (JWT)
+     * utilizados en la autenticación de la aplicación.
+     *
+     * Utiliza la fuente de claves JWK proporcionada para generar los tokens
+     * firmados.
+     *
+     * @param jwkSource fuente de claves, privada y p´
+     * @return instancia de JwtEncoder configurada para generar tokens JWT firmados
      */
     @Bean
     public JwtEncoder jwtEncoder(JWKSource<SecurityContext> jwkSource) {
@@ -121,14 +137,18 @@ public class SecurityConfig {
     }
 
     /**
-     * Obtenemos la clave privada generada en loca, filtramos limpiando texto que no
+     * Obtenemos la clave privada generada en local, filtramos limpiando texto que
+     * no
      * es necesario
      * 
-     * @return
-     * @throws Exception
+     * @return devolvemos la clase privada
+     * @throws IOException              si hay un error leyendo la clave
+     * @throws NoSuchAlgorithmException si el algoritmo de firma no existe
+     * @throws InvalidKeySpecException  si la clave no es válida
+     * @throws Exception                cualquier otra excepciónF
      */
     @Bean
-    public RSAPrivateKey privateKey() throws Exception {
+    public RSAPrivateKey privateKey() throws IOException, InvalidKeySpecException, NoSuchAlgorithmException, Exception {
         String privateKeyContent = Files.readString(Paths.get("clave_privada.pem"))
                 .replace("-----BEGIN PRIVATE KEY-----", "")
                 .replace("-----END PRIVATE KEY-----", "")
@@ -139,14 +159,18 @@ public class SecurityConfig {
     }
 
     /**
-     * Obtenemos la clave pública generada en loca, filtramos limpiando texto que no
+     * Obtenemos la clave pública generada en local, filtramos limpiando texto que
+     * no
      * es necesario
      * 
-     * @return
-     * @throws Exception
+     * @return clve pública
+     * @throws IOException              si hay un error leyendo la clave
+     * @throws NoSuchAlgorithmException si el algoritmo de firma no existe
+     * @throws InvalidKeySpecException  si la clave no es válida
+     * @throws Exception                cualquier otra excepción
      */
     @Bean
-    public RSAPublicKey publicKey() throws Exception {
+    public RSAPublicKey publicKey() throws IOException, InvalidKeySpecException, NoSuchAlgorithmException, Exception {
         String key = Files.readString(Paths.get("clave_publica.pem"));
         key = key.replace("-----BEGIN PUBLIC KEY-----", "")
                 .replace("-----END PUBLIC KEY-----", "")
@@ -193,7 +217,6 @@ public class SecurityConfig {
                         .roles(user.getRole())
                         .build())
                 .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
-
     }
 
     /**
@@ -237,12 +260,12 @@ public class SecurityConfig {
             // List<UserEntity> userList = new ArrayList<>();
 
             // for (int i = 0; i < 100; i++) {
-            //     userList.add(UserEntity.builder()
-            //             .username("User" + i)
-            //             .password(passwordEncoder().encode("1234"))
-            //             .email("user" + i + "@aja.dev")
-            //             .role(RoleEnum.USER.getName())
-            //             .build());
+            // userList.add(UserEntity.builder()
+            // .username("User" + i)
+            // .password(passwordEncoder().encode("1234"))
+            // .email("user" + i + "@aja.dev")
+            // .role(RoleEnum.USER.getName())
+            // .build());
             // }
 
             // userEntityRepository.saveAll(userList);

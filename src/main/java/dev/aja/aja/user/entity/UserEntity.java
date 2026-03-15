@@ -11,7 +11,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
@@ -19,14 +18,19 @@ import lombok.Setter;
  * annotations de Lombok, es innnecesario declarar constructores, getters,
  * setters, etcére
  */
-@Builder
 @Data
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @Entity
 public class UserEntity {
+
+    /**
+     * Constructor creado para ignorar warnings cuando se crea javadoc
+     */
+    public UserEntity() {
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -48,6 +52,15 @@ public class UserEntity {
     @Builder.Default
     private Boolean isActive = true;
 
+    /***
+     * Método para generar UserEntityDTO con la información de la instancia que
+     * ejecuta el método
+     * 
+     * @return devolvemos un UserEntityDTO, que envía toda la información sin la
+     *         contraseña del usuario. Con esto hacemos más segura la transferencia
+     *         de información del usuario entre cliente y servidor y, ademas, al ser
+     *         un DTO conseguimos mejor eficiencia en envío de información
+     */
     public UserEntityDTO toDTO() {
         return UserEntityDTO.builder()
                 .id(this.id)

@@ -23,6 +23,12 @@ import dev.aja.aja.user.exception.UserInvalidRoleException;
 public class GlobalExceptionHandler {
 
     /**
+     * Constructor creado para ignorar warnings cuando se crea javadoc
+     */
+    public GlobalExceptionHandler() {
+    }
+
+    /**
      * Respuesta para la exception UsernameNotFoundException (nombre de usuario) y
      * BadCredentialsException (contraseña) si el usuario no existe o ha introducido
      * mal la contraseña, siempre se responderá esto. Hacemos una respuesta
@@ -57,6 +63,8 @@ public class GlobalExceptionHandler {
      * Respuesta para la exception UserAlreadyExistException si se está añadiendo un
      * nuevo usuario, se avisará y se cancelará la acción
      * 
+     * @param e, enviamos la excepción inyectándola como parámetro para obtener el
+     *           mensaje
      * @return retornamos un diccionario, success indica cuál ha sido el resultado y
      *         message el contenido. En este caso el contenido de message es un
      *         texto de advertencia

@@ -38,7 +38,10 @@ public class AuthController {
      * 
      * @param username nombre de usuario para hacer la petición de login
      * @param password contraseña de usuario para hacer la petición de login
-     * @param request  información de la petición http, headers, body, etcétera.
+     * @param request  objeto con la información de la petición http, headers, body,
+     *                 etcétera.
+     * @param response objeto con el que se creará la respuesta al cliente
+     * 
      * @return retornamos un diccionario, success indica cuál ha sido el resultado y
      *         message el contenido. En este caso el contenido de respuesta válida
      *         es un UserEntityDTO con la información del usuario que acaba de
@@ -55,6 +58,8 @@ public class AuthController {
     /**
      * Logout, para poder realizar petición de logout a la aplicación
      * 
+     * @param response objeto con el que se creará la respuesta al cliente
+     * 
      * @return retornamos un diccionario, success indica cuál ha sido el resultado y
      *         message el contenido. En este caso el contenido de respuesta válida
      *         es un boolean, que nos indica si ha sido correcta o o no la acción,
@@ -69,7 +74,9 @@ public class AuthController {
      * Método que es el endpoint health, simplemente para comprobar que el servidor
      * está activo
      * 
-     * @return
+     * @return si sucede la consulta, se devuelve un diccionario, la única opción de
+     *         algo negativo, es que el servidor no responda, por lo tanto no habría
+     *         ninguna posible consulta
      */
     @GetMapping("/health")
     public ResponseEntity<Map<String, Object>> isServerAlive() {

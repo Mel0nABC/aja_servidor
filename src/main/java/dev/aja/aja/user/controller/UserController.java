@@ -97,6 +97,7 @@ public class UserController {
      * 
      * Obtener el usuario que hay en la base de datos.
      * 
+     * @param id identificador del usuario del cual se quiere obtener la información
      * @return Retornamos un DTO de UserEntity, success indica cuál ha sido el
      *         resultado y message el contenido. En este caso el contenido de
      *         respuesta válida es una lista de UserEntityDTO

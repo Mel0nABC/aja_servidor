@@ -19,6 +19,12 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 public class ApplicationConfig {
 
     /**
+     * Constructor creado para ignorar warnings cuando se crea javadoc
+     */
+    public ApplicationConfig() {
+    }
+
+    /**
      * Especificamos donde vamos a almacenar los datos, en este caso, una base de
      * datos postgresql
      * 
