@@ -9,7 +9,7 @@
         ✅ - Login
         ✅ - logout
         ✅ - Acciones de usuario, PONER REQUESTMATCHERS POR ROLES 
-        ❌ - Limitar tamaño username y password
+        ✅ - Limitar tamaño username y password
     ✅ - Password encoder
     ✅ - Userdetails
     ✅ - SecurityFilterChain
