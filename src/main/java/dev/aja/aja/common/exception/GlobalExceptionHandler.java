@@ -41,7 +41,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler({ UsernameNotFoundException.class, BadCredentialsException.class })
     public ResponseEntity<Map<String, Object>> userNotFound() {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                .body(Map.of("success", false, "message", "El usuario al que intentas acceder, no existe"));
+                .body(Map.of("success", false, "message", "Usuario o contraseña incorrecto"));
     }
 
     /**

@@ -4,44 +4,97 @@
 ✅
 
 
-✅ - Implementar login y logout, con usuarios básicos en memoria
-    ✅ - Controller
-        ✅ - Login
-        ✅ - logout
-        ✅ - Acciones de usuario, PONER REQUESTMATCHERS POR ROLES 
-        ✅ - Limitar tamaño username y password
-    ✅ - Password encoder
-    ✅ - Userdetails
-    ✅ - SecurityFilterChain
-        ✅ - Restringir acceso por isActive
-    ✅ - AuthenticationManager
-    ✅ - Service
-    ✅ - DataSource
-        ✅ - UserEntity
-        ❌ - TopicEntity
-        ❌ - PostEntity
-        ❌ - MessageEntity
-    ❌ - DTO's??
-        ✅ - UserEntityDTO
-✅ - Implementar JWT
-❌ - Realizar TEST
-        ✅ - AuthController
-        ✅ - UserController
-        ✅ - UserEntity
-        ❌ - TopicEntity
-        ❌ - PostEntity
-        ❌ - MessageEntity
+ENTIDADES Y PERMISOS:
+
+USUARIOS:
+	REGISTRO/ALTA -> CUALQUIER -> VENTANA LOGIN
+	BAJA/ELIMINAR -> USUARIO
+	MODIFICACIÓN -> USUARIO Y ADMINISTRADOR
+	CONSULTAS -> ADMINISTRADOR
 
 
-❌ - Forum
-❌ - topic
-❌ - post
+FORUM:
+	REGISTRAR/ALTA -> ADMIN
+	BAJA/ELIMINAR -> ADMIN
+	MODIFICACIÓN -> ADMIN
+	CONSULTAS -> TODOS
 
 
-Controlador
-Entidad para usuario, UserEntity
-Service para UserEntity
-DataSource, almacenar usuarios en base de datos
-Security, implementar seguridad en los endpoints
-Implementar GlobarExceptionHandler
-Realizar comentarios para javadoc
+TOPIC:
+	REGISTRAR/ALTA -> USUARIO/ADMIN
+	BAJA/ELIMINAR -> ADMIN
+	MODIFICACIÓN -> USUARIO
+	CONSULTAS -> TODOS
+
+
+
+POST:
+	REGISTRAR/ALTA -> USUARIO/ADMIN
+	BAJA/ELIMINAR -> PROPIETARIO/ADMIN
+	MODIFICACIÓN -> PROPIETARIO
+	CONSULTAS -> TODOS
+
+
+
+ENTIDADES:
+
+USUARIOS:
+	- id
+	- username
+	- mail
+	- contraseña
+	- isActivo
+	- fechaRegistro
+
+
+
+FORUM:
+	- id
+	- titulo
+	- fechaCreación
+	- fechaModificación
+	- topicList
+
+
+
+TOPIC:
+	- id
+	- nombre
+	- usuario
+	- vistas
+	- fechaCreación
+	- fechaModificación
+	- PostList
+
+
+
+
+POST:
+- id
+- numeroMensaje
+- usuario
+- texto
+- fechaCreación
+- fechaModificación
+
+
+DTO'S PARA ACCIONES:
+USUARIO REGISTRO -> username, password, email
+USUARIO MODIFICACION -> username, password, email
+FORUM REGISTRO -> título
+FORUM MODIFICACIÓN -> id, títutlo
+FORUM BAJA/ELIMINAR -> id
+TOPIC REGISTRO -> titulo
+TOPIC BAJA -> id
+TOPIC MODIFICACIÓNM -> id, titulo
+POST REGISTRO -> texto
+POST BAJA -> id
+POST MODIFICACIÓN -> id, texto
+
+
+
+
+Registro/Alta
+Baja/Eliminar
+Modificación
+Consultas
