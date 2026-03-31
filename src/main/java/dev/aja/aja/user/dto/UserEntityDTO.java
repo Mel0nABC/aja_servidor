@@ -1,5 +1,7 @@
 package dev.aja.aja.user.dto;
 
+import java.time.LocalDate;
+
 import lombok.Builder;
 
 /**
@@ -13,10 +15,11 @@ import lombok.Builder;
  */
 @Builder
 public record UserEntityDTO(
-        Long id,
-        String username,
-        String email,
-        String role,
-        boolean isActive) {
+                Long id,
+                String username,
+                String email,
+                String role,
+                boolean isActive,
+                LocalDate registerDate) {
 
 }

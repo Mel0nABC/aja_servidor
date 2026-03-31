@@ -1,5 +1,6 @@
 package dev.aja.aja.user.service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import dev.aja.aja.user.RoleEnum;
 import dev.aja.aja.user.dto.UserEntityDTO;
+import dev.aja.aja.user.dto.UserEntityNewDTO;
 import dev.aja.aja.user.entity.UserEntity;
 import dev.aja.aja.user.exception.UserAlreadyExistException;
 import dev.aja.aja.user.exception.UserInvalidRoleException;
@@ -76,30 +78,34 @@ public class UserService {
     }
 
     /**
-     * Añadimos nuevo usuario, realizamos validaciones del usuario del contexto que
-     * lo añade y que no exista nada repetido. Validamos manualmente para evitar
-     * excepciones de DataIntegrity
+     * Añadimos nuevo usuario,se comprueba que el nombre de usuario y el correo
+     * electrónico no existan. Validamos manualmente para evitar excepciones de
+     * DataIntegrity
      * 
-     * @param userEntity usuario para añadir
-     * @throws UserAlreadyExistException si el nombre de usuario o email ya existen
+     * @param userEntity
      */
-    public void addUser(UserEntity userEntity) {
+    public void addUser(UserEntityNewDTO userEntityDTO) {
 
-        checkRoleAdminFromUserContext();
+        checkArgumentSize(userEntityDTO.username(), userEntityDTO.password());
 
-        checkArgumentSize(userEntity);
-
-        Optional<UserEntity> userUsernameOptional = userEntityRepository.findByUsername(userEntity.getUsername());
+        Optional<UserEntity> userUsernameOptional = userEntityRepository.findByUsername(userEntityDTO.username());
 
         if (!userUsernameOptional.isEmpty())
             throw new UserAlreadyExistException("El nombre de usuario que quieres añadir ya existe");
 
-        Optional<UserEntity> userMailOptional = userEntityRepository.findByEmail(userEntity.getEmail());
+        Optional<UserEntity> userMailOptional = userEntityRepository.findByEmail(userEntityDTO.email());
 
         if (!userMailOptional.isEmpty())
             throw new UserAlreadyExistException("El email de usuario que quieres añadir ya existe");
 
-        userEntity.setPassword(passwordEncoder().encode(userEntity.getPassword()));
+        UserEntity userEntity = UserEntity.builder()
+                .username(userEntityDTO.username())
+                .password(passwordEncoder().encode(userEntityDTO.password()))
+                .email(userEntityDTO.email())
+                .role(RoleEnum.USER.getName())
+                .isActive(true)
+                .registerDate(LocalDate.now())
+                .build();
 
         userEntityRepository.save(userEntity);
     }
@@ -131,7 +137,7 @@ public class UserService {
     public void editUser(UserEntity userEntity) {
         checkRoleAdminFromUserContext();
 
-        checkArgumentSize(userEntity);
+        checkArgumentSize(userEntity.getUsername(), userEntity.getPassword());
 
         Optional<UserEntity> userEntityDB = userEntityRepository.findById(userEntity.getId());
 
@@ -195,13 +201,13 @@ public class UserService {
      * @param userEntity instancia de UserEntity para obtener tamaño de username y
      *                   password
      */
-    public void checkArgumentSize(UserEntity userEntity) {
+    public void checkArgumentSize(String username, String password) {
 
-        if (userEntity.getUsername().length() > USERNAME_SIZE)
+        if (username.length() > USERNAME_SIZE)
             throw new IllegalArgumentException(
                     "El nombre de usuario es demasiado largo, no puede exceder de " + USERNAME_SIZE);
 
-        if (userEntity.getPassword().length() > PASSWORD_SIZE)
+        if (password.length() > PASSWORD_SIZE)
 
             throw new IllegalArgumentException(
                     "La contraseña es demasiado larga, no puede exceder de " + PASSWORD_SIZE);

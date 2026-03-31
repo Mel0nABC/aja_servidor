@@ -242,30 +242,33 @@ public class SecurityConfig {
         // https://docs.spring.io/spring-data/jpa/reference/jpa/getting-started.html
         return args -> {
             // UserEntity admin = UserEntity.builder()
-            // .username("admin")
-            // .password(passwordEncoder().encode("1234"))
-            // .email("admin@aja.dev")
-            // .role(RoleEnum.ADMIN.getName())
-            // .build();
+            //         .username("admin")
+            //         .password(passwordEncoder().encode("1234"))
+            //         .email("admin@aja.dev")
+            //         .role(RoleEnum.ADMIN.getName())
+            //         .registerDate(LocalDate.now())
+            //         .build();
 
             // UserEntity user = UserEntity.builder()
-            // .username("user")
-            // .password(passwordEncoder().encode("1234"))
-            // .email("user@aja.dev")
-            // .role(RoleEnum.USER.getName())
-            // .build();
+            //         .username("user")
+            //         .password(passwordEncoder().encode("1234"))
+            //         .email("user@aja.dev")
+            //         .role(RoleEnum.USER.getName())
+            //         .registerDate(LocalDate.now())
+            //         .build();
 
             // userEntityRepository.saveAll(List.of(admin, user));
 
             // List<UserEntity> userList = new ArrayList<>();
 
             // for (int i = 0; i < 100; i++) {
-            // userList.add(UserEntity.builder()
-            // .username("User" + i)
-            // .password(passwordEncoder().encode("1234"))
-            // .email("user" + i + "@aja.dev")
-            // .role(RoleEnum.USER.getName())
-            // .build());
+            //     userList.add(UserEntity.builder()
+            //             .username("User" + i)
+            //             .password(passwordEncoder().encode("1234"))
+            //             .email("user" + i + "@aja.dev")
+            //             .role(RoleEnum.USER.getName())
+            //             .registerDate(LocalDate.now())
+            //             .build());
             // }
 
             // userEntityRepository.saveAll(userList);

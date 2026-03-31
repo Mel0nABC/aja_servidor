@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import dev.aja.aja.user.dto.UserEntityNewDTO;
 import dev.aja.aja.user.entity.UserEntity;
 import dev.aja.aja.user.service.UserService;
 
@@ -48,7 +49,7 @@ public class UserController {
      *         diccionarios de las excepciones
      */
     @PostMapping("/user")
-    public ResponseEntity<Map<String, Object>> addUser(@RequestBody UserEntity userEntity) {
+    public ResponseEntity<Map<String, Object>> addUser(@RequestBody UserEntityNewDTO userEntity) {
 
         userService.addUser(userEntity);
 

@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.time.LocalDate;
 import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -24,6 +25,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.context.TestConstructor;
 
 import dev.aja.aja.user.RoleEnum;
+import dev.aja.aja.user.dto.UserEntityNewDTO;
 import dev.aja.aja.user.entity.UserEntity;
 import dev.aja.aja.user.exception.UserAlreadyExistException;
 import dev.aja.aja.user.repository.UserEntityRepository;
@@ -75,6 +77,7 @@ public class UserEntityTest {
                 .password(passwordEncoder.encode(password))
                 .role(RoleEnum.ADMIN.getName())
                 .email("adminTest@adminTest.com")
+                .registerDate(LocalDate.now())
                 .build();
 
         // Sólo se usa este repositorio para este usuario, es necesario para poder
@@ -105,19 +108,18 @@ public class UserEntityTest {
     @Order(2)
     public void addUserEntityWithAdminRoleContextTest() {
 
-        UserEntity userEntity = UserEntity.builder()
+        UserEntityNewDTO userEntity = UserEntityNewDTO.builder()
                 .username("userTest")
                 .password(passwordEncoder.encode("1234"))
-                .role(RoleEnum.USER.getName())
                 .email("userTest@userTest.com")
                 .build();
 
         userService.addUser(userEntity);
 
-        Optional<UserEntity> userOption = userEntityRepository.findByUsername(userEntity.getUsername());
+        Optional<UserEntity> userOption = userEntityRepository.findByUsername(userEntity.username());
 
         assertFalse(userOption.isEmpty());
-        assertEquals(userEntity.getUsername(), userOption.get().getUsername());
+        assertEquals(userEntity.username(), userOption.get().getUsername());
     }
 
     /**
@@ -131,10 +133,9 @@ public class UserEntityTest {
 
         assertThrows(UserAlreadyExistException.class, () -> {
 
-            UserEntity userEntity = UserEntity.builder()
+            UserEntityNewDTO userEntity = UserEntityNewDTO.builder()
                     .username("userTest")
                     .password(passwordEncoder.encode("1234"))
-                    .role(RoleEnum.USER.getName())
                     .email("")
                     .build();
 
@@ -143,10 +144,9 @@ public class UserEntityTest {
 
         assertDoesNotThrow(() -> {
 
-            UserEntity userEntity = UserEntity.builder()
+            UserEntityNewDTO userEntity = UserEntityNewDTO.builder()
                     .username("userTest2")
                     .password(passwordEncoder.encode("1234"))
-                    .role(RoleEnum.USER.getName())
                     .email("")
                     .build();
 
@@ -165,10 +165,9 @@ public class UserEntityTest {
 
         assertThrows(UserAlreadyExistException.class, () -> {
 
-            UserEntity userEntity = UserEntity.builder()
+            UserEntityNewDTO userEntity = UserEntityNewDTO.builder()
                     .username("123")
                     .password(passwordEncoder.encode("1234"))
-                    .role(RoleEnum.USER.getName())
                     .email("userTest@userTest.com")
                     .build();
 
@@ -177,10 +176,9 @@ public class UserEntityTest {
 
         assertDoesNotThrow(() -> {
 
-            UserEntity userEntity = UserEntity.builder()
+            UserEntityNewDTO userEntity = UserEntityNewDTO.builder()
                     .username("123")
                     .password(passwordEncoder.encode("1234"))
-                    .role(RoleEnum.USER.getName())
                     .email("userTest@userTest2.com")
                     .build();
 
@@ -195,16 +193,16 @@ public class UserEntityTest {
     @Test
     @Order(5)
     public void deleteUser() {
-        UserEntity userEntity = UserEntity.builder()
+        UserEntityNewDTO userEntity = UserEntityNewDTO.builder()
                 .username("123")
                 .password(passwordEncoder.encode("1234"))
-                .role(RoleEnum.USER.getName())
+
                 .email("userTest@userTest.com")
                 .build();
 
         userService.addUser(userEntity);
 
-        Optional<UserEntity> userOptional = userEntityRepository.findByUsername(userEntity.getUsername());
+        Optional<UserEntity> userOptional = userEntityRepository.findByUsername(userEntity.username());
 
         assertFalse(userOptional.isEmpty());
 
@@ -230,16 +228,15 @@ public class UserEntityTest {
     @Test
     @Order(6)
     public void updateUser() {
-        UserEntity userEntity = UserEntity.builder()
+        UserEntityNewDTO userEntity = UserEntityNewDTO.builder()
                 .username("123")
                 .password(passwordEncoder.encode("1234"))
-                .role(RoleEnum.USER.getName())
                 .email("userTest@userTest.com")
                 .build();
 
         userService.addUser(userEntity);
 
-        Optional<UserEntity> userOptional = userEntityRepository.findByUsername(userEntity.getUsername());
+        Optional<UserEntity> userOptional = userEntityRepository.findByUsername(userEntity.username());
 
         assertFalse(userOptional.isEmpty());
 
@@ -247,7 +244,7 @@ public class UserEntityTest {
 
         user.setEmail("");
 
-        userService.editUser(userEntity);
+        userService.editUser(user);
 
         assertNotNull(userService.getUserDTO(user.getId()));
 

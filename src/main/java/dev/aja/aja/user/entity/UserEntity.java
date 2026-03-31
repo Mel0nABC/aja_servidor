@@ -1,5 +1,7 @@
 package dev.aja.aja.user.entity;
 
+import java.time.LocalDate;
+
 import dev.aja.aja.user.RoleEnum;
 import dev.aja.aja.user.dto.UserEntityDTO;
 import dev.aja.aja.user.service.UserService;
@@ -53,6 +55,9 @@ public class UserEntity {
     @Builder.Default
     private Boolean isActive = true;
 
+    @Column(nullable = false)
+    private LocalDate registerDate;
+
     /***
      * Método para generar UserEntityDTO con la información de la instancia que
      * ejecuta el método
@@ -69,6 +74,7 @@ public class UserEntity {
                 .email(this.email)
                 .role(this.role)
                 .isActive(this.isActive)
+                .registerDate(this.registerDate)
                 .build();
     }
 

@@ -1,5 +1,6 @@
 package dev.aja.aja;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -22,6 +23,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 
 import dev.aja.aja.config.SecurityConfig;
 import dev.aja.aja.user.RoleEnum;
+import dev.aja.aja.user.dto.UserEntityNewDTO;
 import dev.aja.aja.user.entity.UserEntity;
 import dev.aja.aja.user.repository.UserEntityRepository;
 import jakarta.servlet.http.Cookie;
@@ -68,6 +70,7 @@ public class UserControllerTest {
                 .email("userAdminTest1@mel0n.dev")
                 .isActive(true)
                 .role(RoleEnum.ADMIN.getName())
+                .registerDate(LocalDate.now())
                 .build();
 
         this.deleteUser2 = UserEntity.builder()
@@ -76,6 +79,7 @@ public class UserControllerTest {
                 .email("deleteUser2@mel0n.dev")
                 .isActive(true)
                 .role(RoleEnum.USER.getName())
+                .registerDate(LocalDate.now())
                 .build();
 
         this.editUser3 = UserEntity.builder()
@@ -84,6 +88,7 @@ public class UserControllerTest {
                 .email("user3@mel0n.dev")
                 .isActive(true)
                 .role(RoleEnum.USER.getName())
+                .registerDate(LocalDate.now())
                 .build();
 
         userEntityRepository.saveAll(List.of(this.userAdminTest1, this.deleteUser2, this.editUser3));
@@ -119,12 +124,10 @@ public class UserControllerTest {
 
         try {
 
-            UserEntity user4 = UserEntity.builder()
+            UserEntityNewDTO user4 = UserEntityNewDTO.builder()
                     .username("user4")
-                    .password(SecurityConfig.passwordEncoder().encode("1234"))
+                    .password("1234")
                     .email("user4@mel0n.dev")
-                    .isActive(true)
-                    .role(RoleEnum.ADMIN.getName())
                     .build();
 
             mockMvc.perform(post("/api/user")
@@ -133,7 +136,7 @@ public class UserControllerTest {
                     .content(objectMapper.writeValueAsString(user4)))
                     .andExpect(status().isOk());
 
-            UserEntity user4FromDB = userEntityRepository.findByUsername(user4.getUsername()).get();
+            UserEntity user4FromDB = userEntityRepository.findByUsername(user4.username()).get();
 
             MvcResult resultUser = mockMvc.perform(get("/api/user/{id}", user4FromDB.getId().toString())
                     .cookie(this.adminCookie))
@@ -143,7 +146,7 @@ public class UserControllerTest {
 
             String response = resultUser.getResponse().getContentAsString();
 
-            assertTrue(response.contains(user4.getUsername()));
+            assertTrue(response.contains(user4.username()));
 
         } catch (JacksonException e) {
             e.printStackTrace();
