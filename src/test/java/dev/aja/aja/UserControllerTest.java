@@ -233,9 +233,13 @@ public class UserControllerTest {
 
     /**
      * Obtenemos el usuario para comprobar, que está guardado y contiene el nombre
-     * con el que se guardó. Seguidamente, editamos su nombre de usuario, lo
+     * con el que se guardó. Seguidamente, editamos su correo electrónico, lo
      * guardamos y, desde el repositorio volvemos a obtener ese usuario utilizando
-     * su id para comprobar que el nombre de usuario se cambió con éxito
+     * su id para comprobar que el correo electrónico se cambió con éxito
+     * Repetimos los pasos con username.
+     * 
+     * Se sigue ese orden con el fin de no invalidar el JWT y tener que hacer login
+     * nuevamente
      */
     @Test
     public void updateUserWithOk() {
@@ -252,17 +256,37 @@ public class UserControllerTest {
 
             assertTrue(response.contains(this.editUser3.getUsername()));
 
-            this.editUser3.setUsername("usernamEdited");
+            UserEntity tmp = new UserEntity(editUser3.getId(), editUser3.getUsername(), editUser3.getPassword(),
+                    editUser3.getEmail(), editUser3.getRole(), editUser3.getIsActive(), editUser3.getRegisterDate());
+
+            tmp.setEmail("newemail@ajateam.dev");
+
             mockMvc.perform(put("/api/user")
-                    .cookie(this.adminCookie)
+                    .cookie(this.userCookie)
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsString(this.editUser3)))
+                    .content(objectMapper.writeValueAsString(tmp)))
                     .andExpect(status().isOk())
                     .andDo(print())
                     .andReturn();
 
-            assertEquals(userEntityRepository.findById(this.editUser3.getId()).get().getUsername(),
-                    this.editUser3.getUsername());
+            assertEquals(userEntityRepository.findByUsername(tmp.getEmail()).get().getEmail(),
+                    tmp.getEmail());
+
+            // Se cambia el username por último, porque si no la cookie de sesión no es
+            // válida
+            tmp.setUsername("NewName");
+
+            mockMvc.perform(put("/api/user")
+                    .cookie(this.userCookie)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(tmp)))
+                    .andExpect(status().isOk())
+                    .andDo(print())
+                    .andReturn();
+
+            assertEquals(userEntityRepository.findByUsername(tmp.getUsername()).get().getUsername(),
+                    tmp.getUsername());
+
         } catch (JacksonException e) {
             e.printStackTrace();
         } catch (Exception e) {

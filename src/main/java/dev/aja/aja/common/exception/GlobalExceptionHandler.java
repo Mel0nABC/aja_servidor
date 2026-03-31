@@ -10,8 +10,11 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import dev.aja.aja.user.exception.EmailAlreadyExistException;
 import dev.aja.aja.user.exception.UserAlreadyExistException;
 import dev.aja.aja.user.exception.UserInvalidRoleException;
+import dev.aja.aja.user.exception.UserInvalidToEditInformation;
+import dev.aja.aja.user.exception.UsernameAlreadyExistException;
 
 /**
  * Aquí implementamos de una manera centralizada toda la gestión de todas las
@@ -87,6 +90,46 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(DisabledException.class)
     public ResponseEntity<Map<String, Object>> userIsDisabled(Exception e) {
+        return ResponseEntity
+                .status(HttpStatus.UNAUTHORIZED).body(Map.of("success", false, "message", e.getMessage()));
+    }
+
+    /**
+     * Cuando no se permite editar información de un usuario, porque no es un admin
+     * o porque no es el propio usuario
+     * 
+     * @param e, enviamos la excepción inyectándola como parámetro para obtener el
+     *           mensaje
+     * @return retornamos un diccionario, success indica cuál ha sido el resultado y
+     *         message el contenido. En este caso el contenido de message es un
+     *         texto de advertencia
+     */
+    @ExceptionHandler(UserInvalidToEditInformation.class)
+    public ResponseEntity<Map<String, Object>> userEditError(Exception e) {
+        return ResponseEntity
+                .status(HttpStatus.UNAUTHORIZED).body(Map.of("success", false, "message", e.getMessage()));
+    }
+
+    /**
+     * Cuando se edita un username o se quiere añadir un nuevo usuario
+     * 
+     * @param e
+     * @return
+     */
+    @ExceptionHandler(UsernameAlreadyExistException.class)
+    public ResponseEntity<Map<String, Object>> usernameExist(Exception e) {
+        return ResponseEntity
+                .status(HttpStatus.UNAUTHORIZED).body(Map.of("success", false, "message", e.getMessage()));
+    }
+
+    /**
+     * Cuando se edita un email o se quiere añadir un nuevo usuario
+     * 
+     * @param e
+     * @return
+     */
+    @ExceptionHandler(EmailAlreadyExistException.class)
+    public ResponseEntity<Map<String, Object>> emailExist(Exception e) {
         return ResponseEntity
                 .status(HttpStatus.UNAUTHORIZED).body(Map.of("success", false, "message", e.getMessage()));
     }

@@ -32,4 +32,20 @@ public interface UserEntityRepository extends JpaRepository<UserEntity, Long> {
      *         UserEntity, pero nunca será null
      */
     Optional<UserEntity> findByEmail(String mail);
+
+    /**
+     * Comprobamos si existe un usuario con ese username
+     * 
+     * @param username username a comprobar
+     * @return devolvemos true si existe, false si no existe
+     */
+    boolean existsByUsername(String username);
+
+    /**
+     * Comprobamos si existe un usuario con ese username
+     * 
+     * @param email email a comprobar
+     * @return devolvemos true si existe, false si no existe
+     */
+    boolean existsByEmail(String email);
 }

@@ -13,8 +13,10 @@ import dev.aja.aja.user.RoleEnum;
 import dev.aja.aja.user.dto.UserEntityDTO;
 import dev.aja.aja.user.dto.UserEntityNewDTO;
 import dev.aja.aja.user.entity.UserEntity;
-import dev.aja.aja.user.exception.UserAlreadyExistException;
+import dev.aja.aja.user.exception.EmailAlreadyExistException;
 import dev.aja.aja.user.exception.UserInvalidRoleException;
+import dev.aja.aja.user.exception.UserInvalidToEditInformation;
+import dev.aja.aja.user.exception.UsernameAlreadyExistException;
 import dev.aja.aja.user.repository.UserEntityRepository;
 
 /**
@@ -91,12 +93,12 @@ public class UserService {
         Optional<UserEntity> userUsernameOptional = userEntityRepository.findByUsername(userEntityDTO.username());
 
         if (!userUsernameOptional.isEmpty())
-            throw new UserAlreadyExistException("El nombre de usuario que quieres añadir ya existe");
+            throw new UsernameAlreadyExistException("El nombre de usuario que quieres añadir ya existe");
 
         Optional<UserEntity> userMailOptional = userEntityRepository.findByEmail(userEntityDTO.email());
 
         if (!userMailOptional.isEmpty())
-            throw new UserAlreadyExistException("El email de usuario que quieres añadir ya existe");
+            throw new EmailAlreadyExistException("El email de usuario que quieres añadir ya existe");
 
         UserEntity userEntity = UserEntity.builder()
                 .username(userEntityDTO.username())
@@ -132,14 +134,18 @@ public class UserService {
     }
 
     /**
-     * Actualizar UserEntity
+     * Actualizar UserEntity, sólo el propio usuario puede editar su información
      * 
      * @param userEntity userEntity del usuario a actualizar
      * 
      * @throws UsernameNotFoundException si el usuario no existe
      */
     public void editUser(UserEntity userEntity) {
-        checkRoleAdminFromUserContext();
+
+        UserEntity userModifyYourInformation = getUserEntityFromActualUserContext();
+
+        if (!userModifyYourInformation.getId().equals(userEntity.getId()))
+            throw new UserInvalidToEditInformation("Sólo puedes editar tu información");
 
         checkArgumentSize(userEntity.getUsername(), userEntity.getPassword());
 
@@ -148,10 +154,21 @@ public class UserService {
         if (userEntityDB.isEmpty())
             throw new UsernameNotFoundException(null);
 
+        if (userEntityRepository.existsByUsername(userEntity.getUsername())
+                & !userEntityDB.get().getUsername().equals(userEntity.getUsername()))
+            throw new UsernameAlreadyExistException("El nombre de usuario elegido ya existe");
+
+        if (userEntityRepository.existsByEmail(userEntity.getEmail())
+                & !userEntityDB.get().getEmail().equals(userEntity.getEmail()))
+            throw new EmailAlreadyExistException("El correo electrónico elegido ya existe");
+
         UserEntity user = userEntityDB.get();
 
-        if (!user.getPassword().equals(userEntity.getPassword()))
+        if (passwordEncoder().matches(user.getPassword(), passwordEncoder().encode(userEntity.getPassword())))
             user.setPassword(passwordEncoder().encode(userEntity.getPassword()));
+
+        user.setUsername(userEntity.getUsername());
+        user.setEmail(userEntity.getEmail());
 
         userEntityRepository.save(userEntity);
     }
