@@ -50,7 +50,7 @@ public class UserControllerTest {
     private ObjectMapper objectMapper;
 
     UserEntity userAdminTest1, deleteUser2, editUser3;
-    private Cookie cookie;
+    private Cookie adminCookie, userCookie;
 
     /**
      * Añadimos varios usuarios para las pruebas que se van a ir realizando. Nos
@@ -88,14 +88,23 @@ public class UserControllerTest {
 
         userEntityRepository.saveAll(List.of(this.userAdminTest1, this.deleteUser2, this.editUser3));
 
-        ResultActions result = mockMvc.perform(post("/api/auth/login")
-                .param("username", "userAdminTest1")
+        ResultActions resultAdmin = mockMvc.perform(post("/api/auth/login")
+                .param("username", userAdminTest1.getUsername())
                 .param("password", "1234"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.message.username").value("userAdminTest1"))
+                .andExpect(jsonPath("$.message.username").value(userAdminTest1.getUsername()))
                 .andDo(print());
 
-        cookie = result.andReturn().getResponse().getCookie("JWT_TOKEN");
+        this.adminCookie = resultAdmin.andReturn().getResponse().getCookie("JWT_TOKEN");
+
+        ResultActions resultUser = mockMvc.perform(post("/api/auth/login")
+                .param("username", editUser3.getUsername())
+                .param("password", "1234"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.message.username").value(editUser3.getUsername()))
+                .andDo(print());
+
+        this.userCookie = resultUser.andReturn().getResponse().getCookie("JWT_TOKEN");
 
     }
 
@@ -119,7 +128,7 @@ public class UserControllerTest {
                     .build();
 
             mockMvc.perform(post("/api/user")
-                    .cookie(cookie)
+                    .cookie(this.adminCookie)
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(user4)))
                     .andExpect(status().isOk());
@@ -127,7 +136,7 @@ public class UserControllerTest {
             UserEntity user4FromDB = userEntityRepository.findByUsername(user4.getUsername()).get();
 
             MvcResult resultUser = mockMvc.perform(get("/api/user/{id}", user4FromDB.getId().toString())
-                    .cookie(cookie))
+                    .cookie(this.adminCookie))
                     .andExpect(status().isOk())
                     .andDo(print())
                     .andReturn();
@@ -155,7 +164,7 @@ public class UserControllerTest {
     public void deleteUserWithOk() throws Exception {
 
         MvcResult result = mockMvc.perform(delete("/api/user/{id}", this.deleteUser2.getId())
-                .cookie(cookie)
+                .cookie(this.adminCookie)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andDo(print())
@@ -178,7 +187,7 @@ public class UserControllerTest {
         try {
 
             MvcResult resultUser = mockMvc.perform(get("/api/user/{id}", this.editUser3.getId().toString())
-                    .cookie(cookie))
+                    .cookie(this.adminCookie))
                     .andExpect(status().isOk())
                     .andDo(print())
                     .andReturn();
@@ -189,7 +198,7 @@ public class UserControllerTest {
 
             this.editUser3.setUsername("usernamEdited");
             mockMvc.perform(put("/api/user")
-                    .cookie(cookie)
+                    .cookie(this.adminCookie)
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(this.editUser3)))
                     .andExpect(status().isOk())
@@ -226,7 +235,7 @@ public class UserControllerTest {
                     .build();
 
             mockMvc.perform(post("/api/user")
-                    .cookie(cookie)
+                    .cookie(this.adminCookie)
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(userBigUsername)))
                     .andExpect(status().isOk())
@@ -261,12 +270,102 @@ public class UserControllerTest {
                     .build();
 
             mockMvc.perform(post("/api/user")
-                    .cookie(cookie)
+                    .cookie(this.adminCookie)
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(userBigUsername)))
                     .andExpect(status().isOk())
                     .andExpect(result -> assertTrue(
                             result.getResolvedException() instanceof IllegalArgumentException));
+
+        } catch (JacksonException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Intentamos obtener la información del usuario edtUser3 mediante su id,
+     * utilizando un usuario de rol admin. En este caso, el servidor nos devuelve un
+     * response ok, así que también incluiría el user DTO
+     */
+    @Order(6)
+    @Test
+    public void getUserWithAdminWithResultOK() {
+        try {
+
+            mockMvc.perform(get("/api/user/{id}", this.editUser3.getId().toString())
+                    .cookie(this.adminCookie))
+                    .andExpect(status().isOk())
+                    .andDo(print())
+                    .andReturn();
+
+        } catch (JacksonException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Intentamos obtener la información del usuario edtUser3 mediante su id,
+     * utilizando un usuario de rol user. En este caso, el servidor nos devuelve un
+     * response forbidden, que significa que no se ha podido realizar la petición
+     */
+    @Order(7)
+    @Test
+    public void getUserWithUserWithResultNoOK() {
+        try {
+
+            mockMvc.perform(get("/api/user/{id}", this.editUser3.getId().toString())
+                    .cookie(this.userCookie))
+                    .andExpect(status().isForbidden())
+                    .andDo(print())
+                    .andReturn();
+
+        } catch (JacksonException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Intentamos obtener la lista completa de usuarios del foro. Con respuesta ok
+     * al utilizar un usuario de role Admin
+     */
+    @Order(8)
+    @Test
+    public void getAllUsersWithAdminRoleResultOk() {
+        try {
+
+            mockMvc.perform(get("/api/user")
+                    .cookie(this.adminCookie))
+                    .andExpect(status().isOk())
+                    .andDo(print())
+                    .andReturn();
+
+        } catch (JacksonException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Intentamos obtener la lista completa de usuarios del foro. Con respuesta
+     * forbidden al utilizar un usuario de role Admin
+     */
+    @Order(9)
+    @Test
+    public void getAllUsersWithUserRoleResultNoOk() {
+        try {
+
+            mockMvc.perform(get("/api/user")
+                    .cookie(this.userCookie))
+                    .andExpect(status().isForbidden())
+                    .andDo(print())
+                    .andReturn();
 
         } catch (JacksonException e) {
             e.printStackTrace();

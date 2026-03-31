@@ -103,7 +103,7 @@ public class UserController {
      *         respuesta válida es una lista de UserEntityDTO
      */
     @GetMapping("/user/{id}")
-    public ResponseEntity<Map<String, Object>> getUsers(@PathVariable Long id) {
+    public ResponseEntity<Map<String, Object>> getUser(@PathVariable Long id) {
         return ResponseEntity.ok(Map.of("success", true, "message", userService.getUserDTO(id)));
     }
 

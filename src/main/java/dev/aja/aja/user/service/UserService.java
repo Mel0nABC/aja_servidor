@@ -147,7 +147,8 @@ public class UserService {
     }
 
     /**
-     * Proporcionamos el UserEntity de usuario que se proporciona su id
+     * Proporcionamos el UserEntity de usuario que se solicita por su id. Sólo para
+     * administrador
      * 
      * @param id UserEntity id
      * 
@@ -156,6 +157,8 @@ public class UserService {
      * @throws UsernameNotFoundException si el usuario no existe
      */
     public UserEntityDTO getUserDTO(Long id) {
+
+        checkRoleAdminFromUserContext();
 
         Optional<UserEntity> userOptional = userEntityRepository.findById(id);
 
