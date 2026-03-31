@@ -117,7 +117,11 @@ public class UserService {
      * @throws UsernameNotFoundException si el usuario no existe
      */
     public void delUSer(Long id) {
-        checkRoleAdminFromUserContext();
+
+        UserEntity user = getUserEntityFromActualUserContext();
+
+        if (!user.getId().equals(id))
+            checkRoleAdminFromUserContext();
 
         Optional<UserEntity> userEntity = userEntityRepository.findById(id);
 

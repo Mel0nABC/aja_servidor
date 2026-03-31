@@ -8,7 +8,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
-import org.springframework.core.annotation.Order;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -51,8 +50,8 @@ public class UserControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    UserEntity userAdminTest1, deleteUser2, editUser3;
-    private Cookie adminCookie, userCookie;
+    UserEntity userAdminTest1, deleteUser2, editUser3, userForCookie;
+    private Cookie adminCookie, userCookie, otherUserCookie;
 
     /**
      * Añadimos varios usuarios para las pruebas que se van a ir realizando. Nos
@@ -91,7 +90,17 @@ public class UserControllerTest {
                 .registerDate(LocalDate.now())
                 .build();
 
-        userEntityRepository.saveAll(List.of(this.userAdminTest1, this.deleteUser2, this.editUser3));
+        this.userForCookie = UserEntity.builder()
+                .username("usercookie")
+                .password(SecurityConfig.passwordEncoder().encode("1234"))
+                .email("usercookie@mel0n.dev")
+                .isActive(true)
+                .role(RoleEnum.USER.getName())
+                .registerDate(LocalDate.now())
+                .build();
+
+        userEntityRepository
+                .saveAll(List.of(this.userAdminTest1, this.deleteUser2, this.editUser3, this.userForCookie));
 
         ResultActions resultAdmin = mockMvc.perform(post("/api/auth/login")
                 .param("username", userAdminTest1.getUsername())
@@ -111,6 +120,15 @@ public class UserControllerTest {
 
         this.userCookie = resultUser.andReturn().getResponse().getCookie("JWT_TOKEN");
 
+        ResultActions resultUserCookie = mockMvc.perform(post("/api/auth/login")
+                .param("username", userForCookie.getUsername())
+                .param("password", "1234"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.message.username").value(userForCookie.getUsername()))
+                .andDo(print());
+
+        this.otherUserCookie = resultUserCookie.andReturn().getResponse().getCookie("JWT_TOKEN");
+
     }
 
     /**
@@ -118,7 +136,6 @@ public class UserControllerTest {
      * repositorio para obtener su id, luego, mediante /api/user/{id} lo volvemos a
      * recuperar pero esta vez desde el controlador
      */
-    @Order(1)
     @Test
     public void addUserAndGetThisUserWithOK() {
 
@@ -162,9 +179,8 @@ public class UserControllerTest {
      * 
      * @throws Exception
      */
-    @Order(2)
     @Test
-    public void deleteUserWithOk() throws Exception {
+    public void deleteUserWithAdminResultOk() throws Exception {
 
         MvcResult result = mockMvc.perform(delete("/api/user/{id}", this.deleteUser2.getId())
                 .cookie(this.adminCookie)
@@ -178,12 +194,49 @@ public class UserControllerTest {
     }
 
     /**
+     * Un usuario intenta eliminar su propia cuenta, obteniendo resultado favorable
+     * 
+     * @throws Exception
+     */
+    @Test
+    public void autoDeleteUserAccountWithResultOk() throws Exception {
+
+        MvcResult result = mockMvc.perform(delete("/api/user/{id}", this.userForCookie.getId())
+                .cookie(this.otherUserCookie)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andDo(print())
+                .andReturn();
+
+        assertTrue(result.getResponse().getContentAsString().contains("true"));
+
+    }
+
+    /**
+     * Un usuario de role User intentan eliminar otro usuario, no es posible
+     * 
+     * @throws Exception
+     */
+    @Test
+    public void deleteUserWithUserRoleWithResultForbidden() throws Exception {
+
+        MvcResult result = mockMvc.perform(delete("/api/user/{id}", this.userAdminTest1.getId())
+                .cookie(this.otherUserCookie)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isForbidden())
+                .andDo(print())
+                .andReturn();
+
+        assertTrue(result.getResponse().getContentAsString().contains("false"));
+
+    }
+
+    /**
      * Obtenemos el usuario para comprobar, que está guardado y contiene el nombre
      * con el que se guardó. Seguidamente, editamos su nombre de usuario, lo
      * guardamos y, desde el repositorio volvemos a obtener ese usuario utilizando
      * su id para comprobar que el nombre de usuario se cambió con éxito
      */
-    @Order(3)
     @Test
     public void updateUserWithOk() {
 
@@ -223,7 +276,6 @@ public class UserControllerTest {
      * excepción IllegalARgumentException que tenemos aplicada en UserService en su
      * método addUser
      */
-    @Order(4)
     @Test
     public void addNewUserWithBigUsername() {
         try {
@@ -258,7 +310,6 @@ public class UserControllerTest {
      * método addUser. Se ha utilizado 65 carácteres, porque el SHA256 del hash de
      * contraseña aplica 64 de tamaño máximo
      */
-    @Order(5)
     @Test
     public void addNewUserWithBigPassword() {
         try {
@@ -292,7 +343,6 @@ public class UserControllerTest {
      * utilizando un usuario de rol admin. En este caso, el servidor nos devuelve un
      * response ok, así que también incluiría el user DTO
      */
-    @Order(6)
     @Test
     public void getUserWithAdminWithResultOK() {
         try {
@@ -315,7 +365,6 @@ public class UserControllerTest {
      * utilizando un usuario de rol user. En este caso, el servidor nos devuelve un
      * response forbidden, que significa que no se ha podido realizar la petición
      */
-    @Order(7)
     @Test
     public void getUserWithUserWithResultNoOK() {
         try {
@@ -337,7 +386,6 @@ public class UserControllerTest {
      * Intentamos obtener la lista completa de usuarios del foro. Con respuesta ok
      * al utilizar un usuario de role Admin
      */
-    @Order(8)
     @Test
     public void getAllUsersWithAdminRoleResultOk() {
         try {
@@ -359,7 +407,6 @@ public class UserControllerTest {
      * Intentamos obtener la lista completa de usuarios del foro. Con respuesta
      * forbidden al utilizar un usuario de role Admin
      */
-    @Order(9)
     @Test
     public void getAllUsersWithUserRoleResultNoOk() {
         try {
