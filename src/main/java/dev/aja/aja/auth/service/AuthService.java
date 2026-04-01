@@ -2,7 +2,6 @@ package dev.aja.aja.auth.service;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -17,7 +16,6 @@ import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.stereotype.Service;
 
-import dev.aja.aja.user.RoleEnum;
 import dev.aja.aja.user.entity.UserEntity;
 import dev.aja.aja.user.repository.UserEntityRepository;
 import dev.aja.aja.user.service.UserService;

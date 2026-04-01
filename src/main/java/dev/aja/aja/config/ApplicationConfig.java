@@ -61,6 +61,7 @@ public class ApplicationConfig {
         LocalContainerEntityManagerFactoryBean factory = new LocalContainerEntityManagerFactoryBean();
         factory.setJpaVendorAdapter(vendorAdapter);
         factory.setPackagesToScan("dev.aja.aja");
+        
         factory.setDataSource(dataSource());
 
         // Properties to recreate tables when restart application.

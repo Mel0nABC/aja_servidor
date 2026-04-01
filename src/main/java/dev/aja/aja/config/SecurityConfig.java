@@ -98,6 +98,11 @@ public class SecurityConfig {
 
                         // ForumController
 
+                        .requestMatchers(HttpMethod.POST, "/api/forum").hasRole(RoleEnum.ADMIN.getName())
+                        .requestMatchers(HttpMethod.DELETE, "/api/forum/**").hasRole(RoleEnum.ADMIN.getName())
+                        .requestMatchers(HttpMethod.PUT, "/api/forum").hasRole(RoleEnum.ADMIN.getName())
+                        .requestMatchers(HttpMethod.GET, "/api/forum/**", "/api/forum").authenticated()
+
                         // TopicController
 
                         // PostController
