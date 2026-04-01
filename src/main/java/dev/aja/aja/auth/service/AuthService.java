@@ -3,6 +3,7 @@ package dev.aja.aja.auth.service;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.security.authentication.AuthenticationManager;
@@ -10,6 +11,7 @@ import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
@@ -17,6 +19,7 @@ import org.springframework.stereotype.Service;
 
 import dev.aja.aja.user.RoleEnum;
 import dev.aja.aja.user.entity.UserEntity;
+import dev.aja.aja.user.repository.UserEntityRepository;
 import dev.aja.aja.user.service.UserService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -33,6 +36,7 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
     private final UserService userService;
     private final JwtEncoder jwtEncoder;
+    private final UserEntityRepository userEntityRepository;
     /**
      * Constante para indicar el nombre de la cookie que se usará para el JWT TOKEN
      */
@@ -48,10 +52,12 @@ public class AuthService {
      * @param jwtEncoder            Bean de instancia JwtEncoder para poder crear el
      *                              JWT_TOKEN
      */
-    public AuthService(AuthenticationManager authenticationManager, UserService userService, JwtEncoder jwtEncoder) {
+    public AuthService(AuthenticationManager authenticationManager, UserService userService, JwtEncoder jwtEncoder,
+            UserEntityRepository userEntityRepository) {
         this.authenticationManager = authenticationManager;
         this.userService = userService;
         this.jwtEncoder = jwtEncoder;
+        this.userEntityRepository = userEntityRepository;
     }
 
     /**
@@ -104,11 +110,16 @@ public class AuthService {
      */
     public String makeJwt(String username) {
 
+        Optional<UserEntity> userOptional = userEntityRepository.findByUsername(username);
+
+        if (userOptional.isEmpty())
+            throw new UsernameNotFoundException("Nombre de usuario o contraseña incorrectos");
+
         JwtClaimsSet claims = JwtClaimsSet.builder()
                 .subject(username)
                 .issuedAt(Instant.now())
                 .expiresAt(Instant.now().plus(UNIT_EXPIRATION_TOKEN, ChronoUnit.DAYS))
-                .claim("roles", List.of(RoleEnum.ADMIN.getName(), RoleEnum.USER.getName())) // roles personalizados
+                .claim("roles", userOptional.get().getRole())
                 .claim("jti", UUID.randomUUID().toString()) // <-- UUID único para más seguridad
                 .build();
 
