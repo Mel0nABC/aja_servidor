@@ -16,6 +16,7 @@ import java.util.UUID;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -86,8 +87,21 @@ public class SecurityConfig {
                 .formLogin((form) -> form.disable())
                 .logout((logout) -> logout.disable())
                 .authorizeHttpRequests((authorize) -> authorize
+
+                        // AuthController
                         .requestMatchers("/api/auth/health", "/api/auth/login").permitAll()
-                        .requestMatchers("/api/user/**").hasRole(RoleEnum.ADMIN.getName())
+
+                        // UserController
+                        .requestMatchers(HttpMethod.POST, "/api/user").permitAll()
+                        .requestMatchers(HttpMethod.PUT, "/api/user").authenticated()
+                        .requestMatchers(HttpMethod.GET, "/api/user/**").hasRole(RoleEnum.ADMIN.getName())
+
+                        // ForumController
+
+                        // TopicController
+
+                        // PostController
+
                         .anyRequest().authenticated())
                 .build();
     }
@@ -242,33 +256,33 @@ public class SecurityConfig {
         // https://docs.spring.io/spring-data/jpa/reference/jpa/getting-started.html
         return args -> {
             // UserEntity admin = UserEntity.builder()
-            //         .username("admin")
-            //         .password(passwordEncoder().encode("1234"))
-            //         .email("admin@aja.dev")
-            //         .role(RoleEnum.ADMIN.getName())
-            //         .registerDate(LocalDate.now())
-            //         .build();
+            // .username("admin")
+            // .password(passwordEncoder().encode("1234"))
+            // .email("admin@aja.dev")
+            // .role(RoleEnum.ADMIN.getName())
+            // .registerDate(LocalDate.now())
+            // .build();
 
             // UserEntity user = UserEntity.builder()
-            //         .username("user")
-            //         .password(passwordEncoder().encode("1234"))
-            //         .email("user@aja.dev")
-            //         .role(RoleEnum.USER.getName())
-            //         .registerDate(LocalDate.now())
-            //         .build();
+            // .username("user")
+            // .password(passwordEncoder().encode("1234"))
+            // .email("user@aja.dev")
+            // .role(RoleEnum.USER.getName())
+            // .registerDate(LocalDate.now())
+            // .build();
 
             // userEntityRepository.saveAll(List.of(admin, user));
 
             // List<UserEntity> userList = new ArrayList<>();
 
             // for (int i = 0; i < 100; i++) {
-            //     userList.add(UserEntity.builder()
-            //             .username("User" + i)
-            //             .password(passwordEncoder().encode("1234"))
-            //             .email("user" + i + "@aja.dev")
-            //             .role(RoleEnum.USER.getName())
-            //             .registerDate(LocalDate.now())
-            //             .build());
+            // userList.add(UserEntity.builder()
+            // .username("User" + i)
+            // .password(passwordEncoder().encode("1234"))
+            // .email("user" + i + "@aja.dev")
+            // .role(RoleEnum.USER.getName())
+            // .registerDate(LocalDate.now())
+            // .build());
             // }
 
             // userEntityRepository.saveAll(userList);
