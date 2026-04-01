@@ -39,7 +39,7 @@ public class UserController {
 
     /**
      * 
-     * Añadir usuario, este endpoint está filtrado sólo para role admin
+     * Añadir usuario, este endpoint es uso público para nuevos usuarios
      * 
      * @param userEntity hay que recibir un UserEntity desde el cliente.
      * 
@@ -58,7 +58,7 @@ public class UserController {
 
     /**
      * 
-     * Añadir usuario, este endpoint está filtrado sólo para role admin
+     * Editar usuario, este endpoint está filtrado sólo usuarios authenticados
      * 
      * @param userEntity hay que recibir un UserEntity desde el cliente.
      * 

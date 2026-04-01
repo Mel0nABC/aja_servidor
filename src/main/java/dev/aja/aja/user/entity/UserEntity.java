@@ -1,7 +1,10 @@
 package dev.aja.aja.user.entity;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
+import dev.aja.aja.post.entity.PostEntity;
 import dev.aja.aja.user.RoleEnum;
 import dev.aja.aja.user.dto.UserEntityDTO;
 import dev.aja.aja.user.service.UserService;
@@ -10,6 +13,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -57,6 +61,10 @@ public class UserEntity {
 
     @Column(nullable = false)
     private LocalDate registerDate;
+
+    @Builder.Default
+    @OneToMany(mappedBy = "user")
+    private List<PostEntity> postList = new ArrayList<>();
 
     /***
      * Método para generar UserEntityDTO con la información de la instancia que

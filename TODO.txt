@@ -6,7 +6,7 @@
 
 ENTIDADES Y PERMISOS:
 
-USUARIOS:
+✅ USUARIOS:
 	✅ REGISTRO/ALTA -> CUALQUIER -> VENTANA LOGIN
 	✅ BAJA/ELIMINAR -> USUARIO/ADMINISTRADOR
 	✅ MODIFICACIÓN -> USUARIO
@@ -38,49 +38,43 @@ POST:
 
 ENTIDADES:
 
-USUARIOS:
-	- id
-	- username
-	- mail
-	- contraseña
-	- isActivo
-	- fechaRegistro
+✅ USUARIOS:
+	✅ - id
+	✅ - username
+	✅ - mail
+	✅ - contraseña
+	✅ - isActivo
+	✅ - fechaRegistro
 
+✅FORUM:
+	✅ - id
+	✅ - titulo
+	✅ - fechaCreación
+	✅ - fechaModificación
+	✅ - topicList
 
+✅TOPIC:
+	✅ - id
+	✅ - nombre
+	✅ - usuario
+	✅ - vistas
+	✅ - fechaCreación
+	✅ - fechaModificación
+	✅ - PostList
 
-FORUM:
-	- id
-	- titulo
-	- fechaCreación
-	- fechaModificación
-	- topicList
-
-
-
-TOPIC:
-	- id
-	- nombre
-	- usuario
-	- vistas
-	- fechaCreación
-	- fechaModificación
-	- PostList
-
-
-
-
-POST:
-- id
-- numeroMensaje
-- usuario
-- texto
-- fechaCreación
-- fechaModificación
+✅POST:
+	✅ - id
+	✅ - numeroMensaje
+	✅ - usuario
+	✅ - texto
+	✅ - fechaCreación
+	✅ - fechaModificación
 
 
 DTO'S PARA ACCIONES:
-USUARIO REGISTRO -> username, password, email
-USUARIO MODIFICACION -> username, password, email
+✅ USUARIO REGISTRO -> username, password, email
+✅ USUARIO MODIFICACION -> UserEntity entero
+USUARIO MODIFICACIÓN -> Endpoint para que un admin pueda cambiar el role a un usuario y convertirlo también en admin
 FORUM REGISTRO -> título
 FORUM MODIFICACIÓN -> id, títutlo
 FORUM BAJA/ELIMINAR -> id

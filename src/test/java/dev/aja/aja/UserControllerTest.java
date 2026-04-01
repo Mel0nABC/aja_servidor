@@ -257,7 +257,8 @@ public class UserControllerTest {
             assertTrue(response.contains(this.editUser3.getUsername()));
 
             UserEntity tmp = new UserEntity(editUser3.getId(), editUser3.getUsername(), editUser3.getPassword(),
-                    editUser3.getEmail(), editUser3.getRole(), editUser3.getIsActive(), editUser3.getRegisterDate());
+                    editUser3.getEmail(), editUser3.getRole(), editUser3.getIsActive(), editUser3.getRegisterDate(),
+                    null);
 
             tmp.setEmail("newemail@ajateam.dev");
 
@@ -269,7 +270,7 @@ public class UserControllerTest {
                     .andDo(print())
                     .andReturn();
 
-            assertEquals(userEntityRepository.findByUsername(tmp.getEmail()).get().getEmail(),
+            assertEquals(userEntityRepository.findByEmail(tmp.getEmail()).get().getEmail(),
                     tmp.getEmail());
 
             // Se cambia el username por último, porque si no la cookie de sesión no es
