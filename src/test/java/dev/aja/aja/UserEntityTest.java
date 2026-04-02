@@ -28,7 +28,7 @@ import dev.aja.aja.user.RoleEnum;
 import dev.aja.aja.user.dto.UserEntityNewDTO;
 import dev.aja.aja.user.entity.UserEntity;
 import dev.aja.aja.user.exception.UserAlreadyExistException;
-import dev.aja.aja.user.repository.UserEntityRepository;
+import dev.aja.aja.user.repository.UserRepository;
 import dev.aja.aja.user.service.UserService;
 import jakarta.transaction.Transactional;
 
@@ -44,7 +44,7 @@ public class UserEntityTest {
     private final UserService userService;
     private final BCryptPasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
-    private final UserEntityRepository userEntityRepository;
+    private final UserRepository userEntityRepository;
     private UserEntity userEntity;
 
     /**
@@ -56,7 +56,7 @@ public class UserEntityTest {
      * @param userEntityRepository
      */
     public UserEntityTest(UserService userService, BCryptPasswordEncoder passwordEncoder,
-            AuthenticationManager authenticationManager, UserEntityRepository userEntityRepository) {
+            AuthenticationManager authenticationManager, UserRepository userEntityRepository) {
         this.userService = userService;
         this.passwordEncoder = passwordEncoder;
         this.authenticationManager = authenticationManager;

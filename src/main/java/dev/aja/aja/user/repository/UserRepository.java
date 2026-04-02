@@ -12,7 +12,7 @@ import dev.aja.aja.user.entity.UserEntity;
  * entidades de UserEntity
  */
 @Repository
-public interface UserEntityRepository extends JpaRepository<UserEntity, Long> {
+public interface UserRepository extends JpaRepository<UserEntity, Long> {
     // https://docs.spring.io/spring-data/jpa/reference/data-commons/repositories/definition.html
 
     /**

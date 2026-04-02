@@ -17,7 +17,7 @@ import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.stereotype.Service;
 
 import dev.aja.aja.user.entity.UserEntity;
-import dev.aja.aja.user.repository.UserEntityRepository;
+import dev.aja.aja.user.repository.UserRepository;
 import dev.aja.aja.user.service.UserService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -34,7 +34,7 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
     private final UserService userService;
     private final JwtEncoder jwtEncoder;
-    private final UserEntityRepository userEntityRepository;
+    private final UserRepository userEntityRepository;
     /**
      * Constante para indicar el nombre de la cookie que se usará para el JWT TOKEN
      */
@@ -51,7 +51,7 @@ public class AuthService {
      *                              JWT_TOKEN
      */
     public AuthService(AuthenticationManager authenticationManager, UserService userService, JwtEncoder jwtEncoder,
-            UserEntityRepository userEntityRepository) {
+            UserRepository userEntityRepository) {
         this.authenticationManager = authenticationManager;
         this.userService = userService;
         this.jwtEncoder = jwtEncoder;

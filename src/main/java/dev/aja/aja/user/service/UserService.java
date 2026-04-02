@@ -17,7 +17,7 @@ import dev.aja.aja.user.exception.EmailAlreadyExistException;
 import dev.aja.aja.user.exception.UserInvalidRoleException;
 import dev.aja.aja.user.exception.UserInvalidToEditInformation;
 import dev.aja.aja.user.exception.UsernameAlreadyExistException;
-import dev.aja.aja.user.repository.UserEntityRepository;
+import dev.aja.aja.user.repository.UserRepository;
 
 /**
  * Clase que se declara como servicio para la carga durante el inicio de Spring
@@ -28,7 +28,7 @@ import dev.aja.aja.user.repository.UserEntityRepository;
 @Service
 public class UserService {
 
-    private final UserEntityRepository userEntityRepository;
+    private final UserRepository userEntityRepository;
     public static final int USERNAME_SIZE = 20;
     public static final int PASSWORD_SIZE = 65;
 
@@ -39,7 +39,7 @@ public class UserService {
      * @param userEntityRepository repositorio que nos da acceso a la tabla de
      *                             usuarios en la base de datos
      */
-    public UserService(UserEntityRepository userEntityRepository) {
+    public UserService(UserRepository userEntityRepository) {
         this.userEntityRepository = userEntityRepository;
     }
 
@@ -170,9 +170,8 @@ public class UserService {
         user.setUsername(userEntity.getUsername());
         user.setEmail(userEntity.getEmail());
 
-
-        System.out.println("USER: "+user.getUsername());
-        System.out.println("PASSWORD: "+user.getPassword());
+        System.out.println("USER: " + user.getUsername());
+        System.out.println("PASSWORD: " + user.getPassword());
 
         userEntityRepository.save(user);
     }

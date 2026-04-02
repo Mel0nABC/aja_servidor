@@ -11,7 +11,7 @@ import dev.aja.aja.auth.service.AuthService;
 import dev.aja.aja.config.SecurityConfig;
 import dev.aja.aja.user.RoleEnum;
 import dev.aja.aja.user.entity.UserEntity;
-import dev.aja.aja.user.repository.UserEntityRepository;
+import dev.aja.aja.user.repository.UserRepository;
 import jakarta.servlet.http.Cookie;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -43,7 +43,7 @@ public class AuthControllerTest {
         private MockMvc mockMvc;
 
         @Autowired
-        private UserEntityRepository userEntityRepository;
+        private UserRepository userEntityRepository;
 
         @Mock
         private AuthService authService;

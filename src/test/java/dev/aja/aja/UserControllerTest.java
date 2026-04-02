@@ -24,7 +24,7 @@ import dev.aja.aja.config.SecurityConfig;
 import dev.aja.aja.user.RoleEnum;
 import dev.aja.aja.user.dto.UserEntityNewDTO;
 import dev.aja.aja.user.entity.UserEntity;
-import dev.aja.aja.user.repository.UserEntityRepository;
+import dev.aja.aja.user.repository.UserRepository;
 import jakarta.servlet.http.Cookie;
 import tools.jackson.core.JacksonException;
 import tools.jackson.databind.ObjectMapper;
@@ -45,7 +45,7 @@ public class UserControllerTest {
     private MockMvc mockMvc;
 
     @Autowired
-    private UserEntityRepository userEntityRepository;
+    private UserRepository userEntityRepository;
 
     @Autowired
     private ObjectMapper objectMapper;

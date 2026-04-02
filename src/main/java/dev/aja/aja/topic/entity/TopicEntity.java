@@ -27,7 +27,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "topic")
+@Table(name = "topics")
 public class TopicEntity {
 
     @Id
