@@ -43,7 +43,7 @@ public class AuthControllerTest {
         private MockMvc mockMvc;
 
         @Autowired
-        private UserRepository userEntityRepository;
+        private UserRepository userRepository;
 
         @Mock
         private AuthService authService;
@@ -63,7 +63,7 @@ public class AuthControllerTest {
                                 .role(RoleEnum.ADMIN.getName())
                                 .build();
 
-                userEntityRepository.save(userEntity);
+                userRepository.save(userEntity);
 
         }
 

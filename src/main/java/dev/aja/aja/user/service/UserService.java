@@ -34,7 +34,7 @@ public class UserService {
 
     /**
      * 
-     * Constructor con la inyecciónd de dependencias necesarias para el srvice
+     * Constructor con la inyecciónd de dependencias necesarias para el servicio
      * 
      * @param userEntityRepository repositorio que nos da acceso a la tabla de
      *                             usuarios en la base de datos

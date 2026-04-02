@@ -31,7 +31,7 @@ public class UserController {
      * Constructor para implementar inyección de dependencias necesarias
      * 
      * @param userService inyección para servicio de usuario, obtenemos
-     *                    acceso a la lígica referente a usuarios
+     *                    acceso a la lógica referente a usuarios
      */
     public UserController(UserService userService) {
         this.userService = userService;

@@ -3,7 +3,6 @@ package dev.aja.aja.forum.controller;
 import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,29 +12,78 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import dev.aja.aja.forum.service.ForumService;
 import dev.aja.aja.topic.dto.ForumEntityNewDTO;
 
+/**
+ * Clase que nos va a gestionar todos los endpoints refentes a forum, obtener,
+ * añadir, editar, eliminar
+ */
 @Controller
 @RequestMapping("/api")
 public class ForumController {
 
+    private final ForumService forumService;
+
+    /**
+     * 
+     * Constructor para implementar inyección de dependencias necesarias
+     * 
+     * @param forumService inyección para servicio de forums, obtenemos
+     *                     acceso a la lógica referente a forum
+     */
+    public ForumController(ForumService forumService) {
+        this.forumService = forumService;
+    }
+
+    /**
+     * Añadir nuevo Forum, sólo con acceso para Administradores
+     * 
+     * @param forumEntityNewDTO record DTO para añadir un nuevo forum.
+     * 
+     * @return retornamos un diccionario, success indica cuál ha sido el resultado y
+     *         message el contenido. En este caso el contenido de respuesta válida
+     *         es un mensaje de texto, si hubiera algún fallo llegarían los
+     *         diccionarios de las excepciones
+     */
     @PostMapping("/forum")
     public ResponseEntity<Map<String, Object>> addForum(@RequestBody ForumEntityNewDTO forumEntityNewDTO) {
 
-        System.out.println(SecurityContextHolder.getContext().getAuthentication());
+        forumService.addForum(forumEntityNewDTO);
 
-        System.out.println("NEW FORUM: ");
         return ResponseEntity
                 .ok(Map.of("success", true, "message", "Nuevo Forum añadido satisfactoriamente"));
     }
 
+    /**
+     * Eliminar Forum, sólo con acceso para Administradores
+     * 
+     * @param forumEntityNewDTO record DTO para añadir un nuevo forum.
+     * 
+     * @return retornamos un diccionario, success indica cuál ha sido el resultado y
+     *         message el contenido. En este caso el contenido de respuesta válida
+     *         es un mensaje de texto, si hubiera algún fallo llegarían los
+     *         diccionarios de las excepciones
+     */
     @DeleteMapping("/forum/{id}")
     public ResponseEntity<Map<String, Object>> delForum(@PathVariable Long id) {
-        System.out.println("DELETE FORUM SECTION: " + id);
+
+        forumService.delForum(id);
+
         return ResponseEntity
                 .ok(Map.of("success", true, "message", "Forum eliminado satisfactoriamente"));
     }
 
+    /**
+     * Editar Forum, sólo con acceso para Administradores
+     * 
+     * @param forumEntityNewDTO record DTO para añadir un nuevo forum.
+     * 
+     * @return retornamos un diccionario, success indica cuál ha sido el resultado y
+     *         message el contenido. En este caso el contenido de respuesta válida
+     *         es un mensaje de texto, si hubiera algún fallo llegarían los
+     *         diccionarios de las excepciones
+     */
     @PutMapping("/forum")
     public ResponseEntity<Map<String, Object>> editForum() {
         System.out.println("EDITAMOS: ");
@@ -43,6 +91,17 @@ public class ForumController {
                 .ok(Map.of("success", true, "message", "Forum editado satisfactoriamente"));
     }
 
+    /**
+     * Obtener todo el contenido de una entidad ForumEntity, acceso para cualquier
+     * usuario cuando entra en esta sección
+     * 
+     * @param id identificador del forum al que se quiere acceder
+     * 
+     * @return retornamos un diccionario, success indica cuál ha sido el resultado y
+     *         message el contenido. En este caso el contenido de respuesta válida
+     *         es toda la información de un ForumEntity, si hubiera algún fallo
+     *         llegarían los diccionarios de las excepciones
+     */
     @GetMapping("/forum/{id}")
     public ResponseEntity<Map<String, Object>> getForum(@PathVariable Long id) {
         System.out.println("GET FORUM SECTION: " + id);
@@ -50,6 +109,15 @@ public class ForumController {
                 .ok(Map.of("success", true, "message", "INFO TOTAL DE UN FORUM"));
     }
 
+    /**
+     * Obtener una lista de ForumEntity, acceso para cualquier
+     * usuario cuando entra en esta sección
+     * 
+     * @return retornamos un diccionario, success indica cuál ha sido el resultado y
+     *         message el contenido. En este caso el contenido de respuesta válida
+     *         es una lista de ForumDTO, si hubiera algún fallo llegarían los
+     *         diccionarios de las excepciones
+     */
     @GetMapping("/forum")
     public ResponseEntity<Map<String, Object>> getAllForum() {
         System.out.println("GET ALL FORUMS");

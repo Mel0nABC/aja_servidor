@@ -10,6 +10,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import dev.aja.aja.forum.exception.ForumAlreadyExistException;
+import dev.aja.aja.forum.exception.ForumNotFoundException;
 import dev.aja.aja.user.exception.EmailAlreadyExistException;
 import dev.aja.aja.user.exception.UserAlreadyExistException;
 import dev.aja.aja.user.exception.UserInvalidRoleException;
@@ -107,7 +109,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(UserInvalidToEditInformation.class)
     public ResponseEntity<Map<String, Object>> userEditError(Exception e) {
         return ResponseEntity
-                .status(HttpStatus.UNAUTHORIZED).body(Map.of("success", false, "message", e.getMessage()));
+                .status(HttpStatus.CONFLICT).body(Map.of("success", false, "message", e.getMessage()));
     }
 
     /**
@@ -119,7 +121,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(UsernameAlreadyExistException.class)
     public ResponseEntity<Map<String, Object>> usernameExist(Exception e) {
         return ResponseEntity
-                .status(HttpStatus.UNAUTHORIZED).body(Map.of("success", false, "message", e.getMessage()));
+                .status(HttpStatus.CONFLICT).body(Map.of("success", false, "message", e.getMessage()));
     }
 
     /**
@@ -131,6 +133,32 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(EmailAlreadyExistException.class)
     public ResponseEntity<Map<String, Object>> emailExist(Exception e) {
         return ResponseEntity
-                .status(HttpStatus.UNAUTHORIZED).body(Map.of("success", false, "message", e.getMessage()));
+                .status(HttpStatus.CONFLICT).body(Map.of("success", false, "message", e.getMessage()));
     }
+
+    /**
+     * 
+     * Al añadir un nuevo foro si este ya existe
+     * 
+     * @param e
+     * @return
+     */
+    @ExceptionHandler(ForumAlreadyExistException.class)
+    public ResponseEntity<Map<String, Object>> forumTitleExist(Exception e) {
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT).body(Map.of("success", false, "message", e.getMessage()));
+    }
+
+    /**
+     * Al eliminar un forum si este no existe
+     * 
+     * @param e
+     * @return
+     */
+    @ExceptionHandler(ForumNotFoundException.class)
+    public ResponseEntity<Map<String, Object>> forumNotFound(Exception e) {
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT).body(Map.of("success", false, "message", e.getMessage()));
+    }
+
 }
