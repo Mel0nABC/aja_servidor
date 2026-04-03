@@ -263,6 +263,7 @@ public class SecurityConfig {
         return args -> {
             // DemoUsers demoUsers = new DemoUsers(userEntityRepository, passwordEncoder());
             // DemoForums demoForums = new DemoForums(forumRepository);
+            // System.out.println("¡Datos para demo añadidos satisfactoriamente!");
         };
     }
 }
