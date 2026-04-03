@@ -34,7 +34,7 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
     private final UserService userService;
     private final JwtEncoder jwtEncoder;
-    private final UserRepository userEntityRepository;
+    private final UserRepository userRepository;
     /**
      * Constante para indicar el nombre de la cookie que se usará para el JWT TOKEN
      */
@@ -51,11 +51,11 @@ public class AuthService {
      *                              JWT_TOKEN
      */
     public AuthService(AuthenticationManager authenticationManager, UserService userService, JwtEncoder jwtEncoder,
-            UserRepository userEntityRepository) {
+            UserRepository userRepository) {
         this.authenticationManager = authenticationManager;
         this.userService = userService;
         this.jwtEncoder = jwtEncoder;
-        this.userEntityRepository = userEntityRepository;
+        this.userRepository = userRepository;
     }
 
     /**
@@ -75,12 +75,20 @@ public class AuthService {
     public UserEntity login(String username, String password, HttpServletRequest request,
             HttpServletResponse response) {
 
+        Optional<UserEntity> userOptional = userRepository.findByUsername(username);
+
+        if (!userOptional.isEmpty()) {
+            if (!userOptional.get().getIsActive()) {
+                throw new DisabledException("Tu usuario está deshabilitado consulta por mail con un admin");
+            }
+        }
+
         Authentication auth = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(username, password));
 
         if (auth != null && auth.isAuthenticated() &&
                 !"anonymousUser".equals(auth.getPrincipal())) {
-            System.out.println("IDENTIFICADO");
+
             String token = makeJwt(username);
             Cookie cookie = new Cookie(JWT_TOKEN_COOKIE_NAME, token);
             cookie.setHttpOnly(true);
@@ -91,9 +99,6 @@ public class AuthService {
         }
 
         SecurityContextHolder.getContext().setAuthentication(auth);
-
-        if (!userService.getUserEntityFromActualUserContext().getIsActive())
-            throw new DisabledException("Tu usuario está deshabilitado consulta por mail con un admin");
 
         return userService.getUserEntityFromActualUserContext();
     }
@@ -108,7 +113,7 @@ public class AuthService {
      */
     public String makeJwt(String username) {
 
-        Optional<UserEntity> userOptional = userEntityRepository.findByUsername(username);
+        Optional<UserEntity> userOptional = userRepository.findByUsername(username);
 
         if (userOptional.isEmpty())
             throw new UsernameNotFoundException("Nombre de usuario o contraseña incorrectos");

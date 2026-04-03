@@ -65,13 +65,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     break;
                 }
             }
-        String username = "";
 
         if (jwtCookie != null) {
 
             Jwt jwt = jwtDecoder.decode(jwtCookie.getValue());
 
-            username = jwt.getSubject();
+            String username = jwt.getSubject();
 
             List<String> roles = jwt.getClaimAsStringList("roles");
 
@@ -82,24 +81,26 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             Authentication auth = new UsernamePasswordAuthenticationToken(username, null, authorities);
 
             SecurityContextHolder.getContext().setAuthentication(auth);
-        }
 
-        Optional<UserEntity> userOptional = userRepository.findByUsername(username);
+            Optional<UserEntity> userOptional = userRepository.findByUsername(username);
 
-        if (!userOptional.isEmpty()) {
-            if (!userOptional.get().getIsActive()) {
-                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            if (!userOptional.isEmpty()) {
+                if (!userOptional.get().getIsActive()) {
 
-                response.setContentType("application/json");
+                    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 
-                response.getWriter().write("""
-                            {
-                                "success": "false",
-                                "message": "Tu usuario está deshabilitado consulta por mail con un admin"
-                            }
-                        """);
-                return;
+                    response.setContentType("application/json");
+
+                    response.getWriter().write("""
+                                {
+                                    "success": "false",
+                                    "message": "Tu usuario está deshabilitado consulta por mail con un admin"
+                                }
+                            """);
+                    return;
+                }
             }
+
         }
 
         filterChain.doFilter(request, response);
