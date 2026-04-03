@@ -1,6 +1,7 @@
 package dev.aja.aja;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.http.MediaType;
@@ -14,15 +15,16 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
 
 import dev.aja.aja.config.SecurityConfig;
+import dev.aja.aja.forum.dto.ForumEntityDTO;
 import dev.aja.aja.forum.entity.ForumEntity;
 import dev.aja.aja.forum.repository.ForumRepository;
 import dev.aja.aja.forum.service.ForumService;
-import dev.aja.aja.topic.dto.ForumEntityNewDTO;
 import dev.aja.aja.user.RoleEnum;
 import dev.aja.aja.user.entity.UserEntity;
 import dev.aja.aja.user.repository.UserRepository;
@@ -121,7 +123,7 @@ public class ForumControllerTest {
     public void addNewForumWithRoleAdminResultOk() {
         try {
 
-            ForumEntityNewDTO newForumDTO = ForumEntityNewDTO.builder()
+            ForumEntityDTO newForumDTO = ForumEntityDTO.builder()
                     .title("Forum Test")
                     .build();
 
@@ -154,7 +156,7 @@ public class ForumControllerTest {
 
             forumRepository.save(forumEntity);
 
-            ForumEntityNewDTO newForumDTO = ForumEntityNewDTO.builder()
+            ForumEntityDTO newForumDTO = ForumEntityDTO.builder()
                     .title("TestExist")
                     .build();
 
@@ -162,7 +164,7 @@ public class ForumControllerTest {
                     .cookie(this.adminCookie)
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(newForumDTO)))
-                    .andExpect(status().isConflict())
+                    .andExpect(status().isFound())
                     .andDo(print());
 
         } catch (JacksonException e) {
@@ -179,7 +181,7 @@ public class ForumControllerTest {
     public void addNewForumWithroleUserResultForbidden() {
         try {
 
-            ForumEntityNewDTO newForumDTO = ForumEntityNewDTO.builder()
+            ForumEntityDTO newForumDTO = ForumEntityDTO.builder()
                     .title("Forum Test")
                     .build();
 
@@ -243,14 +245,14 @@ public class ForumControllerTest {
      * Intentamos eliminar una forum con un id que no existe
      */
     @Test
-    public void delForumWithRoleAdminWithTitleForumErrorResultConflict() {
+    public void delForumWithRoleAdminWithTitleForumErrorResultNotFound() {
         try {
 
             Long id = 9127830127380123L;
 
             mockMvc.perform(delete("/api/forum/" + id)
                     .cookie(this.adminCookie))
-                    .andExpect(status().isConflict())
+                    .andExpect(status().isNotFound())
                     .andDo(print());
 
         } catch (JacksonException e) {
@@ -258,6 +260,186 @@ public class ForumControllerTest {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Obtenemos forumDDBB que es una entidad que seañadió en el BeforeEach,
+     * realizamos la consulta solicitando el id de forumDDBB. Una vez obtenemos la
+     * respuesta, mediante jackson desserializamos el json que nos llegó y acabamos
+     * obteniendo el ForumEntity de la respuesta. Comparamos id's para contrastar
+     * que es el mismo y correcto
+     */
+    @Test
+    public void getForumWithCorrectIdResultOk() {
+        try {
+            ForumEntity forumDDBB = forumRepository.findByTitle(this.forumEntity.getTitle()).get();
+
+            ResultActions result = mockMvc.perform(get("/api/forum/" + forumDDBB.getId())
+                    .cookie(this.adminCookie))
+                    .andExpect(status().isOk())
+                    .andDo(print());
+
+            ObjectMapper mapper = new ObjectMapper();
+
+            String json = result.andReturn().getResponse().getContentAsString();
+
+            ForumEntity forum = mapper.treeToValue(
+                    mapper.readTree(json).get("message"),
+                    ForumEntity.class);
+
+            assertTrue(this.forumEntity.getId().equals(forum.getId()));
+
+        } catch (JacksonException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Añadmos 10 ForumEntity a la base de datos, ademas del que se crea en
+     * BeforeEach, realizamos la consulta y comprobamos que nos devuelve un status
+     * ok, se obtiene la lista de ForumEntity mediante jackson y se valida que el
+     * tamaño de la lista es 10 o más
+     */
+    @Test
+    public void getForumWithIncoorrectIdResultConflict() {
+        try {
+
+            List<ForumEntity> newForumList = new ArrayList<>();
+
+            for (int i = 0; i < 10; i++) {
+                newForumList.add(
+                        ForumEntity.builder()
+                                .title("Title " + i)
+                                .creationDate(LocalDate.now())
+                                .lastModification(LocalDate.now())
+                                .build());
+            }
+
+            forumRepository.saveAll(newForumList);
+
+            ResultActions result = mockMvc.perform(get("/api/forum")
+                    .cookie(this.adminCookie))
+                    .andExpect(status().isOk())
+                    .andDo(print());
+
+            ObjectMapper mapper = new ObjectMapper();
+
+            String json = result.andReturn().getResponse().getContentAsString();
+
+            @SuppressWarnings("unchecked")
+            List<ForumEntity> forumList = mapper.treeToValue(
+                    mapper.readTree(json).get("message"),
+                    List.class);
+
+            System.out.println(forumList);
+            assertTrue(forumList.size() >= 10);
+
+        } catch (JacksonException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Editamos la información (title) de un forum con resultado satisfactorio
+     */
+    @Test
+    public void editForumInformationWithResultOk() {
+        try {
+
+            ForumEntityDTO forumEntityDTO = ForumEntityDTO.builder()
+                    .id(this.forumEntity.getId())
+                    .title("TitleToEdit")
+                    .build();
+
+            ResultActions resultAction = mockMvc.perform(put("/api/forum")
+                    .cookie(this.adminCookie)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(forumEntityDTO)))
+                    .andExpect(status().isOk())
+                    .andDo(print());
+
+            ObjectMapper mapper = new ObjectMapper();
+
+            String json = resultAction.andReturn().getResponse().getContentAsString();
+
+            Boolean result = mapper.treeToValue(
+                    mapper.readTree(json).get("success"),
+                    Boolean.class);
+
+            assertTrue(result);
+
+        } catch (JacksonException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    /**
+     * Se intenta editar un forum, pero nos devuelve forbidden por falta de permisos
+     */
+    @Test
+    public void editForumInformationWithRoleUserResultForbidden() {
+        try {
+
+            ForumEntityDTO forumEntityDTO = ForumEntityDTO.builder()
+                    .id(this.forumEntity.getId())
+                    .title("TitleToEdit")
+                    .build();
+
+            mockMvc.perform(put("/api/forum")
+                    .cookie(this.userCookie)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(forumEntityDTO)))
+                    .andExpect(status().isForbidden())
+                    .andDo(print());
+
+        } catch (JacksonException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    /**
+     * Intentamos editar un forum con un título que ya existe
+     */
+    @Test
+    public void editForumInformationWithTitleExist() {
+        try {
+
+            ForumEntity newForum = ForumEntity.builder()
+                    .title("titleAlreadyExistError")
+                    .creationDate(LocalDate.now())
+                    .lastModification(LocalDate.now())
+                    .build();
+
+            forumRepository.save(newForum);
+
+            ForumEntityDTO forumEntityDTO = ForumEntityDTO.builder()
+                    .id(this.forumEntity.getId())
+                    .title(newForum.getTitle())
+                    .build();
+
+            mockMvc.perform(put("/api/forum")
+                    .cookie(this.adminCookie)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(forumEntityDTO)))
+                    .andExpect(status().isFound())
+                    .andDo(print());
+
+        } catch (JacksonException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
 }

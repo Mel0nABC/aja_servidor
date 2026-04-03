@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import dev.aja.aja.forum.dto.ForumEntityDTO;
 import dev.aja.aja.forum.service.ForumService;
-import dev.aja.aja.topic.dto.ForumEntityNewDTO;
 
 /**
  * Clase que nos va a gestionar todos los endpoints refentes a forum, obtener,
@@ -47,7 +47,7 @@ public class ForumController {
      *         diccionarios de las excepciones
      */
     @PostMapping("/forum")
-    public ResponseEntity<Map<String, Object>> addForum(@RequestBody ForumEntityNewDTO forumEntityNewDTO) {
+    public ResponseEntity<Map<String, Object>> addForum(@RequestBody ForumEntityDTO forumEntityNewDTO) {
 
         forumService.addForum(forumEntityNewDTO);
 
@@ -85,8 +85,10 @@ public class ForumController {
      *         diccionarios de las excepciones
      */
     @PutMapping("/forum")
-    public ResponseEntity<Map<String, Object>> editForum() {
-        System.out.println("EDITAMOS: ");
+    public ResponseEntity<Map<String, Object>> editForum(@RequestBody ForumEntityDTO forumEditDTO) {
+
+        forumService.editForum(forumEditDTO);
+
         return ResponseEntity
                 .ok(Map.of("success", true, "message", "Forum editado satisfactoriamente"));
     }
@@ -104,9 +106,9 @@ public class ForumController {
      */
     @GetMapping("/forum/{id}")
     public ResponseEntity<Map<String, Object>> getForum(@PathVariable Long id) {
-        System.out.println("GET FORUM SECTION: " + id);
+
         return ResponseEntity
-                .ok(Map.of("success", true, "message", "INFO TOTAL DE UN FORUM"));
+                .ok(Map.of("success", true, "message", forumService.getForum(id)));
     }
 
     /**
@@ -120,9 +122,8 @@ public class ForumController {
      */
     @GetMapping("/forum")
     public ResponseEntity<Map<String, Object>> getAllForum() {
-        System.out.println("GET ALL FORUMS");
         return ResponseEntity
-                .ok(Map.of("success", true, "message", "INFO REDUCIDA (DTO) DE TODOS LOS FORUMS"));
+                .ok(Map.of("success", true, "message", forumService.getAllForums()));
     }
 
 }

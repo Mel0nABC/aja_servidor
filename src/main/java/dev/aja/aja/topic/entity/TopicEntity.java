@@ -21,6 +21,9 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * Topic son los temas que habrán dentro de ForumEntity
+ */
 @Data
 @Getter
 @Setter

@@ -3,6 +3,7 @@ package dev.aja.aja.forum.entity;
 import java.time.LocalDate;
 import java.util.List;
 
+import dev.aja.aja.forum.dto.ForumEntityDTO;
 import dev.aja.aja.topic.entity.TopicEntity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -16,12 +17,17 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * Clase forum, son la temáticas principales que generaran el contenido del foro
+ */
 @Data
 @Getter
 @Setter
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
 @Entity
 @Table(name = "forums")
@@ -42,4 +48,11 @@ public class ForumEntity {
 
     @OneToMany(mappedBy = "forum", cascade = CascadeType.ALL)
     private List<TopicEntity> topicList;
+
+    public ForumEntityDTO toDTO() {
+        return ForumEntityDTO.builder()
+                .id(this.id)
+                .title(this.title)
+                .build();
+    }
 }

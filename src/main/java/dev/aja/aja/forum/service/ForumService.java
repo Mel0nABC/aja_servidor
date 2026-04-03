@@ -1,14 +1,16 @@
 package dev.aja.aja.forum.service;
 
 import java.time.LocalDate;
+import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
+import dev.aja.aja.forum.dto.ForumEntityDTO;
 import dev.aja.aja.forum.entity.ForumEntity;
 import dev.aja.aja.forum.exception.ForumAlreadyExistException;
 import dev.aja.aja.forum.exception.ForumNotFoundException;
 import dev.aja.aja.forum.repository.ForumRepository;
-import dev.aja.aja.topic.dto.ForumEntityNewDTO;
 import dev.aja.aja.user.service.UserService;
 
 /**
@@ -43,9 +45,9 @@ public class ForumService {
      * 
      * @param forumEntityNewDTO información para poder crear un nuevo forum
      */
-    public void addForum(ForumEntityNewDTO forumEntityNewDTO) {
+    public void addForum(ForumEntityDTO forumEntityNewDTO) {
 
-        userService.checkRoleAdminFromUserContext();
+        this.userService.checkRoleAdminFromUserContext();
 
         checkForumExist(forumEntityNewDTO.title());
 
@@ -65,13 +67,70 @@ public class ForumService {
      */
     public void delForum(Long id) {
 
-        userService.checkRoleAdminFromUserContext();
+        this.userService.checkRoleAdminFromUserContext();
 
         if (!forumRepository.existsById(id)) {
             throw new ForumNotFoundException("No se ha localizado el forum que se quiere eliminar");
         }
 
         forumRepository.deleteById(id);
+    }
+
+    /**
+     * Editar ForumEntit, se recibe con ForumEntityDTO sólo con el id y el nuevo
+     * título. Se obtiene de la base de datos dicho ForumEntity que corresponde al
+     * id de ForumEntityDTO y editamos título y la fecha de modificación.
+     * Sólo administradores pueden editar.
+     * 
+     * @param forumEditDTO Información que se va a modificar
+     */
+    public void editForum(ForumEntityDTO forumEditDTO) {
+
+        this.userService.checkRoleAdminFromUserContext();
+
+        Optional<ForumEntity> forumOptional = forumRepository.findById(forumEditDTO.id());
+
+        if (forumOptional.isEmpty())
+            throw new ForumNotFoundException("El forum que quiere editar no existe");
+
+        ForumEntity forumToEdit = forumOptional.get();
+
+        Optional<ForumEntity> forumOptionalTitle = forumRepository.findByTitle(forumEditDTO.title());
+
+        if (!forumOptionalTitle.isEmpty())
+            if (!forumToEdit.getId().equals(forumOptionalTitle.get().getId()))
+                throw new ForumAlreadyExistException("El título que quieres asignar ya existe en otro foro");
+
+        forumToEdit.setTitle(forumEditDTO.title());
+        forumToEdit.setLastModification(LocalDate.now());
+
+        forumRepository.save(forumToEdit);
+    }
+
+    /**
+     * Para obtener toda la información de un forum
+     * 
+     * @param id id del forum requerido
+     * @return retornamos una entidad ForumEntity si existe dicho forum o una
+     *         excepción ForumNotFoundException si no existe
+     */
+    public ForumEntity getForum(Long id) {
+
+        Optional<ForumEntity> forumOptional = forumRepository.findById(id);
+
+        if (forumOptional.isEmpty())
+            throw new ForumNotFoundException("No se ha localizado la información del forum requerido");
+
+        return forumOptional.get();
+    }
+
+    /**
+     * Para obtener todos los forums que existan
+     * 
+     * @return devuelve una lista de ForumEntity con o sin entidades
+     */
+    public List<ForumEntity> getAllForums() {
+        return forumRepository.findAll();
     }
 
     /**

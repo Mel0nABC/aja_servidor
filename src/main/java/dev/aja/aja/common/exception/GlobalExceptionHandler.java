@@ -121,7 +121,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(UsernameAlreadyExistException.class)
     public ResponseEntity<Map<String, Object>> usernameExist(Exception e) {
         return ResponseEntity
-                .status(HttpStatus.CONFLICT).body(Map.of("success", false, "message", e.getMessage()));
+                .status(HttpStatus.FOUND).body(Map.of("success", false, "message", e.getMessage()));
     }
 
     /**
@@ -133,7 +133,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(EmailAlreadyExistException.class)
     public ResponseEntity<Map<String, Object>> emailExist(Exception e) {
         return ResponseEntity
-                .status(HttpStatus.CONFLICT).body(Map.of("success", false, "message", e.getMessage()));
+                .status(HttpStatus.FOUND).body(Map.of("success", false, "message", e.getMessage()));
     }
 
     /**
@@ -146,7 +146,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ForumAlreadyExistException.class)
     public ResponseEntity<Map<String, Object>> forumTitleExist(Exception e) {
         return ResponseEntity
-                .status(HttpStatus.CONFLICT).body(Map.of("success", false, "message", e.getMessage()));
+                .status(HttpStatus.FOUND).body(Map.of("success", false, "message", e.getMessage()));
     }
 
     /**
@@ -158,7 +158,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ForumNotFoundException.class)
     public ResponseEntity<Map<String, Object>> forumNotFound(Exception e) {
         return ResponseEntity
-                .status(HttpStatus.CONFLICT).body(Map.of("success", false, "message", e.getMessage()));
+                .status(HttpStatus.NOT_FOUND).body(Map.of("success", false, "message", e.getMessage()));
     }
 
 }

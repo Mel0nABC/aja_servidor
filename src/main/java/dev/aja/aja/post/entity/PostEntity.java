@@ -18,6 +18,9 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * Clase para los mensaje que se podrán postear en TopicEntity
+ */
 @Data
 @Getter
 @Setter
@@ -53,7 +56,5 @@ public class PostEntity {
     @ManyToOne
     @JoinColumn(name = "topic_id", nullable = false)
     private TopicEntity topic;
-
-
 
 }
