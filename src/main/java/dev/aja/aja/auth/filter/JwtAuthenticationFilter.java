@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -88,8 +87,19 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         Optional<UserEntity> userOptional = userRepository.findByUsername(username);
 
         if (!userOptional.isEmpty()) {
-            if (!userOptional.get().getIsActive())
-                throw new DisabledException("Este usuario está deshabilitado");
+            if (!userOptional.get().getIsActive()) {
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+
+                response.setContentType("application/json");
+
+                response.getWriter().write("""
+                            {
+                                "success": "false",
+                                "message": "Tu usuario está deshabilitado consulta por mail con un admin"
+                            }
+                        """);
+                return;
+            }
         }
 
         filterChain.doFilter(request, response);

@@ -93,7 +93,7 @@ public class AuthService {
         SecurityContextHolder.getContext().setAuthentication(auth);
 
         if (!userService.getUserEntityFromActualUserContext().getIsActive())
-            throw new DisabledException("Tu usuario está deshabilitado, consulta por mail con un admin");
+            throw new DisabledException("Tu usuario está deshabilitado consulta por mail con un admin");
 
         return userService.getUserEntityFromActualUserContext();
     }
