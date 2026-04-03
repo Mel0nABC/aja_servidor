@@ -160,5 +160,4 @@ public class GlobalExceptionHandler {
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND).body(Map.of("success", false, "message", e.getMessage()));
     }
-
 }

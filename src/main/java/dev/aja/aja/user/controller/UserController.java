@@ -95,6 +95,23 @@ public class UserController {
     }
 
     /**
+     * Para deshabilitar un usuario y no tenga acceso. Sólo por admins
+     * 
+     * @param id id del usuario
+     * @return retornamos un diccionario, success indica cuál ha sido el resultado y
+     *         message el contenido. En este caso el contenido de respuesta válida
+     *         es un mensaje de texto, si hubiera algún fallo llegarían los
+     *         diccionarios de las excepciones
+     */
+    @PutMapping("/user/disable/{id}")
+    public ResponseEntity<Map<String, Object>> disableUser(@PathVariable Long id) {
+
+        userService.disableUser(id);
+
+        return ResponseEntity.ok(Map.of("success", true, "message", "Usuario eliminado satisfactoriamente"));
+    }
+
+    /**
      * 
      * Obtener el usuario que hay en la base de datos.
      * 

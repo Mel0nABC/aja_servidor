@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
@@ -439,6 +440,94 @@ public class UserControllerTest {
             mockMvc.perform(get("/api/user")
                     .cookie(this.userCookie))
                     .andExpect(status().isForbidden())
+                    .andDo(print())
+                    .andReturn();
+
+        } catch (JacksonException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Test para deshabilitar un usuario con resultado ok. Sólo un Admin puede
+     * hacerlo
+     */
+    @Test
+    public void disableUserWithAdminRoleResultOk() {
+        try {
+
+            mockMvc.perform(put("/api/user/disable/" + editUser3.getId())
+                    .cookie(this.adminCookie))
+                    .andExpect(status().isOk())
+                    .andDo(print())
+                    .andReturn();
+
+        } catch (JacksonException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Test para deshabilitar un usuario con resultado no permitido. Sólo un Admin
+     * puede hacerlo
+     */
+    @Test
+    public void disableUserWithUserRoleResultForbidden() {
+        try {
+
+            mockMvc.perform(put("/api/user/disable/" + editUser3.getId())
+                    .cookie(this.userCookie))
+                    .andExpect(status().isForbidden())
+                    .andDo(print())
+                    .andReturn();
+
+        } catch (JacksonException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Comprobamos si un usuario está deshabilitado, siendo este no estarlo
+     */
+    @Test
+    public void checkIfUserIsEnabled() {
+        try {
+
+            mockMvc.perform(get("/api/user")
+                    .cookie(this.adminCookie))
+                    .andExpect(status().isOk())
+                    .andDo(print())
+                    .andReturn();
+
+        } catch (JacksonException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Comprobamos que un usuario está deshabilitado, estándolo
+     */
+    @Test
+    public void checkIfUserIsDisabled() {
+        try {
+
+            this.userAdminTest1.setIsActive(false);
+
+            userEntityRepository.save(this.userAdminTest1);
+
+            System.out.println(userEntityRepository.findById(this.userAdminTest1.getId()).get());
+
+            mockMvc.perform(get("/api/user")
+                    .cookie(this.adminCookie))
+                    .andExpect(result -> assertTrue(result.getResolvedException() instanceof DisabledException))
                     .andDo(print())
                     .andReturn();
 

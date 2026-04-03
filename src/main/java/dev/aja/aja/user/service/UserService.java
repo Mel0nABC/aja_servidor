@@ -134,6 +134,28 @@ public class UserService {
     }
 
     /**
+     * Deshabilitar usuario, sólo permitido por rol ADMIN
+     * 
+     * @param id id del usuario a deshabilitar
+     */
+    public void disableUser(Long id) {
+
+        checkRoleAdminFromUserContext();
+
+        Optional<UserEntity> userOptional = userEntityRepository.findById(id);
+
+        if (userOptional.isEmpty())
+            throw new UsernameNotFoundException(null);
+
+        UserEntity userEntity = userOptional.get();
+
+        userEntity.setIsActive(true);
+
+        userEntityRepository.save(userEntity);
+
+    }
+
+    /**
      * Actualizar UserEntity, sólo el propio usuario puede editar su información
      * 
      * @param userEntity userEntity del usuario a actualizar

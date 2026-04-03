@@ -3,8 +3,10 @@ package dev.aja.aja.auth.filter;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -16,6 +18,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import dev.aja.aja.auth.service.AuthService;
+import dev.aja.aja.user.entity.UserEntity;
+import dev.aja.aja.user.repository.UserRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
@@ -31,6 +35,7 @@ import jakarta.servlet.http.HttpServletResponse;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtDecoder jwtDecoder;
+    private final UserRepository userRepository;
 
     /**
      * Constructor del filtro para comprobar si hay Jwt Token o no cuando se realiza
@@ -39,8 +44,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
      * @param jwtDecoder inyección de JwtDecoder para decodificar posible token de
      *                   entrada
      */
-    public JwtAuthenticationFilter(JwtDecoder jwtDecoder) {
+    public JwtAuthenticationFilter(JwtDecoder jwtDecoder, UserRepository userRepository) {
         this.jwtDecoder = jwtDecoder;
+        this.userRepository = userRepository;
     }
 
     /***
@@ -60,12 +66,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     break;
                 }
             }
+        String username = "";
 
         if (jwtCookie != null) {
 
             Jwt jwt = jwtDecoder.decode(jwtCookie.getValue());
 
-            String username = jwt.getSubject();
+            username = jwt.getSubject();
 
             List<String> roles = jwt.getClaimAsStringList("roles");
 
@@ -76,6 +83,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             Authentication auth = new UsernamePasswordAuthenticationToken(username, null, authorities);
 
             SecurityContextHolder.getContext().setAuthentication(auth);
+        }
+
+        Optional<UserEntity> userOptional = userRepository.findByUsername(username);
+
+        if (!userOptional.isEmpty()) {
+            if (!userOptional.get().getIsActive())
+                throw new DisabledException("Este usuario está deshabilitado");
         }
 
         filterChain.doFilter(request, response);
