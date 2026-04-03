@@ -64,12 +64,19 @@ public class DemoUsers {
         List<UserEntity> userList = new ArrayList<>();
 
         for (int i = 0; i < 100; i++) {
+
+            Boolean active = true;
+
+            if (i <= 1)
+                active = false;
+
             userList.add(UserEntity.builder()
                     .username("User" + i)
                     .password(passwordEncoder.encode("1234"))
                     .email("user" + i + "@aja.dev")
                     .role(RoleEnum.USER.getName())
                     .registerDate(LocalDate.now())
+                    .isActive(active)
                     .build());
         }
 
