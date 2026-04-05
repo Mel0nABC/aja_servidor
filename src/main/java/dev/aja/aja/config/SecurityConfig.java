@@ -284,9 +284,11 @@ public class SecurityConfig {
     @Bean
     CommandLineRunner runner(UserRepository userEntityRepository, ForumRepository forumRepository) {
         // https://docs.spring.io/spring-data/jpa/reference/jpa/getting-started.html
+
         return args -> {
             // DemoUsers demoUsers = new DemoUsers(userEntityRepository, passwordEncoder());
             // DemoForums demoForums = new DemoForums(forumRepository);
+            // new DemoTopics(demoForums.getForumList(), demoUsers, forumRepository);
             // System.out.println("¡Datos para demo añadidos satisfactoriamente!");
         };
     }

@@ -25,7 +25,7 @@ TOPIC:
 	✅ BAJA/ELIMINAR -> ADMIN
 	✅ MODIFICACIÓN -> USUARIO
 	✅ CONSULTAS -> TODOS
-	DEMO
+	✅ DEMO
 
 
 
@@ -80,7 +80,7 @@ USUARIO MODIFICACIÓN -> Endpoint para que un admin pueda cambiar el role a un u
 ✅ FORUM BAJA/ELIMINAR -> id
 ✅ TOPIC REGISTRO -> titulo, forumId
 ✅ TOPIC BAJA -> id
-TOPIC MODIFICACIÓNM -> id, titulo, forum actual id y nuevo forum id
+✅ TOPIC MODIFICACIÓNM -> id, titulo, forum actual id y nuevo forum id
 POST REGISTRO -> texto
 POST BAJA -> id
 POST MODIFICACIÓN -> id, texto

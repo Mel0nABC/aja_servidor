@@ -17,6 +17,7 @@ public class DemoUsers {
 
     private final UserRepository userEntityRepository;
     private final BCryptPasswordEncoder passwordEncoder;
+    private UserEntity admin, user;
 
     /**
      * Constructor, al cual le pasamos el forumRepository para guardar las
@@ -37,7 +38,7 @@ public class DemoUsers {
      * Crear los dos usuarios principales, uno role ADMIN y otro role USER
      */
     public void createUserAndAdminUsers() {
-        UserEntity admin = UserEntity.builder()
+        this.admin = UserEntity.builder()
                 .username("admin")
                 .password(passwordEncoder.encode("1234"))
                 .email("admin@aja.dev")
@@ -45,7 +46,7 @@ public class DemoUsers {
                 .registerDate(LocalDate.now())
                 .build();
 
-        UserEntity user = UserEntity.builder()
+        this.user = UserEntity.builder()
                 .username("user")
                 .password(passwordEncoder.encode("1234"))
                 .email("user@aja.dev")
@@ -81,6 +82,24 @@ public class DemoUsers {
         }
 
         userEntityRepository.saveAll(userList);
+    }
+
+    /**
+     * Retorna el usuario con role ADMIN
+     * 
+     * @return UserEntity del usuario
+     */
+    public UserEntity getAdmin() {
+        return admin;
+    }
+
+    /**
+     * Retorna el usuario con role USER
+     * 
+     * @return UserEntity del usuario
+     */
+    public UserEntity getUser() {
+        return user;
     }
 
 }
