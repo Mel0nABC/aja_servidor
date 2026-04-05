@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import dev.aja.aja.forum.exception.ForumAlreadyExistException;
 import dev.aja.aja.forum.exception.ForumNotFoundException;
 import dev.aja.aja.topic.exception.TopicAlreadyExistException;
+import dev.aja.aja.topic.exception.TopicNotFoundException;
 import dev.aja.aja.user.exception.EmailAlreadyExistException;
 import dev.aja.aja.user.exception.UserAlreadyExistException;
 import dev.aja.aja.user.exception.UserInvalidRoleException;
@@ -110,7 +111,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(UserInvalidToEditInformation.class)
     public ResponseEntity<Map<String, Object>> userEditError(Exception e) {
         return ResponseEntity
-                .status(HttpStatus.CONFLICT).body(Map.of("success", false, "message", e.getMessage()));
+                .status(HttpStatus.FORBIDDEN).body(Map.of("success", false, "message", e.getMessage()));
     }
 
     /**
@@ -172,5 +173,17 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Map<String, Object>> topicFound(Exception e) {
         return ResponseEntity
                 .status(HttpStatus.FOUND).body(Map.of("success", false, "message", e.getMessage()));
+    }
+
+    /**
+     * Al obtener topic si este no existe
+     * 
+     * @param e Excepción que aporta el mensaje
+     * @return Diccionario con respuesta
+     */
+    @ExceptionHandler(TopicNotFoundException.class)
+    public ResponseEntity<Map<String, Object>> topicNotFound(Exception e) {
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND).body(Map.of("success", false, "message", e.getMessage()));
     }
 }

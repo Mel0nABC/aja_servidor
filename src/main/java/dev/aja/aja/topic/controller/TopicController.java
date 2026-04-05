@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import dev.aja.aja.topic.dto.TopicEditDTO;
 import dev.aja.aja.topic.dto.TopicNewEditDTO;
 import dev.aja.aja.topic.service.TopicService;
 
@@ -69,7 +70,9 @@ public class TopicController {
      *         es un mensaje, si diera un error, indicaría el mensaje con el error
      */
     @PutMapping("/topic")
-    public ResponseEntity<Map<String, Object>> editTopic(@RequestBody TopicNewEditDTO topicEditDTO) {
+    public ResponseEntity<Map<String, Object>> editTopic(@RequestBody TopicEditDTO topicEditDTO) {
+
+        topicService.editTopic(topicEditDTO);
 
         return ResponseEntity.ok(Map.of("success", true, "message", "Topic editado satisfactoriamente"));
     }
@@ -85,8 +88,7 @@ public class TopicController {
      */
     @GetMapping("/topic/{id}")
     public ResponseEntity<Map<String, Object>> getTopic(@PathVariable Long id) {
-
-        return ResponseEntity.ok(Map.of("success", true, "message", "INFORMACIÓN DE TOPIC"));
+        return ResponseEntity.ok(Map.of("success", true, "message", topicService.getTopic(id)));
     }
 
     /**
@@ -99,8 +101,7 @@ public class TopicController {
      */
     @GetMapping("/topic")
     public ResponseEntity<Map<String, Object>> getAllTopic() {
-
-        return ResponseEntity.ok(Map.of("success", true, "message", "INFORMACIÓN DE TODOS LOS TOPICS"));
+        return ResponseEntity.ok(Map.of("success", true, "message", topicService.getAllTopic()));
     }
 
 }

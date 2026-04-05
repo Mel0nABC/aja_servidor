@@ -4,6 +4,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import dev.aja.aja.forum.dto.ForumEntityDTO;
 import dev.aja.aja.topic.entity.TopicEntity;
 import dev.aja.aja.topic.exception.TopicAlreadyExistException;
@@ -50,6 +52,7 @@ public class ForumEntity {
 
     @Builder.Default
     @OneToMany(mappedBy = "forum", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private List<TopicEntity> topicList = new ArrayList<>();
 
     public ForumEntityDTO toDTO() {

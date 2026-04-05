@@ -17,6 +17,8 @@ import jakarta.servlet.http.Cookie;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import java.time.LocalDate;
+
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -61,6 +63,7 @@ public class AuthControllerTest {
                                 .email("test@mel0n.dev")
                                 .isActive(true)
                                 .role(RoleEnum.ADMIN.getName())
+                                .registerDate(LocalDate.now())
                                 .build();
 
                 userRepository.save(userEntity);

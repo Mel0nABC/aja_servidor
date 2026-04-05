@@ -6,10 +6,12 @@ import java.util.List;
 
 import dev.aja.aja.forum.entity.ForumEntity;
 import dev.aja.aja.post.entity.PostEntity;
+import dev.aja.aja.topic.dto.TopicEntityDTO;
 import dev.aja.aja.user.entity.UserEntity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -59,7 +61,22 @@ public class TopicEntity {
     private ForumEntity forum;
 
     @Builder.Default
-    @OneToMany(mappedBy = "topic", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "topic", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<PostEntity> postList = new ArrayList<>();
 
+    /**
+     * Método para crear un DTO, un resumen de TopicEntity para enviar por red
+     * 
+     * @return DTO resumen de TopicEntity
+     */
+    public TopicEntityDTO toDTO() {
+        return TopicEntityDTO.builder()
+                .id(this.id)
+                .title(this.title)
+                .creationDate(this.creationDate)
+                .lastModification(this.lastModification)
+                .userOwner(this.userOwner.toDTO())
+                .forum(this.forum.toDTO())
+                .build();
+    }
 }

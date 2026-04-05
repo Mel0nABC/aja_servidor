@@ -10,12 +10,15 @@ import dev.aja.aja.forum.entity.ForumEntity;
 import dev.aja.aja.forum.exception.ForumNotFoundException;
 import dev.aja.aja.forum.repository.ForumRepository;
 import dev.aja.aja.topic.dto.TopicEditDTO;
+import dev.aja.aja.topic.dto.TopicEntityDTO;
 import dev.aja.aja.topic.dto.TopicNewEditDTO;
 import dev.aja.aja.topic.entity.TopicEntity;
 import dev.aja.aja.topic.exception.TopicAlreadyExistException;
 import dev.aja.aja.topic.exception.TopicNotFoundException;
 import dev.aja.aja.topic.repository.TopicRepository;
+import dev.aja.aja.user.RoleEnum;
 import dev.aja.aja.user.entity.UserEntity;
+import dev.aja.aja.user.exception.UserInvalidToEditInformation;
 import dev.aja.aja.user.service.UserService;
 
 /**
@@ -96,16 +99,81 @@ public class TopicService {
         forumRepository.save(forumEntity);
     }
 
+    /**
+     * Mediante un TopicEditDTO que trae la información justa para poder editar un
+     * TopiEntity, realizamos las validaciones correspondientes y editamos si todo
+     * es ok
+     * 
+     * @param topicEditDTO información básica para editar un TopicEntity
+     */
     public void editTopic(TopicEditDTO topicEditDTO) {
 
+        Optional<TopicEntity> topicOptional = topicRepository.findById(topicEditDTO.id());
+
+        if (topicOptional.isEmpty())
+            throw new TopicNotFoundException("El topic que desea editar no existe");
+
+        TopicEntity topicEntity = topicOptional.get();
+
+        UserEntity userEntity = userService.getUserEntityFromActualUserContext();
+
+        if (!userEntity.getRole().equals(RoleEnum.ADMIN.getName()))
+            if (!topicEntity.getUserOwner().getId().equals(userEntity.getId()))
+                throw new UserInvalidToEditInformation("No puedes editar este topic");
+
+        Optional<TopicEntity> titleTopicOptional = topicRepository.findByTitle(topicEditDTO.title());
+
+        if (!topicEditDTO.title().equals(topicEntity.getTitle()))
+            if (!titleTopicOptional.isEmpty())
+                throw new TopicAlreadyExistException("El nuevo título del topic ya existe");
+
+        topicEntity.setTitle(topicEditDTO.title());
+        topicEntity.setLastModification(LocalDate.now());
+
+        if (!topicEntity.getForum().getId().equals(topicEditDTO.newForumId())) {
+
+            Optional<ForumEntity> newForumEntityOptional = forumRepository.findById(topicEditDTO.newForumId());
+
+            if (newForumEntityOptional.isEmpty())
+                throw new ForumNotFoundException("El nuevo forum elegido no existe");
+
+            ForumEntity oldForumEntity = topicEntity.getForum();
+
+            oldForumEntity.delTopic(topicEntity);
+
+            newForumEntityOptional.get().addTopic(topicEntity);
+
+            forumRepository.saveAll(List.of(oldForumEntity, newForumEntityOptional.get()));
+        } else {
+            topicRepository.save(topicEntity);
+        }
     }
 
-    public TopicEntity getTopic(Long id) {
-        return null;
+    /**
+     * Mediante la id obtenemos toda la información de un TopicEntity y lo
+     * tranformamos a TopicEntityDTO
+     * 
+     * @param id del topic para buscarlo.
+     * @return entidad del tipo TopicEntityDTO, resument de TopicEntity
+     */
+    public TopicEntityDTO getTopic(Long id) {
+
+        Optional<TopicEntity> topicOptional = topicRepository.findById(id);
+
+        if (topicOptional.isEmpty())
+            throw new TopicNotFoundException("El topic seleccionado no existe");
+
+        return topicOptional.get().toDTO();
     }
 
-    public List<TopicEntity> getAllTopic() {
-        return null;
+    /**
+     * Obtenemos la lista de todas las entidades del tipo TopicEntity y las
+     * transformamos al tipo TopicEntityDTO
+     * 
+     * @return lista de entidades del tipo TopicEntityDTO
+     */
+    public List<TopicEntityDTO> getAllTopic() {
+        return topicRepository.findAll().stream().map(topic -> topic.toDTO()).toList();
     }
 
 }
