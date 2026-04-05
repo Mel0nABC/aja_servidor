@@ -44,6 +44,7 @@ import dev.aja.aja.auth.filter.JwtAuthenticationFilter;
 import dev.aja.aja.forum.repository.ForumRepository;
 import dev.aja.aja.user.RoleEnum;
 import dev.aja.aja.user.repository.UserRepository;
+import jakarta.servlet.http.HttpServletResponse;
 
 /**
  * Clase donde se va a especificar toda la confiuración relativa a seguridad de
@@ -80,6 +81,24 @@ public class SecurityConfig {
             throws Exception {
         // https://docs.spring.io/spring-security/reference/servlet/authentication/passwords/index.html
         return http
+                /**
+                 * Fuente ChatGPT y editado por mi.
+                 * 
+                 * Prompt: esta excepciópn, AccessDeniedException no la puedo capturar con el
+                 * GlobalExceptionHandler?
+                 * 
+                 * Se añade la captura de excepciones, para cuando hay un forbidden en el
+                 * auuthorizetHttpRequests poder devolver el diccionario habitual en las
+                 * respuestas, así, el cliente podrá gestionarlo de una manera genérica.
+                 */
+                .exceptionHandling(exception -> exception
+                        .accessDeniedHandler((request, response, ex) -> {
+                            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                            response.setContentType("application/json");
+                            response.getWriter()
+                                    .write("{\"success\":" + false
+                                            + ", \"message\": \"No tienes acceso a este recurso\"}");
+                        }))
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtAuthenticationFilter,
@@ -105,6 +124,11 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/api/forum/**", "/api/forum").authenticated()
 
                         // TopicController
+
+                        .requestMatchers(HttpMethod.POST, "/api/topic").authenticated()
+                        .requestMatchers(HttpMethod.PUT, "/api/topic").authenticated()
+                        .requestMatchers(HttpMethod.GET, "/api/topic/**", "/api/topic").authenticated()
+                        .requestMatchers(HttpMethod.DELETE, "/api/topic/**").hasRole(RoleEnum.ADMIN.getName())
 
                         // PostController
 

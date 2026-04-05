@@ -1,10 +1,12 @@
 package dev.aja.aja.forum.entity;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import dev.aja.aja.forum.dto.ForumEntityDTO;
 import dev.aja.aja.topic.entity.TopicEntity;
+import dev.aja.aja.topic.exception.TopicAlreadyExistException;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -46,13 +48,30 @@ public class ForumEntity {
     @Column(nullable = false)
     private LocalDate lastModification;
 
-    @OneToMany(mappedBy = "forum", cascade = CascadeType.ALL)
-    private List<TopicEntity> topicList;
+    @Builder.Default
+    @OneToMany(mappedBy = "forum", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<TopicEntity> topicList = new ArrayList<>();
 
     public ForumEntityDTO toDTO() {
         return ForumEntityDTO.builder()
                 .id(this.id)
                 .title(this.title)
                 .build();
+    }
+
+    public void addTopic(TopicEntity topicEntity) {
+
+        Boolean result = topicList.stream().anyMatch(topic -> topic.getTitle().equals(topicEntity.getTitle()));
+
+        if (result)
+            throw new TopicAlreadyExistException("El topic con el títutlo <" + topicEntity.getTitle() + "> ya existe");
+
+        topicList.add(topicEntity);
+        topicEntity.setForum(this);
+    }
+
+    public void delTopic(TopicEntity topicEntity) {
+        topicList.remove(topicEntity);
+        topicEntity.setForum(null);
     }
 }

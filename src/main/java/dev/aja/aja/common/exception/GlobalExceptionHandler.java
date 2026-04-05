@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import dev.aja.aja.forum.exception.ForumAlreadyExistException;
 import dev.aja.aja.forum.exception.ForumNotFoundException;
+import dev.aja.aja.topic.exception.TopicAlreadyExistException;
 import dev.aja.aja.user.exception.EmailAlreadyExistException;
 import dev.aja.aja.user.exception.UserAlreadyExistException;
 import dev.aja.aja.user.exception.UserInvalidRoleException;
@@ -115,8 +116,8 @@ public class GlobalExceptionHandler {
     /**
      * Cuando se edita un username o se quiere añadir un nuevo usuario
      * 
-     * @param e
-     * @return
+     * @param e Excepción que aporta el mensaje
+     * @return Diccionario con respuesta
      */
     @ExceptionHandler(UsernameAlreadyExistException.class)
     public ResponseEntity<Map<String, Object>> usernameExist(Exception e) {
@@ -127,8 +128,8 @@ public class GlobalExceptionHandler {
     /**
      * Cuando se edita un email o se quiere añadir un nuevo usuario
      * 
-     * @param e
-     * @return
+     * @param e Excepción que aporta el mensaje
+     * @return Diccionario con respuesta
      */
     @ExceptionHandler(EmailAlreadyExistException.class)
     public ResponseEntity<Map<String, Object>> emailExist(Exception e) {
@@ -140,8 +141,8 @@ public class GlobalExceptionHandler {
      * 
      * Al añadir un nuevo foro si este ya existe
      * 
-     * @param e
-     * @return
+     * @param e Excepción que aporta el mensaje
+     * @return Diccionario con respuesta
      */
     @ExceptionHandler(ForumAlreadyExistException.class)
     public ResponseEntity<Map<String, Object>> forumTitleExist(Exception e) {
@@ -152,12 +153,24 @@ public class GlobalExceptionHandler {
     /**
      * Al eliminar un forum si este no existe
      * 
-     * @param e
-     * @return
+     * @param e Excepción que aporta el mensaje
+     * @return Diccionario con respuesta
      */
     @ExceptionHandler(ForumNotFoundException.class)
     public ResponseEntity<Map<String, Object>> forumNotFound(Exception e) {
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND).body(Map.of("success", false, "message", e.getMessage()));
+    }
+
+    /**
+     * Al añadir un topic si ya existe uno con ese título
+     * 
+     * @param e Excepción que aporta el mensaje
+     * @return Diccionario con respuesta
+     */
+    @ExceptionHandler(TopicAlreadyExistException.class)
+    public ResponseEntity<Map<String, Object>> topicFound(Exception e) {
+        return ResponseEntity
+                .status(HttpStatus.FOUND).body(Map.of("success", false, "message", e.getMessage()));
     }
 }

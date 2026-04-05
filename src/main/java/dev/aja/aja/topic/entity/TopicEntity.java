@@ -1,10 +1,12 @@
 package dev.aja.aja.topic.entity;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import dev.aja.aja.forum.entity.ForumEntity;
 import dev.aja.aja.post.entity.PostEntity;
+import dev.aja.aja.user.entity.UserEntity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -19,6 +21,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
@@ -28,6 +31,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
 @Entity
 @Table(name = "topics")
@@ -47,10 +51,15 @@ public class TopicEntity {
     private LocalDate lastModification;
 
     @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private UserEntity userOwner;
+
+    @ManyToOne
     @JoinColumn(name = "forum_id", nullable = false)
     private ForumEntity forum;
 
-    @OneToMany(mappedBy = "topic", cascade = CascadeType.ALL)
-    private List<PostEntity> postList;
+    @Builder.Default
+    @OneToMany(mappedBy = "topic", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<PostEntity> postList = new ArrayList<>();
 
 }
