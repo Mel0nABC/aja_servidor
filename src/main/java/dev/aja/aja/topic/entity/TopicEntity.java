@@ -64,6 +64,16 @@ public class TopicEntity {
     @OneToMany(mappedBy = "topic", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<PostEntity> postList = new ArrayList<>();
 
+    public void addPost(PostEntity postEntity) {
+        postList.add(postEntity);
+        postEntity.setTopic(this);
+    }
+
+    public void delPost(PostEntity postEntity) {
+        postList.remove(postEntity);
+        postEntity.setTopic(null);
+    }
+
     /**
      * Método para crear un DTO, un resumen de TopicEntity para enviar por red
      * 

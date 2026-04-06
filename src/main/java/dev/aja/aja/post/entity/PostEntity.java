@@ -2,6 +2,7 @@ package dev.aja.aja.post.entity;
 
 import java.time.LocalDate;
 
+import dev.aja.aja.post.dto.PostEntityDTO;
 import dev.aja.aja.topic.entity.TopicEntity;
 import dev.aja.aja.user.entity.UserEntity;
 import jakarta.persistence.Column;
@@ -37,6 +38,7 @@ public class PostEntity {
     private Long id;
 
     @Builder.Default
+    @Column(nullable = false)
     private Long messageNumber = 0L;
 
     @ManyToOne
@@ -44,10 +46,7 @@ public class PostEntity {
     private UserEntity user;
 
     @Column(nullable = false)
-    private String postText;
-
-    @Column(nullable = false)
-    private String title;
+    private String text;
 
     @Column(nullable = false)
     private LocalDate creationDate;
@@ -58,5 +57,23 @@ public class PostEntity {
     @ManyToOne
     @JoinColumn(name = "topic_id", nullable = false)
     private TopicEntity topic;
+
+    /**
+     * Método para convertir un PostEntity en un PostEntityDTO simplificando alguna
+     * información
+     * 
+     * @return PostEntityDTO
+     */
+    public PostEntityDTO toDTO() {
+        return PostEntityDTO.builder()
+                .id(this.id)
+                .messageNumber(this.messageNumber)
+                .user(this.user.toDTO())
+                .text(this.text)
+                .creationDate(creationDate)
+                .lastModification(lastModification)
+                .topic(this.topic.toDTO())
+                .build();
+    }
 
 }

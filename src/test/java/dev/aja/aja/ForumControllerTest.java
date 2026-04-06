@@ -333,7 +333,6 @@ public class ForumControllerTest {
                     mapper.readTree(json).get("message"),
                     List.class);
 
-            System.out.println(forumList);
             assertTrue(forumList.size() >= 10);
 
         } catch (JacksonException e) {

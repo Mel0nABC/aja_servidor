@@ -16,6 +16,10 @@ import dev.aja.aja.topic.dto.TopicEditDTO;
 import dev.aja.aja.topic.dto.TopicNewEditDTO;
 import dev.aja.aja.topic.service.TopicService;
 
+/**
+ * Clase que nos va a gestionar todos los endpoints refentes a Topic, obtener,
+ * añadir, editar, eliminar
+ */
 @Controller
 @RequestMapping("/api")
 public class TopicController {
