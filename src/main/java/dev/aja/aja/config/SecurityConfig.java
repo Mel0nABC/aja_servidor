@@ -42,6 +42,7 @@ import com.nimbusds.jose.proc.SecurityContext;
 
 import dev.aja.aja.auth.filter.JwtAuthenticationFilter;
 import dev.aja.aja.forum.repository.ForumRepository;
+import dev.aja.aja.post.repository.PostRepository;
 import dev.aja.aja.user.RoleEnum;
 import dev.aja.aja.user.repository.UserRepository;
 import jakarta.servlet.http.HttpServletResponse;
@@ -282,13 +283,15 @@ public class SecurityConfig {
      * @return
      */
     @Bean
-    CommandLineRunner runner(UserRepository userEntityRepository, ForumRepository forumRepository) {
+    CommandLineRunner runner(UserRepository userEntityRepository, ForumRepository forumRepository,
+            PostRepository postRepository) {
         // https://docs.spring.io/spring-data/jpa/reference/jpa/getting-started.html
 
         return args -> {
             // DemoUsers demoUsers = new DemoUsers(userEntityRepository, passwordEncoder());
             // DemoForums demoForums = new DemoForums(forumRepository);
             // new DemoTopics(demoForums.getForumList(), demoUsers, forumRepository);
+            // new DemoPosts(forumRepository.findAll(), userEntityRepository.findAll(), forumRepository, postRepository);
             // System.out.println("¡Datos para demo añadidos satisfactoriamente!");
         };
     }

@@ -18,6 +18,7 @@ public class DemoUsers {
     private final UserRepository userEntityRepository;
     private final BCryptPasswordEncoder passwordEncoder;
     private UserEntity admin, user;
+    private List<UserEntity> userList;
 
     /**
      * Constructor, al cual le pasamos el forumRepository para guardar las
@@ -31,6 +32,7 @@ public class DemoUsers {
         this.passwordEncoder = passwordEncoder;
 
         createUserAndAdminUsers();
+        createUserListWithNames();
         createUserList();
     }
 
@@ -85,12 +87,77 @@ public class DemoUsers {
     }
 
     /**
+     * Crear una lista de usuarios con nombres reales para luego añadir post con
+     * ellos
+     * 
+     * @return lista de UserEntity
+     */
+    public List<UserEntity> createUserListWithNames() {
+
+        List<UserEntity> userList = new ArrayList<>();
+        /**
+         * Usuarios creados con chatgpt.
+         * Prompt:
+         * con la misma estructura que te voy a mostrar, creame 4 usuarios con
+         * diferentes
+         * usernames y emails y todos que sean RoleEnum.USER.getName() de role
+         * 
+         * UserEntity admin = UserEntity.builder()
+         * .username("admin")
+         * .password(passwordEncoder.encode("1234"))
+         * .email("admin@aja.dev")
+         * .role(RoleEnum.ADMIN.getName())
+         * .registerDate(LocalDate.now())
+         * .build();
+         * 
+         * Luego edité para cambiarlo de lugar y añadirlo a una lista
+         */
+        userList.add(UserEntity.builder()
+                .username("juan")
+                .password(passwordEncoder.encode("1234"))
+                .email("juan@aja.dev")
+                .role(RoleEnum.USER.getName())
+                .registerDate(LocalDate.now())
+                .build());
+
+        userList.add(UserEntity.builder()
+                .username("maria")
+                .password(passwordEncoder.encode("1234"))
+                .email("maria@aja.dev")
+                .role(RoleEnum.USER.getName())
+                .registerDate(LocalDate.now())
+                .build());
+
+        userList.add(UserEntity.builder()
+                .username("carlos")
+                .password(passwordEncoder.encode("1234"))
+                .email("carlos@aja.dev")
+                .role(RoleEnum.USER.getName())
+                .registerDate(LocalDate.now())
+                .build());
+
+        userList.add(UserEntity.builder()
+                .username("laura")
+                .password(passwordEncoder.encode("1234"))
+                .email("laura@aja.dev")
+                .role(RoleEnum.USER.getName())
+                .registerDate(LocalDate.now())
+                .build());
+
+        userEntityRepository.saveAll(userList);
+
+        this.userList = userList;
+
+        return userList;
+    }
+
+    /**
      * Retorna el usuario con role ADMIN
      * 
      * @return UserEntity del usuario
      */
     public UserEntity getAdmin() {
-        return admin;
+        return userEntityRepository.findByUsername(this.admin.getUsername()).get();
     }
 
     /**
@@ -99,7 +166,16 @@ public class DemoUsers {
      * @return UserEntity del usuario
      */
     public UserEntity getUser() {
-        return user;
+        return userEntityRepository.findByUsername(this.user.getUsername()).get();
+    }
+
+    /**
+     * Retorna una lista de usuarios con nombres reales
+     * 
+     * @return lista UserEntity
+     */
+    public List<UserEntity> getUserList() {
+        return userList;
     }
 
 }

@@ -61,7 +61,7 @@ public class TopicEntity {
     private ForumEntity forum;
 
     @Builder.Default
-    @OneToMany(mappedBy = "topic", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "topic", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<PostEntity> postList = new ArrayList<>();
 
     public void addPost(PostEntity postEntity) {
