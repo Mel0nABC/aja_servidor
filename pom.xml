@@ -103,6 +103,15 @@
 
 	<build>
 		<plugins>
+			<!-- Configurar título de API DOCS -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<configuration>
+					<doctitle>Aja Team API DOCS TEA 3</doctitle>
+					<windowtitle>Aja Team API DOCS TEA 3</windowtitle>
+				</configuration>
+			</plugin>
 			<!-- Plugin de compilación -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>

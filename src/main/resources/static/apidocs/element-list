@@ -1,4 +1,5 @@
 dev.aja.aja
+dev.aja.aja.apidocs.controller
 dev.aja.aja.auth.controller
 dev.aja.aja.auth.filter
 dev.aja.aja.auth.service
