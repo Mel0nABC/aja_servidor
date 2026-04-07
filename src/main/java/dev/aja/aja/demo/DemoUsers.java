@@ -21,11 +21,12 @@ public class DemoUsers {
     private List<UserEntity> userList;
 
     /**
-     * Constructor, al cual le pasamos el forumRepository para guardar las
+     * Constructor, al cual le pasamos el userEntityRepository para guardar las
      * instancias de UserEntity y passwordEncoder para codificar contraseñas
      * 
-     * @param forumRepository para guardar las entidades Forum creadas
-     * @param passwordEncoder para codificar las contraseñas
+     * @param userEntityRepository repositorio para realizar acciones en la base de
+     *                             datos de usuarios
+     * @param passwordEncoder      objeto para poder codificar las contraseñas
      */
     public DemoUsers(UserRepository userEntityRepository, BCryptPasswordEncoder passwordEncoder) {
         this.userEntityRepository = userEntityRepository;

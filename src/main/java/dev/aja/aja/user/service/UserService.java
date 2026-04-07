@@ -29,7 +29,14 @@ import dev.aja.aja.user.repository.UserRepository;
 public class UserService {
 
     private final UserRepository userEntityRepository;
+    /**
+     * Tamaño máximo que puede tener un nombre de usuario
+     */
     public static final int USERNAME_SIZE = 20;
+
+    /**
+     * Tamaño máximo que puede tener una contraseña
+     */
     public static final int PASSWORD_SIZE = 65;
 
     /**
@@ -84,7 +91,7 @@ public class UserService {
      * electrónico no existan. Validamos manualmente para evitar excepciones de
      * DataIntegrity
      * 
-     * @param userEntity
+     * @param userEntityDTO
      */
     public void addUser(UserEntityNewDTO userEntityDTO) {
 
@@ -244,8 +251,8 @@ public class UserService {
     /**
      * Se comprueba si username o password exceden de un tamaño máximo
      * 
-     * @param userEntity instancia de UserEntity para obtener tamaño de username y
-     *                   password
+     * @param username nombre de usuario
+     * @param password contraseña del usaurio
      */
     public void checkArgumentSize(String username, String password) {
 

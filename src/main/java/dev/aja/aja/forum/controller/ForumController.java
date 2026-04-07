@@ -58,8 +58,7 @@ public class ForumController {
     /**
      * Eliminar Forum, sólo con acceso para Administradores
      * 
-     * @param forumEntityNewDTO record DTO para añadir un nuevo forum.
-     * 
+     * @param id id del forum que se quiere eliminar
      * @return retornamos un diccionario, success indica cuál ha sido el resultado y
      *         message el contenido. En este caso el contenido de respuesta válida
      *         es un mensaje de texto, si hubiera algún fallo llegarían los
@@ -77,8 +76,7 @@ public class ForumController {
     /**
      * Editar Forum, sólo con acceso para Administradores
      * 
-     * @param forumEntityNewDTO record DTO para añadir un nuevo forum.
-     * 
+     * @param forumEditDTO record DTO para editar un forum
      * @return retornamos un diccionario, success indica cuál ha sido el resultado y
      *         message el contenido. En este caso el contenido de respuesta válida
      *         es un mensaje de texto, si hubiera algún fallo llegarían los

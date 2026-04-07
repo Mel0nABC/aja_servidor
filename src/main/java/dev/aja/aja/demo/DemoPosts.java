@@ -16,6 +16,16 @@ import dev.aja.aja.user.entity.UserEntity;
  */
 public class DemoPosts {
 
+    /**
+     * Constructor de DemoPosts, el mismoya crea, añade y guarda en la bbdd los post
+     * 
+     * @param forumList       lista de forums creados
+     * @param userList        lista de usuarios creados
+     * @param forumRepository repositorio para hacer peticiones a la base de datos
+     *                        tabla forums
+     * @param postRepository  repositorio para hacer peticiones a la base de datos
+     *                        tabla posts
+     */
     public DemoPosts(List<ForumEntity> forumList, List<UserEntity> userList, ForumRepository forumRepository,
             PostRepository postRepository) {
 

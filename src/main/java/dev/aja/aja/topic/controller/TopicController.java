@@ -26,6 +26,12 @@ public class TopicController {
 
     private final TopicService topicService;
 
+    /**
+     * Contructor del controlador con inyección de dependencias
+     * 
+     * @param topicService instancia de TopicService para acceder a la lógica de
+     *                     esta feature
+     */
     public TopicController(TopicService topicService) {
         this.topicService = topicService;
     }

@@ -26,6 +26,8 @@ public class DemoForums {
 
         /**
          * Creamos todos los ejemplos
+         * 
+         * @return lista de forums para la Demo
          */
         public List<ForumEntity> createForumsTitles() {
                 LocalDate dateNow = LocalDate.now();

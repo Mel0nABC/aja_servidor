@@ -42,6 +42,12 @@ public class AuthService {
     private final int UNIT_EXPIRATION_TOKEN = 3;
 
     /**
+     * 
+     * 
+    
+     */
+
+    /**
      * Constructor para implementar inyección de dependencias necesarias
      * 
      * @param authenticationManager inyección para authenticar el usuario
@@ -49,6 +55,8 @@ public class AuthService {
      *                              acceso a la lígica referente a usuarios
      * @param jwtEncoder            Bean de instancia JwtEncoder para poder crear el
      *                              JWT_TOKEN
+     * @param userRepository        repositorio para realizar consultas a la base de
+     *                              datos y la tabla de usuarios
      */
     public AuthService(AuthenticationManager authenticationManager, UserService userService, JwtEncoder jwtEncoder,
             UserRepository userRepository) {
