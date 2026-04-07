@@ -10,6 +10,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class ApidocsController {
 
     /**
+     * Constructor vacío requerido por JPA.
+     */
+    public ApidocsController() {
+
+    }
+
+    /**
      * Método que es llamado mediante un método tipo GET a la ruta /apidocs.
      * 
      * @return Nos reenvía al index.html de la apidocs, ubicado en
