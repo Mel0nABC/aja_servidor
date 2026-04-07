@@ -109,6 +109,10 @@ public class SecurityConfig {
                 .logout((logout) -> logout.disable())
                 .authorizeHttpRequests((authorize) -> authorize
 
+                        // Apidocs
+
+                        .requestMatchers("/apidocs/**").anonymous()
+
                         // AuthController
                         .requestMatchers("/api/auth/health", "/api/auth/login").permitAll()
 
@@ -291,7 +295,8 @@ public class SecurityConfig {
             // DemoUsers demoUsers = new DemoUsers(userEntityRepository, passwordEncoder());
             // DemoForums demoForums = new DemoForums(forumRepository);
             // new DemoTopics(demoForums.getForumList(), demoUsers, forumRepository);
-            // new DemoPosts(forumRepository.findAll(), userEntityRepository.findAll(), forumRepository, postRepository);
+            // new DemoPosts(forumRepository.findAll(), userEntityRepository.findAll(),
+            // forumRepository, postRepository);
             // System.out.println("¡Datos para demo añadidos satisfactoriamente!");
         };
     }
