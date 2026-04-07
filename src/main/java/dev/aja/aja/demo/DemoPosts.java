@@ -10,6 +10,10 @@ import dev.aja.aja.post.entity.PostEntity;
 import dev.aja.aja.post.repository.PostRepository;
 import dev.aja.aja.user.entity.UserEntity;
 
+/**
+ * Clase para generar cientos de PostEntity de ejemplo, para tener contenido a
+ * la hora de realizar pruebas con los clientes
+ */
 public class DemoPosts {
 
     public DemoPosts(List<ForumEntity> forumList, List<UserEntity> userList, ForumRepository forumRepository,

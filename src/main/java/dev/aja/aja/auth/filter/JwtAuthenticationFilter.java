@@ -49,7 +49,24 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     }
 
     /***
-     * Se sobre escribe el método para ajustarlo a las necesidades
+     * Se sobre escribe el método para ajustarlo a las necesidades. En este método
+     * comprobamos si en el request viene la cookie con el nombre en
+     * AuthService.JWT_TOIKEN_COOKIE_NAME, si viene, guardamos su valor en la
+     * variable jwtCookie.
+     * Cuando esta cookie existe, realizamos los siguientes procesos:
+     * - Decodificamos la cookie y obtenemos un objeto del tipo Jwt.
+     * - Obtenemos el username que viene en el jwt.
+     * - Obtenemos los roles.
+     * - Creamos una colección de GrantedAuthority, en este caso para los roles del
+     * usuario y se le asignan todos los que tenga.
+     * - Creamos el Authentication para poderselo añadir al contexto
+     * - Añadimos el Authentication al contexto
+     * - Buscamos el usuario con el username que venía en el JWT.
+     * - Siexiste el usuario, comprobamos si este está activo o no.
+     * - Si no está activo, enviamos una respuesta con response indicando qué
+     * acciones realizar.
+     * - Si está activo, su petición pasará por /api/auth/login y si la
+     * authentificación es correcta, le generará una nueva cookie con el JWT.
      */
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)

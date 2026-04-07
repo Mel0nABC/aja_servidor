@@ -39,6 +39,13 @@ import jakarta.servlet.http.Cookie;
 import tools.jackson.core.JacksonException;
 import tools.jackson.databind.ObjectMapper;
 
+/**
+ * Clase para realizar test de los endpoint de PostController.
+ * 
+ * Utilizamos @Transactional para realizar accesos a la bbdd concretos y,
+ * dejarla como estaba.
+ * 
+ */
 @SpringBootTest
 @AutoConfigureMockMvc
 @Transactional

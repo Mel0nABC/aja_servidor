@@ -20,7 +20,7 @@ ENTIDADES Y PERMISOS:
 	✅ CONSULTAS -> TODOS
 	✅ DEMO
 
-TOPIC:
+✅ TOPIC:
 	✅ REGISTRAR/ALTA -> TODOS
 	✅ BAJA/ELIMINAR -> ADMIN
 	✅ MODIFICACIÓN -> USUARIO
@@ -29,17 +29,17 @@ TOPIC:
 
 
 
-POST:
-	REGISTRAR/ALTA -> USUARIO/ADMIN
-	BAJA/ELIMINAR -> PROPIETARIO/ADMIN
-	MODIFICACIÓN -> PROPIETARIO
-	CONSULTAS -> TODOS
-	DEMO
+✅ POST:
+	✅ REGISTRAR/ALTA -> USUARIO/ADMIN
+	✅ BAJA/ELIMINAR -> PROPIETARIO/ADMIN
+	✅ MODIFICACIÓN -> PROPIETARIO
+	✅ CONSULTAS -> TODOS
+	✅ DEMO
 
 
-❌ - REPASAR TODOS LOS COMENTARIOS EN TODO
+✅ - REPASAR TODOS LOS COMENTARIOS EN TODO
 
-ENTIDADES:
+✅ ENTIDADES:
 
 ✅ USUARIOS:
 	✅ - id
@@ -74,16 +74,16 @@ ENTIDADES:
 	✅ - fechaModificación
 
 
-DTO'S PARA ACCIONES:
+✅ DTO'S PARA ACCIONES:
 ✅ USUARIO REGISTRO -> username, password, email
 ✅ USUARIO MODIFICACION -> UserEntity entero
-USUARIO MODIFICACIÓN -> Endpoint para que un admin pueda cambiar el role a un usuario y convertirlo también en admin
+✅ USUARIO MODIFICACIÓN -> Endpoint para que un admin pueda cambiar el role a un usuario y convertirlo también en admin
 ✅ FORUM REGISTRO -> título
 ✅ FORUM MODIFICACIÓN -> id, títutlo
 ✅ FORUM BAJA/ELIMINAR -> id
 ✅ TOPIC REGISTRO -> titulo, forumId
 ✅ TOPIC BAJA -> id
 ✅ TOPIC MODIFICACIÓNM -> id, titulo, forum actual id y nuevo forum id
-POST REGISTRO -> texto
-POST BAJA -> id
-POST MODIFICACIÓN -> id, texto
+✅ POST REGISTRO -> texto
+✅ POST BAJA -> id
+✅ POST MODIFICACIÓN -> id, texto

@@ -37,6 +37,13 @@ import dev.aja.aja.user.repository.UserRepository;
 import jakarta.servlet.http.Cookie;
 import tools.jackson.databind.ObjectMapper;
 
+/**
+ * Clase para realizar test de los endpoint de TopicController.
+ * 
+ * Utilizamos @Transactional para realizar accesos a la bbdd concretos y,
+ * dejarla como estaba.
+ * 
+ */
 @SpringBootTest
 @AutoConfigureMockMvc
 @Transactional
