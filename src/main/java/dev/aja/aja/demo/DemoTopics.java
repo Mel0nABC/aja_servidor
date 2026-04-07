@@ -8,6 +8,9 @@ import dev.aja.aja.forum.repository.ForumRepository;
 import dev.aja.aja.topic.entity.TopicEntity;
 import dev.aja.aja.user.entity.UserEntity;
 
+/**
+ * Clase para crear Topics para la demo
+ */
 public class DemoTopics {
 
         /**

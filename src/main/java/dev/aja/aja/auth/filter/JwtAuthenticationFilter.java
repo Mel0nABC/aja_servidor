@@ -40,8 +40,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
      * Constructor del filtro para comprobar si hay Jwt Token o no cuando se realiza
      * una conexión
      * 
-     * @param jwtDecoder inyección de JwtDecoder para decodificar posible token de
-     *                   entrada
+     * @param jwtDecoder     inyección de JwtDecoder para decodificar posible token
+     *                       de
+     *                       entrada
+     * @param userRepository repositorio para realizar CRUD a la base de datos y la
+     *                       tabla usuarios
      */
     public JwtAuthenticationFilter(JwtDecoder jwtDecoder, UserRepository userRepository) {
         this.jwtDecoder = jwtDecoder;

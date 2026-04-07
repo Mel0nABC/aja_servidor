@@ -22,7 +22,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
@@ -32,7 +31,6 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-@NoArgsConstructor
 @Builder
 @Entity
 @Table(name = "forums")
@@ -56,6 +54,17 @@ public class ForumEntity {
     @JsonIgnore
     private List<TopicEntity> topicList = new ArrayList<>();
 
+    /**
+     * Constructor vacío requerido por JPA.
+     */
+    public ForumEntity() {
+    }
+
+    /**
+     * Método para crear un ForumEntityDTO de la instancia.
+     * 
+     * @return objeto con información básica
+     */
     public ForumEntityDTO toDTO() {
         return ForumEntityDTO.builder()
                 .id(this.id)
@@ -63,6 +72,11 @@ public class ForumEntity {
                 .build();
     }
 
+    /**
+     * Añadir nuevo TopicEntity al contenido del Forum actual.
+     * 
+     * @param topicEntity nuevo TopicEntity a añadir
+     */
     public void addTopic(TopicEntity topicEntity) {
 
         Boolean result = topicList.stream().anyMatch(topic -> topic.getTitle().equals(topicEntity.getTitle()));
@@ -74,6 +88,11 @@ public class ForumEntity {
         topicEntity.setForum(this);
     }
 
+    /**
+     * Eliminar topic de este forum
+     * 
+     * @param topicEntity topic a eliminar
+     */
     public void delTopic(TopicEntity topicEntity) {
         topicList.remove(topicEntity);
         topicEntity.setForum(null);

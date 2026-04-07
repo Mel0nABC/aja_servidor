@@ -91,7 +91,7 @@ public class UserService {
      * electrónico no existan. Validamos manualmente para evitar excepciones de
      * DataIntegrity
      * 
-     * @param userEntityDTO
+     * @param userEntityDTO información básica para poder añadir un nuevo UserEntity
      */
     public void addUser(UserEntityNewDTO userEntityDTO) {
 

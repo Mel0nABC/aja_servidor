@@ -23,7 +23,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
@@ -33,7 +32,6 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-@NoArgsConstructor
 @Builder
 @Entity
 @Table(name = "topics")
@@ -64,11 +62,27 @@ public class TopicEntity {
     @OneToMany(mappedBy = "topic", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<PostEntity> postList = new ArrayList<>();
 
+    /**
+     * Constructor vacío requerido por JPA.
+     */
+    public TopicEntity() {
+    }
+
+    /**
+     * Añadir nuevo post a este topic
+     * 
+     * @param postEntity post a añadir
+     */
     public void addPost(PostEntity postEntity) {
         postList.add(postEntity);
         postEntity.setTopic(this);
     }
 
+    /**
+     * Eliminar post de este topic
+     * 
+     * @param postEntity post a eliminar
+     */
     public void delPost(PostEntity postEntity) {
         postList.remove(postEntity);
         postEntity.setTopic(null);

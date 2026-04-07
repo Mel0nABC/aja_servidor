@@ -17,7 +17,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
@@ -27,7 +26,6 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-@NoArgsConstructor
 @Builder
 @Entity
 @Table(name = "posts")
@@ -57,6 +55,13 @@ public class PostEntity {
     @ManyToOne
     @JoinColumn(name = "topic_id", nullable = false)
     private TopicEntity topic;
+
+    /**
+     * Constructor vacío requerido por JPA.
+     */
+    public PostEntity() {
+
+    }
 
     /**
      * Método para convertir un PostEntity en un PostEntityDTO simplificando alguna

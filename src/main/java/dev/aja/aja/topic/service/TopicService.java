@@ -32,6 +32,15 @@ public class TopicService {
     private final ForumRepository forumRepository;
     private final UserService userService;
 
+    /**
+     * Constructor para la inyección de dependencias
+     * 
+     * @param topicRepository repositorio para hacer CRUD a la base de datos y la
+     *                        tabla topics
+     * @param forumRepository repositorio para hacer CRUD a la base de datos y la
+     *                        tabla forums
+     * @param userService     lógica de negocio de los usuarios
+     */
     public TopicService(TopicRepository topicRepository, ForumRepository forumRepository, UserService userService) {
         this.topicRepository = topicRepository;
         this.forumRepository = forumRepository;

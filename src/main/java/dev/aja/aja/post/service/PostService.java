@@ -31,6 +31,15 @@ public class PostService {
     private final TopicRepository topicRepository;
     private final UserService userService;
 
+    /**
+     * Constructor para inyección de dependencias
+     * 
+     * @param postRepository  repositorio para hacer CRUD a la base de datos a la
+     *                        tabla posts
+     * @param topicRepository repositorio para hacer CRUD a la base de datos a la
+     *                        tabla topics
+     * @param userService     acceso a la lógica de neogocio de usuarios
+     */
     public PostService(PostRepository postRepository, TopicRepository topicRepository, UserService userService) {
         this.postRepository = postRepository;
         this.topicRepository = topicRepository;
