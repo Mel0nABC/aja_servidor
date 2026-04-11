@@ -1,6 +1,7 @@
 package dev.aja.aja.user.service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -8,7 +9,12 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import dev.aja.aja.post.entity.PostEntity;
+import dev.aja.aja.post.repository.PostRepository;
+import dev.aja.aja.topic.entity.TopicEntity;
+import dev.aja.aja.topic.repository.TopicRepository;
 import dev.aja.aja.user.RoleEnum;
 import dev.aja.aja.user.dto.UserEntityDTO;
 import dev.aja.aja.user.dto.UserEntityNewDTO;
@@ -26,9 +32,12 @@ import dev.aja.aja.user.repository.UserRepository;
  * sesión actual, incluye la lógicade negocio que sea necesaria cara a usuarios
  */
 @Service
+@Transactional
 public class UserService {
 
     private final UserRepository userEntityRepository;
+    private final TopicRepository topicRepository;
+    private final PostRepository postRepository;
     /**
      * Tamaño máximo que puede tener un nombre de usuario
      */
@@ -46,8 +55,11 @@ public class UserService {
      * @param userEntityRepository repositorio que nos da acceso a la tabla de
      *                             usuarios en la base de datos
      */
-    public UserService(UserRepository userEntityRepository) {
+    public UserService(UserRepository userEntityRepository, TopicRepository topicRepository,
+            PostRepository postRepository) {
         this.userEntityRepository = userEntityRepository;
+        this.topicRepository = topicRepository;
+        this.postRepository = postRepository;
     }
 
     /**
@@ -120,7 +132,8 @@ public class UserService {
     }
 
     /**
-     * Eliminar usuario proporcionando su id
+     * Eliminar usuario proporcionando su id. Se asigna un usuario denominado Ghost
+     * a todos los Topic y Post de dicho usuario
      * 
      * @param id identificador del usuario a eliminar
      * @throws UsernameNotFoundException si el usuario no existe
@@ -136,6 +149,30 @@ public class UserService {
 
         if (userEntity.isEmpty())
             throw new UsernameNotFoundException(null);
+
+        UserEntity userGhostToDeletedUsers = userEntityRepository.findByUsername("Deleted User").get();
+
+        List<TopicEntity> topicList = topicRepository.findAll();
+
+        List<PostEntity> postList = new ArrayList<>();
+
+        topicList.forEach(topic -> {
+            if (topic.getUserOwner().getId().equals(id)) {
+                topic.setUserOwner(userGhostToDeletedUsers);
+            }
+
+            topic.getPostList().forEach(post -> {
+                if (post.getUser().getId().equals(id)) {
+                    post.setUser(userGhostToDeletedUsers);
+                    postList.add(post);
+                }
+            });
+
+        });
+
+        postRepository.saveAll(postList);
+
+        topicRepository.saveAllAndFlush(topicList);
 
         userEntityRepository.delete(userEntity.get());
     }

@@ -29,8 +29,11 @@ public class DemoTopics {
 
                         UserEntity owner = demoUsers.getAdmin();
 
-                        if (count < (forumList.size() / 2))
+                        if (count == 1)
                                 owner = demoUsers.getUser();
+
+                        if (count == 2)
+                                owner = demoUsers.getGhost();
 
                         switch (forum.getTitle()) {
 
@@ -308,6 +311,9 @@ public class DemoTopics {
                         System.out.println(forum.getTitle());
                         forumRepository.save(forum);
                         count++;
+
+                        if (count == 3)
+                                count = 0;
                 }
         }
 

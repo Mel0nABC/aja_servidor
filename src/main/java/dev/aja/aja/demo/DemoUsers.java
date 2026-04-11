@@ -17,7 +17,7 @@ public class DemoUsers {
 
     private final UserRepository userEntityRepository;
     private final BCryptPasswordEncoder passwordEncoder;
-    private UserEntity admin, user;
+    private UserEntity admin, user, ghost;
     private List<UserEntity> userList;
 
     /**
@@ -57,7 +57,18 @@ public class DemoUsers {
                 .registerDate(LocalDate.now())
                 .build();
 
-        userEntityRepository.saveAll(List.of(admin, user));
+        /**
+         * Este usuario es para cuándo se elimina un usuario, asignarlo a Topics y Posts
+         */
+        this.ghost = UserEntity.builder()
+                .username("Deleted User")
+                .password(passwordEncoder.encode("X8917283712jaijsd"))
+                .email("ghost@aja.dev")
+                .role(RoleEnum.USER.getName())
+                .registerDate(LocalDate.now())
+                .build();
+
+        userEntityRepository.saveAll(List.of(admin, user, ghost));
     }
 
     /**
@@ -168,6 +179,15 @@ public class DemoUsers {
      */
     public UserEntity getUser() {
         return userEntityRepository.findByUsername(this.user.getUsername()).get();
+    }
+
+    /**
+     * Retorna el usuario con role USER pero denominado GHOST
+     * 
+     * @return UserEntity del usuario
+     */
+    public UserEntity getGhost() {
+        return userEntityRepository.findByUsername(this.ghost.getUsername()).get();
     }
 
     /**

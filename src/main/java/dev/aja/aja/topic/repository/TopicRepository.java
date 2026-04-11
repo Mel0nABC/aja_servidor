@@ -1,5 +1,6 @@
 package dev.aja.aja.topic.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -20,5 +21,13 @@ public interface TopicRepository extends JpaRepository<TopicEntity, Long> {
      * @return Optional, puede o no contener un TopicEntity
      */
     Optional<TopicEntity> findByTitle(String title);
+
+    /**
+     * Devolvemos una lista de todos los TopicEntity que el usuario es el owner
+     * 
+     * @param id del usuario
+     * @return Lista de TopicEntity
+     */
+    List<TopicEntity> findAllByUserOwnerId(Long id);
 
 }
