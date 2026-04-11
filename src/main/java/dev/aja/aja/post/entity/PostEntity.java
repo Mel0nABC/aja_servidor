@@ -40,7 +40,7 @@ public class PostEntity {
     private Long messageNumber = 0L;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_id", nullable = true)
     private UserEntity user;
 
     @Column(nullable = false)

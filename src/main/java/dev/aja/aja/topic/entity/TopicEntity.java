@@ -51,7 +51,7 @@ public class TopicEntity {
     private LocalDate lastModification;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_id", nullable = true)
     private UserEntity userOwner;
 
     @ManyToOne
