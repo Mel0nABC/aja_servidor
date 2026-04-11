@@ -41,7 +41,7 @@ public class UserController {
      * 
      * Añadir usuario, este endpoint es uso público para nuevos usuarios
      * 
-     * @param userEntity hay que recibir un UserEntity desde el cliente.
+     * @param userEntityNewDTO hay que recibir un UserEntity desde el cliente.
      * 
      * @return retornamos un diccionario, success indica cuál ha sido el resultado y
      *         message el contenido. En este caso el contenido de respuesta válida

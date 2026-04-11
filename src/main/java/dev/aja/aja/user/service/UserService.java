@@ -54,6 +54,10 @@ public class UserService {
      * 
      * @param userEntityRepository repositorio que nos da acceso a la tabla de
      *                             usuarios en la base de datos
+     * @param topicRepository      repositorio que nos da acceso a la tabla de
+     *                             topics en la base de datos
+     * @param postRepository       repositorio que nos da acceso a la tabla de
+     *                             posts en la base de datos
      */
     public UserService(UserRepository userEntityRepository, TopicRepository topicRepository,
             PostRepository postRepository) {
