@@ -62,7 +62,7 @@ public class AuthController {
      * 
      * @return retornamos un diccionario, success indica cuál ha sido el resultado y
      *         message el contenido. En este caso el contenido de respuesta válida
-     *         es un boolean, que nos indica si ha sido correcta o o no la acción,
+     *         es un boolean, que nos indica si ha sido correcta o no la acción,
      *         con true o false respectivamente
      */
     @PostMapping("/logout")

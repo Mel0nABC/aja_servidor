@@ -129,8 +129,8 @@ public class ForumService {
      * 
      * @return devuelve una lista de ForumEntity con o sin entidades
      */
-    public List<ForumEntity> getAllForums() {
-        return forumRepository.findAll();
+    public List<ForumEntityDTO> getAllForums() {
+        return forumRepository.findAll().stream().map(forum -> forum.toDTO()).toList();
     }
 
     /**

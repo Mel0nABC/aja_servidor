@@ -106,8 +106,7 @@ public class PostController {
      * @return retornamos un diccionario, success indica cuál ha sido el resultado y
      *         message el contenido. En este caso el contenido de respuesta válida
      *         es una lista de PostEntityDTO, que obtiene la información necesaria
-     *         para
-     *         mostrar en el cliente
+     *         para mostrar en el cliente
      */
     @GetMapping("/post")
     public ResponseEntity<Map<String, Object>> getAllPost() {

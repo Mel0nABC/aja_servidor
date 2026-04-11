@@ -156,6 +156,28 @@ public class UserService {
 
         UserEntity userEntity = userOptional.get();
 
+        userEntity.setIsActive(false);
+
+        userEntityRepository.save(userEntity);
+
+    }
+
+    /**
+     * Habilitar usuario, sólo permitido por rol ADMIN
+     * 
+     * @param id id del usuario a habilitar
+     */
+    public void enableUser(Long id) {
+
+        checkRoleAdminFromUserContext();
+
+        Optional<UserEntity> userOptional = userEntityRepository.findById(id);
+
+        if (userOptional.isEmpty())
+            throw new UsernameNotFoundException(null);
+
+        UserEntity userEntity = userOptional.get();
+
         userEntity.setIsActive(true);
 
         userEntityRepository.save(userEntity);

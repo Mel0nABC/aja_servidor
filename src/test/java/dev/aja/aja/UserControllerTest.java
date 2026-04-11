@@ -16,6 +16,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -464,6 +465,8 @@ public class UserControllerTest {
                     .andDo(print())
                     .andReturn();
 
+            assertFalse(userEntityRepository.findById(editUser3.getId()).get().getIsActive());
+
         } catch (JacksonException e) {
             e.printStackTrace();
         } catch (Exception e) {
@@ -484,6 +487,36 @@ public class UserControllerTest {
                     .andExpect(status().isForbidden())
                     .andDo(print())
                     .andReturn();
+
+        } catch (JacksonException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Test para deshabilitar un usuario con resultado ok. Sólo un Admin puede
+     * hacerlo
+     */
+    @Test
+    public void enableUserWithAdminRoleResultOk() {
+        try {
+
+            // Como está en el contexto, si editamos un usuario, se guarda automáticamente
+            // en la base de datos. Lo editamos para poderlo habilitar después
+            editUser3.setIsActive(false);
+
+            // Comprobamos que está deshabilitado
+            assertFalse(userEntityRepository.findById(editUser3.getId()).get().getIsActive());
+
+            mockMvc.perform(put("/api/user/enable/" + editUser3.getId())
+                    .cookie(this.adminCookie))
+                    .andExpect(status().isOk())
+                    .andDo(print())
+                    .andReturn();
+
+            assertTrue(userEntityRepository.findById(editUser3.getId()).get().getIsActive());
 
         } catch (JacksonException e) {
             e.printStackTrace();

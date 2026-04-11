@@ -93,7 +93,7 @@ public class TopicController {
      * @param id indicamos el id del TopicEntity deseado
      * @return retornamos un diccionario, success indica cuál ha sido el resultado y
      *         message el contenido. En este caso el contenido de respuesta válida
-     *         es una entidad de TopicEntity, si diera un error, indicaría el
+     *         es una entidad de TopicEntityDTO, si diera un error, indicaría el
      *         mensaje con el error
      */
     @GetMapping("/topic/{id}")
@@ -106,7 +106,7 @@ public class TopicController {
      * 
      * @return retornamos un diccionario, success indica cuál ha sido el resultado y
      *         message el contenido. En este caso el contenido de respuesta válida
-     *         es una lista de TopicEntity, si diera un error, indicaría el
+     *         es una lista de TopicEntityDTO, si diera un error, indicaría el
      *         mensaje con el error
      */
     @GetMapping("/topic")

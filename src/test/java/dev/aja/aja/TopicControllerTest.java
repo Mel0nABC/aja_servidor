@@ -194,7 +194,6 @@ public class TopicControllerTest {
             assertTrue(!topicRepository.findByTitle(topicNewEditDTO.title()).isEmpty());
 
         } catch (Exception e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
 
@@ -238,7 +237,6 @@ public class TopicControllerTest {
                     .andDo(print());
 
         } catch (Exception e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }
@@ -261,7 +259,6 @@ public class TopicControllerTest {
             assertTrue(!topicRepository.findById(this.topicToDel.getId()).isEmpty());
 
         } catch (Exception e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }
@@ -278,7 +275,6 @@ public class TopicControllerTest {
                     .andDo(print());
 
         } catch (Exception e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }
@@ -311,7 +307,6 @@ public class TopicControllerTest {
             assertTrue(!topicRepository.findByTitle(this.topicToEdit.getTitle()).isEmpty());
 
         } catch (Exception e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }
@@ -338,7 +333,6 @@ public class TopicControllerTest {
                     .andDo(print());
 
         } catch (Exception e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }
@@ -365,7 +359,6 @@ public class TopicControllerTest {
                     .andExpect(status().isForbidden())
                     .andDo(print());
         } catch (Exception e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }
@@ -398,7 +391,6 @@ public class TopicControllerTest {
                     .anyMatch(topic -> topic.getId().equals(topicEditDTO.id())));
 
         } catch (Exception e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }
@@ -425,7 +417,6 @@ public class TopicControllerTest {
                     .andDo(print());
 
         } catch (Exception e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }
@@ -443,7 +434,6 @@ public class TopicControllerTest {
                     .andDo(print());
 
         } catch (Exception e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }
@@ -461,7 +451,6 @@ public class TopicControllerTest {
                     .andDo(print());
 
         } catch (Exception e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }
@@ -488,7 +477,6 @@ public class TopicControllerTest {
             assertTrue(topicEntityDTOList.size() >= topicList.size());
 
         } catch (Exception e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }

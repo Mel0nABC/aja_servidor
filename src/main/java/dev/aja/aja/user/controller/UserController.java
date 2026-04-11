@@ -49,9 +49,9 @@ public class UserController {
      *         diccionarios de las excepciones
      */
     @PostMapping("/user")
-    public ResponseEntity<Map<String, Object>> addUser(@RequestBody UserEntityNewDTO userEntity) {
+    public ResponseEntity<Map<String, Object>> addUser(@RequestBody UserEntityNewDTO userEntityNewDTO) {
 
-        userService.addUser(userEntity);
+        userService.addUser(userEntityNewDTO);
 
         return ResponseEntity.ok(Map.of("success", true, "message", "Usuario añadido satisfactoriamente"));
     }
@@ -108,7 +108,24 @@ public class UserController {
 
         userService.disableUser(id);
 
-        return ResponseEntity.ok(Map.of("success", true, "message", "Usuario eliminado satisfactoriamente"));
+        return ResponseEntity.ok(Map.of("success", true, "message", "Usuario deshabilitado satisfactoriamente"));
+    }
+
+    /**
+     * Para habilitar un usuario que esté deshabilitado. Sólo por admins
+     * 
+     * @param id id del usuario
+     * @return retornamos un diccionario, success indica cuál ha sido el resultado y
+     *         message el contenido. En este caso el contenido de respuesta válida
+     *         es un mensaje de texto, si hubiera algún fallo llegarían los
+     *         diccionarios de las excepciones
+     */
+    @PutMapping("/user/enable/{id}")
+    public ResponseEntity<Map<String, Object>> enableUser(@PathVariable Long id) {
+
+        userService.enableUser(id);
+
+        return ResponseEntity.ok(Map.of("success", true, "message", "Usuario habilitado satisfactoriamente"));
     }
 
     /**

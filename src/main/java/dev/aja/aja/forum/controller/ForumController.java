@@ -115,7 +115,7 @@ public class ForumController {
      * 
      * @return retornamos un diccionario, success indica cuál ha sido el resultado y
      *         message el contenido. En este caso el contenido de respuesta válida
-     *         es una lista de ForumDTO, si hubiera algún fallo llegarían los
+     *         es una lista de ForumEntityDTO, si hubiera algún fallo llegarían los
      *         diccionarios de las excepciones
      */
     @GetMapping("/forum")
