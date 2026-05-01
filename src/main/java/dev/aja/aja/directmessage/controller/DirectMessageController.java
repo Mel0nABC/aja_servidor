@@ -71,6 +71,26 @@ public class DirectMessageController {
     }
 
     /**
+     * 
+     * Para obtener todas las conversaciones del usuario del contexto, quién hace la
+     * petición
+     * 
+     * @return retornamos un diccionario, success indica cuál ha sido el resultado y
+     *         message el contenido. En este caso el contenido de respuesta válida
+     *         es una lista de todos los DirectMessageEntity del usuario del
+     *         contexto,
+     *         si hubiera algún fallo llegarían los diccionarios de las excepciones
+     */
+
+    @GetMapping("/dm")
+    public ResponseEntity<Map<String, Object>> getAllDirectMessage() {
+
+        return ResponseEntity
+                .ok(Map.of("success", true, "message", directMessageService.getAllDirectMessage()));
+
+    }
+
+    /**
      * Para eliminar la conversación
      * 
      * @param otherUserId id del usuario con el que se tiene la conversación

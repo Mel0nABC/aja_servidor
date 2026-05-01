@@ -2,6 +2,7 @@ package dev.aja.aja.directmessage.dto;
 
 import java.util.List;
 
+import dev.aja.aja.user.dto.UserEntityDTO;
 import lombok.Builder;
 
 /**
@@ -10,7 +11,7 @@ import lombok.Builder;
 @Builder
 public record DirectMessageDTO(
         Long id,
-        List<String> participants,
+        List<UserEntityDTO> participants,
         List<MessageEntityDTO> messages) {
 
 }

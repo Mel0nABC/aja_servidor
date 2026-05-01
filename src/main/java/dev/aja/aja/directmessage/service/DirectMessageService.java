@@ -108,6 +108,12 @@ public class DirectMessageService {
         return dmOptional.get().toDTO();
     }
 
+    public List<DirectMessageDTO> getAllDirectMessage() {
+        UserEntity userEntity = userService.getUserEntityFromActualUserContext();
+
+        return userEntity.getDirectMessages().stream().map(dm -> dm.toDTO()).toList();
+    }
+
     public void delDirectMessage(Long otherUserId) {
         System.out.println("ELIMINAMOS CONVERSACIÓN DE DOS USUARIOS");
     }

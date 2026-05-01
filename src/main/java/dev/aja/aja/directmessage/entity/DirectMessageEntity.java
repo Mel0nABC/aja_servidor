@@ -60,7 +60,7 @@ public class DirectMessageEntity {
 
         return DirectMessageDTO.builder()
                 .id(this.id)
-                .participants(List.of(participants.get(0).getUsername(), participants.get(1).getUsername()))
+                .participants(this.participants.stream().map(user -> user.toDTO()).toList())
                 .messages(this.messages.stream().map(msg -> msg.toDTO()).toList())
                 .build();
     }
