@@ -4,8 +4,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import dev.aja.aja.directmessage.entity.DirectMessageEntity;
 import dev.aja.aja.post.entity.PostEntity;
-import dev.aja.aja.privatemessages.entity.DirectMessageEntity;
 import dev.aja.aja.user.RoleEnum;
 import dev.aja.aja.user.dto.UserEntityDTO;
 import dev.aja.aja.user.service.UserService;

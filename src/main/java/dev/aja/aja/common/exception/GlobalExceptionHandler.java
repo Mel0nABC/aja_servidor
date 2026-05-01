@@ -10,6 +10,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import dev.aja.aja.directmessage.exception.SameUserException;
+import dev.aja.aja.directmessage.exception.UserDestinationNotFoundExcepcion;
 import dev.aja.aja.forum.exception.ForumAlreadyExistException;
 import dev.aja.aja.forum.exception.ForumNotFoundException;
 import dev.aja.aja.topic.exception.TopicAlreadyExistException;
@@ -196,6 +198,30 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(TopicNotFoundException.class)
     public ResponseEntity<Map<String, Object>> topicNotFound(Exception e) {
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND).body(Map.of("success", false, "message", e.getMessage()));
+    }
+
+    /**
+     * Cuando se envia un mensaje a un usuario que ya no existe
+     * 
+     * @param e Excepción que aporta el mensaje
+     * @return Diccionario con respuesta
+     */
+    @ExceptionHandler(UserDestinationNotFoundExcepcion.class)
+    public ResponseEntity<Map<String, Object>> destinationUserNotFound(Exception e) {
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND).body(Map.of("success", false, "message", e.getMessage()));
+    }
+
+    /**
+     * Cuando el usuario de destino es el mismo que el de origen
+     * 
+     * @param e Excepción que aporta el mensaje
+     * @return Diccionario con respuesta
+     */
+    @ExceptionHandler(SameUserException.class)
+    public ResponseEntity<Map<String, Object>> sameDestinationUser(Exception e) {
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND).body(Map.of("success", false, "message", e.getMessage()));
     }

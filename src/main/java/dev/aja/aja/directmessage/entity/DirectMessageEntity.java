@@ -1,4 +1,4 @@
-package dev.aja.aja.privatemessages.entity;
+package dev.aja.aja.directmessage.entity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,7 +51,7 @@ public class DirectMessageEntity {
      * @param userOne       Uno de los dos suers
      * @param userTwo       Segundo de los dos suers
      */
-    public void addMessage(MessageEntity messageEntity, UserEntity userOne, UserEntity userTwo) {
+    public void addMessage(MessageEntity messageEntity) {
         this.messages.add(messageEntity);
     }
 

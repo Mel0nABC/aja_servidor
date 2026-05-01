@@ -5,9 +5,9 @@ import java.util.List;
 
 import org.springframework.transaction.annotation.Transactional;
 
-import dev.aja.aja.privatemessages.entity.DirectMessageEntity;
-import dev.aja.aja.privatemessages.entity.MessageEntity;
-import dev.aja.aja.privatemessages.repository.DirectMessageRepository;
+import dev.aja.aja.directmessage.entity.DirectMessageEntity;
+import dev.aja.aja.directmessage.entity.MessageEntity;
+import dev.aja.aja.directmessage.repository.DirectMessageRepository;
 import dev.aja.aja.user.entity.UserEntity;
 import dev.aja.aja.user.repository.UserRepository;
 
@@ -54,7 +54,7 @@ public class DemoDirectMessage {
                         .directMessage(helloDM)
                         .build();
 
-                helloDM.addMessage(messageEntity, userSendMessage, user);
+                helloDM.addMessage(messageEntity);
 
                 userSendMessage.getDirectMessages().add(helloDM);
                 user.getDirectMessages().add(helloDM);
@@ -73,7 +73,7 @@ public class DemoDirectMessage {
                         .directMessage(responseDM)
                         .build();
 
-                responseDM.addMessage(messageEntityResponse, user, userSendMessage);
+                responseDM.addMessage(messageEntityResponse);
 
                 userSendMessage.getDirectMessages().add(responseDM);
                 user.getDirectMessages().add(responseDM);

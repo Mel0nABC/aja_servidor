@@ -41,9 +41,9 @@ import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
 
 import dev.aja.aja.auth.filter.JwtAuthenticationFilter;
+import dev.aja.aja.directmessage.repository.DirectMessageRepository;
 import dev.aja.aja.forum.repository.ForumRepository;
 import dev.aja.aja.post.repository.PostRepository;
-import dev.aja.aja.privatemessages.repository.DirectMessageRepository;
 import dev.aja.aja.user.RoleEnum;
 import dev.aja.aja.user.repository.UserRepository;
 import jakarta.servlet.http.HttpServletResponse;

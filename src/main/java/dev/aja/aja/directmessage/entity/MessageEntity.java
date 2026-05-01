@@ -1,4 +1,4 @@
-package dev.aja.aja.privatemessages.entity;
+package dev.aja.aja.directmessage.entity;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
