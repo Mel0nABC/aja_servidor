@@ -3,6 +3,7 @@ package dev.aja.aja.directmessage.entity;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+import dev.aja.aja.directmessage.dto.MessageEntityDTO;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -52,6 +53,16 @@ public class MessageEntity {
     public String toString() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy - HH:mm:ss");
         return this.dateTime.format(formatter) + ", " + fromName + ": " + message;
+    }
+
+    public MessageEntityDTO toDTO() {
+        return MessageEntityDTO.builder()
+                .id(this.id)
+                .dateTime(this.dateTime)
+                .fromId(this.fromId)
+                .fromName(this.fromName)
+                .message(this.message)
+                .build();
     }
 
 }

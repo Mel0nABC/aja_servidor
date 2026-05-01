@@ -6,9 +6,11 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
+import dev.aja.aja.directmessage.dto.DirectMessageDTO;
 import dev.aja.aja.directmessage.dto.DirectMessageNewDTO;
 import dev.aja.aja.directmessage.entity.DirectMessageEntity;
 import dev.aja.aja.directmessage.entity.MessageEntity;
+import dev.aja.aja.directmessage.exception.DirectMessageNotFoundException;
 import dev.aja.aja.directmessage.exception.SameUserException;
 import dev.aja.aja.directmessage.exception.UserDestinationNotFoundExcepcion;
 import dev.aja.aja.directmessage.repository.DirectMessageRepository;
@@ -85,11 +87,25 @@ public class DirectMessageService {
 
     }
 
-    public List<DirectMessageEntity> getDirectMessage(Long otherUserId) {
+    public DirectMessageDTO getDirectMessage(Long otherUserId) {
 
-        System.out.println("CONVERSACIÓN DE DOS USUARIOS");
-        return null;
+        UserEntity userEntity = userService.getUserEntityFromActualUserContext();
 
+        Optional<UserEntity> otherUserOptional = userRepository.findById(otherUserId);
+
+        if (otherUserOptional.isEmpty())
+            throw new UserDestinationNotFoundExcepcion("El usuario del que busca una conversación no existe");
+
+        UserEntity otherUser = otherUserOptional.get();
+
+        Optional<DirectMessageEntity> dmOptional = userEntity.getDirectMessages().stream()
+                .filter(dm -> dm.getParticipants().stream().anyMatch(user -> user.getId().equals(otherUserId)))
+                .findFirst();
+
+        if (dmOptional.isEmpty())
+            throw new DirectMessageNotFoundException("No tienes una conversación con el usuario solicitado");
+
+        return dmOptional.get().toDTO();
     }
 
     public void delDirectMessage(Long otherUserId) {

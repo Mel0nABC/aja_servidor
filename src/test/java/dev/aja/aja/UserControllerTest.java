@@ -556,8 +556,6 @@ public class UserControllerTest {
 
             userEntityRepository.save(this.userAdminTest1);
 
-            System.out.println(userEntityRepository.findById(this.userAdminTest1.getId()).get());
-
             mockMvc.perform(get("/api/user")
                     .cookie(this.adminCookie))
                     .andExpect(status().isUnauthorized())

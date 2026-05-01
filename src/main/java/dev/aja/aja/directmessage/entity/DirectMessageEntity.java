@@ -3,6 +3,7 @@ package dev.aja.aja.directmessage.entity;
 import java.util.ArrayList;
 import java.util.List;
 
+import dev.aja.aja.directmessage.dto.DirectMessageDTO;
 import dev.aja.aja.user.entity.UserEntity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -53,6 +54,15 @@ public class DirectMessageEntity {
      */
     public void addMessage(MessageEntity messageEntity) {
         this.messages.add(messageEntity);
+    }
+
+    public DirectMessageDTO toDTO() {
+
+        return DirectMessageDTO.builder()
+                .id(this.id)
+                .participants(List.of(participants.get(0).getUsername(), participants.get(1).getUsername()))
+                .messages(this.messages.stream().map(msg -> msg.toDTO()).toList())
+                .build();
     }
 
 }
