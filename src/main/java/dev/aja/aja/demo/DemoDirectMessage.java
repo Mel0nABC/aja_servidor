@@ -42,7 +42,7 @@ public class DemoDirectMessage {
 
                 // SALUDOS
 
-                DirectMessageEntity helloDM = DirectMessageEntity.builder()
+                DirectMessageEntity directMessageEntity = DirectMessageEntity.builder()
                         .participants(List.of(userSendMessage, user))
                         .build();
 
@@ -51,32 +51,25 @@ public class DemoDirectMessage {
                         .fromId(userSendMessage.getId())
                         .fromName(userSendMessage.getUsername())
                         .message("Hola, ¿cómo estás?, soy " + userSendMessage.getUsername())
-                        .directMessage(helloDM)
+                        .directMessage(directMessageEntity)
                         .build();
 
-                helloDM.addMessage(messageEntity);
-
-                userSendMessage.getDirectMessages().add(helloDM);
-                user.getDirectMessages().add(helloDM);
+                directMessageEntity.addMessage(messageEntity);
 
                 // RESPONSE
-
-                DirectMessageEntity responseDM = DirectMessageEntity.builder()
-                        .participants(List.of(userSendMessage, user))
-                        .build();
 
                 MessageEntity messageEntityResponse = MessageEntity.builder()
                         .dateTime(LocalDateTime.now())
                         .fromId(user.getId())
                         .fromName(user.getUsername())
                         .message("Estoy muy bien!, gracias por preguntar. ¿De dónde eres?")
-                        .directMessage(responseDM)
+                        .directMessage(directMessageEntity)
                         .build();
 
-                responseDM.addMessage(messageEntityResponse);
+                directMessageEntity.addMessage(messageEntityResponse);
 
-                userSendMessage.getDirectMessages().add(responseDM);
-                user.getDirectMessages().add(responseDM);
+                userSendMessage.getDirectMessages().add(directMessageEntity);
+                user.getDirectMessages().add(directMessageEntity);
             }
         });
 
