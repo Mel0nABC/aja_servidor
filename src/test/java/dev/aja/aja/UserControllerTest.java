@@ -260,7 +260,7 @@ public class UserControllerTest {
 
             UserEntity tmp = new UserEntity(editUser3.getId(), editUser3.getUsername(), editUser3.getPassword(),
                     editUser3.getEmail(), editUser3.getRole(), editUser3.getIsActive(), editUser3.getRegisterDate(),
-                    null);
+                    null, null);
 
             tmp.setEmail("newemail@ajateam.dev");
 
