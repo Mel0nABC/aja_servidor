@@ -6,12 +6,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import dev.aja.aja.user.RoleEnum;
 import dev.aja.aja.user.dto.UserEntityNewDTO;
 import dev.aja.aja.user.entity.UserEntity;
 import dev.aja.aja.user.service.UserService;
@@ -153,5 +155,39 @@ public class UserController {
     @GetMapping("/user")
     public ResponseEntity<Map<String, Object>> getAllUSers() {
         return ResponseEntity.ok(Map.of("success", true, "message", userService.getAllUSerDTO()));
+    }
+
+    /**
+     * Establecer el role ADMIN al usuario del id proporcionado
+     * 
+     * @param id id del usuario
+     * @return retornamos un diccionario, success indica cuál ha sido el resultado y
+     *         message el contenido. En este caso el contenido de respuesta válida
+     *         es un mensaje de texto
+     */
+    @PatchMapping("/user/{id}/roles/admin")
+    public ResponseEntity<Map<String, Object>> setUserRoleAdmin(@PathVariable Long id) {
+
+        userService.setUserRoleToAdmin(id);
+
+        return ResponseEntity.ok(
+                Map.of("success", true, "message", "Role cambiado satisfactoriamente a " + RoleEnum.ADMIN.getName()));
+    }
+
+    /**
+     * Establecer el role USER al usuario del id proporcionado
+     * 
+     * @param id id del usuario
+     * @return retornamos un diccionario, success indica cuál ha sido el resultado y
+     *         message el contenido. En este caso el contenido de respuesta válida
+     *         es un mensaje de texto
+     */
+    @PatchMapping("/user/{id}/roles/user")
+    public ResponseEntity<Map<String, Object>> setUserRoleUser(@PathVariable Long id) {
+
+        userService.setUserRoleToUser(id);
+
+        return ResponseEntity.ok(
+                Map.of("success", true, "message", "Role cambiado satisfactoriamente a " + RoleEnum.USER.getName()));
     }
 }

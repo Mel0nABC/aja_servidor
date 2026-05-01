@@ -22,6 +22,7 @@ import dev.aja.aja.user.entity.UserEntity;
 import dev.aja.aja.user.exception.EmailAlreadyExistException;
 import dev.aja.aja.user.exception.UserInvalidRoleException;
 import dev.aja.aja.user.exception.UserInvalidToEditInformation;
+import dev.aja.aja.user.exception.UserRoleAlreadyAssignedException;
 import dev.aja.aja.user.exception.UsernameAlreadyExistException;
 import dev.aja.aja.user.repository.UserRepository;
 
@@ -327,6 +328,50 @@ public class UserService {
 
             throw new IllegalArgumentException(
                     "La contraseña es demasiado larga, no puede exceder de " + PASSWORD_SIZE);
+    }
+
+    /**
+     * Establecer el role ADMIN al usuario
+     * 
+     * @param id id del usuario al que hay que asignarle role ADMIN
+     */
+    public void setUserRoleToAdmin(Long id) {
+
+        Optional<UserEntity> userOptional = userEntityRepository.findById(id);
+
+        if (userOptional.isEmpty())
+            throw new UsernameNotFoundException("El usuario que quieres editar no existe");
+
+        UserEntity userEntity = userOptional.get();
+
+        if (userEntity.getRole().equals(RoleEnum.ADMIN.getName()))
+            throw new UserRoleAlreadyAssignedException("El usuario ya tiene el role " + RoleEnum.ADMIN.getName());
+
+        userEntity.setRole(RoleEnum.ADMIN.getName());
+
+        userEntityRepository.save(userEntity);
+    }
+
+    /**
+     * Establecer el role USER al usuario
+     * 
+     * @param id id del usuario al que hay que asignarle role USER
+     */
+    public void setUserRoleToUser(Long id) {
+
+        Optional<UserEntity> userOptional = userEntityRepository.findById(id);
+
+        if (userOptional.isEmpty())
+            throw new UsernameNotFoundException("El usuario que quieres editar no existe");
+
+        UserEntity userEntity = userOptional.get();
+
+        if (userEntity.getRole().equals(RoleEnum.USER.getName()))
+            throw new UserRoleAlreadyAssignedException("El usuario ya tiene el role " + RoleEnum.USER.getName());
+
+        userEntity.setRole(RoleEnum.USER.getName());
+
+        userEntityRepository.save(userEntity);
     }
 
 }

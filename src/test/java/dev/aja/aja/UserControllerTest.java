@@ -571,4 +571,146 @@ public class UserControllerTest {
         }
     }
 
+    /**
+     * Asianamos role admin a un usuario que no lo es y resultado ok
+     */
+    @Test
+    public void setUserRoleToAdminResultOK() {
+        try {
+
+            Long id = this.editUser3.getId();
+
+            mockMvc.perform(patch("/api/user/" + id + "/roles/admin")
+                    .cookie(this.adminCookie))
+                    .andExpect(status().isOk())
+                    .andDo(print())
+                    .andReturn();
+
+            assertEquals(this.editUser3.getRole(), RoleEnum.ADMIN.getName());
+
+        } catch (JacksonException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Asignamos role admin a un usuario que ya lo es y da error
+     */
+    @Test
+    public void setUserRoleToAdminResultAlreadyRoleAdmin() {
+
+        try {
+
+            Long id = this.userAdminTest1.getId();
+
+            mockMvc.perform(patch("/api/user/" + id + "/roles/admin")
+                    .cookie(this.adminCookie))
+                    .andExpect(status().isConflict())
+                    .andDo(print())
+                    .andReturn();
+
+            assertEquals(this.userAdminTest1.getRole(), RoleEnum.ADMIN.getName());
+
+        } catch (JacksonException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Asignamos role User a un usuario que no lo es y resultado ok
+     */
+    @Test
+    public void setUserRoleToUserResultOK() {
+        try {
+
+            Long id = this.userAdminTest1.getId();
+
+            mockMvc.perform(patch("/api/user/" + id + "/roles/user")
+                    .cookie(this.adminCookie))
+                    .andExpect(status().isOk())
+                    .andDo(print())
+                    .andReturn();
+
+            assertEquals(this.userAdminTest1.getRole(), RoleEnum.USER.getName());
+
+        } catch (JacksonException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Asignamos role user a un usuario que ya lo es y da error
+     */
+    @Test
+    public void setUserRoleToUserResultAlreadyRoleUser() {
+        try {
+
+            Long id = this.editUser3.getId();
+
+            mockMvc.perform(patch("/api/user/" + id + "/roles/user")
+                    .cookie(this.adminCookie))
+                    .andExpect(status().isConflict())
+                    .andDo(print())
+                    .andReturn();
+
+            assertEquals(this.editUser3.getRole(), RoleEnum.USER.getName());
+
+        } catch (JacksonException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Asignamos role admin a un usaurio pero no tenemos permiso, no somos role
+     * admin
+     */
+    @Test
+    public void setUserRoleToAdminResultForbidden() {
+        try {
+
+            Long id = this.editUser3.getId();
+
+            mockMvc.perform(patch("/api/user/" + id + "/roles/admin")
+                    .cookie(this.userCookie))
+                    .andExpect(status().isForbidden())
+                    .andDo(print())
+                    .andReturn();
+
+        } catch (JacksonException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Asignamos role user a un usaurio pero no tenemos permiso, no somos role admin
+     */
+    @Test
+    public void setUserRoleToUserResultForbidden() {
+        try {
+
+            Long id = this.editUser3.getId();
+
+            mockMvc.perform(patch("/api/user/" + id + "/roles/user")
+                    .cookie(this.userCookie))
+                    .andExpect(status().isForbidden())
+                    .andDo(print())
+                    .andReturn();
+
+        } catch (JacksonException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 }

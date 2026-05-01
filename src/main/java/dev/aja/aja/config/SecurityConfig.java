@@ -120,6 +120,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/api/user").permitAll()
                         .requestMatchers(HttpMethod.PUT, "/api/user").authenticated()
                         .requestMatchers(HttpMethod.GET, "/api/user/**").hasRole(RoleEnum.ADMIN.getName())
+                        .requestMatchers(HttpMethod.PATCH, "/api/user/**").hasRole(RoleEnum.ADMIN.getName())
 
                         // ForumController
 
@@ -135,7 +136,9 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/api/topic/**", "/api/topic").authenticated()
                         .requestMatchers(HttpMethod.DELETE, "/api/topic/**").hasRole(RoleEnum.ADMIN.getName())
 
-                        // PostController
+                        // PrivateMessages
+
+
 
                         .anyRequest().authenticated())
                 .build();

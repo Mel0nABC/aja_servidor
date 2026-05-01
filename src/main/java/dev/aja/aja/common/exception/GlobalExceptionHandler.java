@@ -18,6 +18,7 @@ import dev.aja.aja.user.exception.EmailAlreadyExistException;
 import dev.aja.aja.user.exception.UserAlreadyExistException;
 import dev.aja.aja.user.exception.UserInvalidRoleException;
 import dev.aja.aja.user.exception.UserInvalidToEditInformation;
+import dev.aja.aja.user.exception.UserRoleAlreadyAssignedException;
 import dev.aja.aja.user.exception.UsernameAlreadyExistException;
 
 /**
@@ -136,6 +137,18 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Map<String, Object>> emailExist(Exception e) {
         return ResponseEntity
                 .status(HttpStatus.FOUND).body(Map.of("success", false, "message", e.getMessage()));
+    }
+
+    /**
+     * Cuando se edita un role que ya lo tiene asignado el usuario
+     * 
+     * @param e Excepción que aporta el mensaje
+     * @return Diccionario con respuesta
+     */
+    @ExceptionHandler(UserRoleAlreadyAssignedException.class)
+    public ResponseEntity<Map<String, Object>> userRoleAlready(Exception e) {
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT).body(Map.of("success", false, "message", e.getMessage()));
     }
 
     /**
