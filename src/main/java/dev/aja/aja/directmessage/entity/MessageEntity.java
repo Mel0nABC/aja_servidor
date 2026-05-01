@@ -30,6 +30,7 @@ public class MessageEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Builder.Default
     @Column(nullable = false)
     private LocalDateTime dateTime = LocalDateTime.now();
 
