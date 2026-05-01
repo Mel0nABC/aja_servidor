@@ -162,8 +162,6 @@ public class DirectMessageService {
      */
     public void delDirectMessage(Long otherUserId) {
 
-        System.out.println("ELIMINAMOS CONVERSACIÓN ENTRE DOS USUARIOS");
-
         UserEntity userEntity = userService.getUserEntityFromActualUserContext();
 
         Optional<UserEntity> otherUserOptional = userRepository.findById(otherUserId);
