@@ -6,6 +6,12 @@ dev.aja.aja.auth.service
 dev.aja.aja.common.exception
 dev.aja.aja.config
 dev.aja.aja.demo
+dev.aja.aja.directmessage.controller
+dev.aja.aja.directmessage.dto
+dev.aja.aja.directmessage.entity
+dev.aja.aja.directmessage.exception
+dev.aja.aja.directmessage.repository
+dev.aja.aja.directmessage.service
 dev.aja.aja.forum.controller
 dev.aja.aja.forum.dto
 dev.aja.aja.forum.entity
