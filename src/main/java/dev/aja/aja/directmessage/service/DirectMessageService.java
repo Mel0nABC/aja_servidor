@@ -18,6 +18,12 @@ import dev.aja.aja.user.entity.UserEntity;
 import dev.aja.aja.user.repository.UserRepository;
 import dev.aja.aja.user.service.UserService;
 
+/**
+ * Clase que se declara como servicio para la carga durante el inicio de Spring
+ * Boot. Dispondremos de todas las funciones para acceder a la información del
+ * las conversaciones privadas en la base de datos y realizar acciones sobre el
+ * contexto de la sesión actual, incluye la lógicade negocio que sea necesaria
+ */
 @Service
 public class DirectMessageService {
 
@@ -25,6 +31,17 @@ public class DirectMessageService {
     private final UserService userService;
     private final UserRepository userRepository;
 
+    /**
+     * 
+     * Constructor con la inyecciónd de dependencias necesarias para el servicio
+     * 
+     * @param directMessageRepository repositorios que nos da acceso a la tabla de
+     *                                DirectEntity en la base de datos
+     * @param userService             servicio para acceder a métodos y lógica de
+     *                                negocio de usuarios
+     * @param userRepository          repositorio que nos da acceso a la tabla de
+     *                                usuarios en la base de datos
+     */
     public DirectMessageService(DirectMessageRepository directMessageRepository, UserService userService,
             UserRepository userRepository) {
         this.directMessageRepository = directMessageRepository;
@@ -33,6 +50,11 @@ public class DirectMessageService {
 
     }
 
+    /**
+     * Añadir nuevo mensaje o crear conversación privada si esta no existe
+     * 
+     * @param newMessageDTO información básica del nuevo mensaje
+     */
     public void addDirectMessage(DirectMessageNewDTO newMessageDTO) {
 
         UserEntity userFrom = userService.getUserEntityFromActualUserContext();
@@ -87,6 +109,13 @@ public class DirectMessageService {
 
     }
 
+    /**
+     * Obtenemos una conversación con el usuario del id proporcionado
+     * 
+     * @param otherUserId id del usuario que se quiere obtener conversación
+     * @return devolvemos un DirectMessageDTO con información necesaria para
+     *         mostrrar la conversación
+     */
     public DirectMessageDTO getDirectMessage(Long otherUserId) {
 
         UserEntity userEntity = userService.getUserEntityFromActualUserContext();
@@ -95,8 +124,6 @@ public class DirectMessageService {
 
         if (otherUserOptional.isEmpty())
             throw new UserDestinationNotFoundExcepcion("El usuario del que busca una conversación no existe");
-
-        UserEntity otherUser = otherUserOptional.get();
 
         Optional<DirectMessageEntity> dmOptional = userEntity.getDirectMessages().stream()
                 .filter(dm -> dm.getParticipants().stream().anyMatch(user -> user.getId().equals(otherUserId)))
@@ -108,14 +135,59 @@ public class DirectMessageService {
         return dmOptional.get().toDTO();
     }
 
+    /**
+     * Obtenemos todas las conversaciones del usuario del contexto
+     * 
+     * @return devolvemos una lista de DirectMessageDTO con información necesaria
+     *         para mostrrar la conversación
+     */
+
+    /**
+     * Obtenemos una conversación con el usuario del id proporcionado
+     * 
+     * @param otherUserId id del usuario que se quiere obtener conversación
+     * 
+     */
     public List<DirectMessageDTO> getAllDirectMessage() {
         UserEntity userEntity = userService.getUserEntityFromActualUserContext();
 
         return userEntity.getDirectMessages().stream().map(dm -> dm.toDTO()).toList();
     }
 
+    /**
+     * Eliminamos la conversación para los dos usuarios si uno lo solicita
+     * 
+     * @param otherUserId id del usuario con el que se tiene la conversación a
+     *                    eliminar
+     */
     public void delDirectMessage(Long otherUserId) {
-        System.out.println("ELIMINAMOS CONVERSACIÓN DE DOS USUARIOS");
+
+        System.out.println("ELIMINAMOS CONVERSACIÓN ENTRE DOS USUARIOS");
+
+        UserEntity userEntity = userService.getUserEntityFromActualUserContext();
+
+        Optional<UserEntity> otherUserOptional = userRepository.findById(otherUserId);
+
+        if (otherUserOptional.isEmpty())
+            throw new UserDestinationNotFoundExcepcion("El usuario del que busca una conversación no existe");
+
+        UserEntity otherUserEntity = otherUserOptional.get();
+
+        Optional<DirectMessageEntity> dmOptional = userEntity.getDirectMessages().stream()
+                .filter(dm -> dm.getParticipants().stream().anyMatch(user -> user.getId().equals(otherUserId)))
+                .findFirst();
+
+        if (dmOptional.isEmpty())
+            throw new DirectMessageNotFoundException("No tienes una conversación con el usuario solicitado");
+
+        DirectMessageEntity directMessageEntity = dmOptional.get();
+
+        userEntity.getDirectMessages().remove(directMessageEntity);
+        otherUserEntity.getDirectMessages().remove(directMessageEntity);
+
+        userRepository.saveAll(List.of(userEntity, otherUserEntity));
+
+        directMessageRepository.delete(directMessageEntity);
     }
 
 }

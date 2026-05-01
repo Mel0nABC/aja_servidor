@@ -10,6 +10,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import dev.aja.aja.directmessage.exception.DirectMessageNotFoundException;
 import dev.aja.aja.directmessage.exception.SameUserException;
 import dev.aja.aja.directmessage.exception.UserDestinationNotFoundExcepcion;
 import dev.aja.aja.forum.exception.ForumAlreadyExistException;
@@ -222,6 +223,18 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(SameUserException.class)
     public ResponseEntity<Map<String, Object>> sameDestinationUser(Exception e) {
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND).body(Map.of("success", false, "message", e.getMessage()));
+    }
+
+    /**
+     * No dispone de una conversación con el usuario solicitado
+     * 
+     * @param e Excepción que aporta el mensaje
+     * @return Diccionario con respuesta
+     */
+    @ExceptionHandler(DirectMessageNotFoundException.class)
+    public ResponseEntity<Map<String, Object>> notDMWitheUser(Exception e) {
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND).body(Map.of("success", false, "message", e.getMessage()));
     }
