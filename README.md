@@ -1,12 +1,12 @@
 # 🧩 AJA Forum API
 
-API REST desarrollada con **Spring Boot** para la gestión de un foro online de la empresa **AJA**. Proporciona funcionalidades de autenticación, gestión de usuarios, foros, temas, publicaciones y mensajería directa, además de un sistema en tiempo real para visualizar actividad de usuarios mediante WebSockets.
+API REST desarrollada con **Spring Boot** para la gestión de un foro online de la empresa **AJA (Empresa ficticia por estudios IOC, DAM)**. Proporciona funcionalidades de autenticación, gestión de usuarios, foros, temas, publicaciones y mensajería directa, además de un sistema en tiempo real para visualizar actividad de usuarios mediante WebSockets.
 
 ---
 
 ## 🚀 Tecnologías utilizadas
 
-- Java 17+
+- Java 21+
 - Spring Boot
 - Spring Web
 - Spring Security
@@ -84,26 +84,27 @@ API REST desarrollada con **Spring Boot** para la gestión de un foro online de 
 
 ## 🧱 Arquitectura
 
-- Patrón MVC
-- Uso de anotaciones `@Controller`
-- Separación por capas:
-  - Controller
-  - Service
-  - Repository
+- Feature-based structure
 
 ---
 
 ## ⚙️ Configuración
 
-### 1. Clonar el repositorio
+### 1. Requisitos
+
+- Java 21+
+- Apache Maven 3.9.14+
+- Base de datos relacional (SQL)
+
+### 2. Clonar el repositorio
 
 git clone https://github.com/Mel0nABC/aja_api_server.git
 
-### 2. Configurar la base de datos
+### 3. Configurar la base de datos
 
 Editar método dataSource() en ApplicationConfig.java
 
-### 3. Ejecutar aplicación
+### 4. Ejecutar aplicación
 
 cd aja_api_server
 mvn spring-boot:run
@@ -149,7 +150,7 @@ Se recomienda usar herramientas como:
 
 Para probar endpoints REST y autenticación con JWT.
 
-Están implementados todos los test mediante MockMVC
+Están implementados todos los test mediante MockMVC.
 
 ---
 
