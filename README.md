@@ -114,6 +114,7 @@ mvn spring-boot:run
 
 | Método | Endpoint           | Descripción         |
 |--------|--------------------|---------------------|
+| GET    | /api/apidocs       | Java Docs           |
 | POST   | /api/auth/login    | Autenticación       |
 | POST   | /api/auth/logout   | Logout              |
 | GET    | /api/forum         | Listar foros        |
