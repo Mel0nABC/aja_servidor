@@ -146,8 +146,6 @@ public class SecurityConfig {
                                                 .requestMatchers(HttpMethod.DELETE, "/api/topic/**")
                                                 .hasRole(RoleEnum.ADMIN.getName())
 
-                                                // PrivateMessages
-
                                                 .anyRequest().authenticated())
                                 .build();
         }
