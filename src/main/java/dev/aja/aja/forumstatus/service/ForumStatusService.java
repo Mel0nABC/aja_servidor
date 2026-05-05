@@ -13,44 +13,60 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import dev.aja.aja.forumstatus.dto.NotifyStatusDTO;
 
+/**
+ * Service con toda la lógica empresarial
+ */
 @Service
 public class ForumStatusService {
 
     private final SimpMessagingTemplate messagingTemplate;
     private final ObjectMapper mapper = new ObjectMapper();
+    private List<NotifyStatusDTO> notificationList = new ArrayList<>();
 
+    /**
+     * Constructor con inyecciónd e dependencias
+     * 
+     * @param messagingTemplate instancia de objeto SimpMessagindTemplate
+     */
     public ForumStatusService(SimpMessagingTemplate messagingTemplate) {
         this.messagingTemplate = messagingTemplate;
     }
 
-    private List<NotifyStatusDTO> notificationList = new ArrayList<>();
-
+    /**
+     * Notificar que un usuario comenzó a escribir el post
+     * 
+     * @param info string de un diccionario del tipo NotifyStatusDTO
+     */
     public void addNotify(String info) {
 
         notificationList.add(convertStringToObject(info));
 
         notifyToBroker();
-
-        System.out.println("########################## AÑADIMOS NOTIFICACIÓN: " + notificationList.size()
-                + " ##########################");
-
     }
 
+    /**
+     * Notificar que un usuario ya finalizo de escribir el post
+     * 
+     * @param info string de un diccionario del tipo NotifyStatusDTO
+     */
     public void delNotify(String info) {
 
         notificationList.remove(convertStringToObject(info));
 
         notifyToBroker();
-
-        System.out.println("########################## ELIMINAMOS NOTIFICACIÓN: " + notificationList.size()
-                + " ##########################");
-
     }
 
     public List<NotifyStatusDTO> getNotificationList() {
         return notificationList;
     }
 
+    /**
+     * Serializamos de string (diccionario) a NotifyStatusDTO
+     * 
+     * @param info string con estructura diccionario o json
+     * 
+     * @return Si ocurre algún problema al serializar, se devuelve null
+     */
     public NotifyStatusDTO convertStringToObject(String info) {
         try {
             return mapper.readValue(info, NotifyStatusDTO.class);
@@ -63,6 +79,10 @@ public class ForumStatusService {
         return null;
     }
 
+    /**
+     * Mediante toda la lista de notificaciones, la enviamos al broker para que
+     * llegue dicha lista a todos los usuarios que están suscritos a /status
+     */
     public void notifyToBroker() {
         try {
 

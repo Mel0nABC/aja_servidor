@@ -6,6 +6,12 @@ import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBr
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
 
+/**
+ * Configuración del websocket, especificando registerStompEndPoint para
+ * realizar handshake (conexión), el broker donde se enviará la información
+ * actualizada para quel os usuarios puedan verla y especificamos prefijo para
+ * todos las annotation MessageMapping y que comiencen por /api/<MessageMapping>
+ */
 @Configuration
 @EnableWebSocketMessageBroker
 public class ForumStatusConfig implements WebSocketMessageBrokerConfigurer {

@@ -5,6 +5,10 @@ import org.springframework.stereotype.Controller;
 
 import dev.aja.aja.forumstatus.service.ForumStatusService;
 
+/**
+ * Controlador donde se especifican los MessageMapping (endpoints) para realizar
+ * notificaciones por parte del usuario que escribe o deja de escribir un post
+ */
 @Controller
 public class ForumStatusController {
 
