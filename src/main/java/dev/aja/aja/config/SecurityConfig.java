@@ -121,6 +121,7 @@ public class SecurityConfig {
                                                 // UserController
                                                 .requestMatchers(HttpMethod.POST, "/api/user").permitAll()
                                                 .requestMatchers(HttpMethod.PUT, "/api/user").authenticated()
+                                                .requestMatchers(HttpMethod.GET, "/api/user/dm").authenticated()
                                                 .requestMatchers(HttpMethod.GET, "/api/user/**")
                                                 .hasRole(RoleEnum.ADMIN.getName())
                                                 .requestMatchers(HttpMethod.PATCH, "/api/user/**")

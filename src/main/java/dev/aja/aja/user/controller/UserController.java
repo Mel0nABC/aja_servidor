@@ -190,4 +190,17 @@ public class UserController {
         return ResponseEntity.ok(
                 Map.of("success", true, "message", "Role cambiado satisfactoriamente a " + RoleEnum.USER.getName()));
     }
+
+    /**
+     * 
+     * Obtener la lista de dto UserEntityDM de todos los usuarios.
+     * 
+     * @return retornamos un diccionario, success indica cuál ha sido el resultado y
+     *         message el contenido. En este caso el contenido de respuesta válida
+     *         es una lista de UserEntityDM
+     */
+    @GetMapping("/user/dm")
+    public ResponseEntity<Map<String, Object>> getAllUSersDM() {
+        return ResponseEntity.ok(Map.of("success", true, "message", userService.getAllUSersDM()));
+    }
 }

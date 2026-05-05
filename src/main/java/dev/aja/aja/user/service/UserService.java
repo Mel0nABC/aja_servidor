@@ -17,6 +17,7 @@ import dev.aja.aja.topic.entity.TopicEntity;
 import dev.aja.aja.topic.repository.TopicRepository;
 import dev.aja.aja.user.RoleEnum;
 import dev.aja.aja.user.dto.UserEntityDTO;
+import dev.aja.aja.user.dto.UserEntityDmDTO;
 import dev.aja.aja.user.dto.UserEntityNewDTO;
 import dev.aja.aja.user.entity.UserEntity;
 import dev.aja.aja.user.exception.EmailAlreadyExistException;
@@ -369,6 +370,17 @@ public class UserService {
         userEntity.setRole(RoleEnum.USER.getName());
 
         userEntityRepository.save(userEntity);
+    }
+
+    /**
+     * Para obtener todos los usuarios con cualquier user, sólo para poder enviar
+     * DM's
+     * 
+     * @return lista de usuarios
+     */
+    public List<UserEntityDmDTO> getAllUSersDM() {
+
+        return userEntityRepository.findAll().stream().map(UserEntity::toDTOforDM).toList();
     }
 
 }

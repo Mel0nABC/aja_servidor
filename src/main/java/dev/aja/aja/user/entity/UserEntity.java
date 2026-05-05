@@ -8,6 +8,7 @@ import dev.aja.aja.directmessage.entity.DirectMessageEntity;
 import dev.aja.aja.post.entity.PostEntity;
 import dev.aja.aja.user.RoleEnum;
 import dev.aja.aja.user.dto.UserEntityDTO;
+import dev.aja.aja.user.dto.UserEntityDmDTO;
 import dev.aja.aja.user.service.UserService;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -93,6 +94,20 @@ public class UserEntity {
                 .role(this.role)
                 .isActive(this.isActive)
                 .registerDate(this.registerDate)
+                .build();
+    }
+
+    /***
+     * Método para generar UserEntityDmDTO con la información básica para poder
+     * enviar DM's
+     * 
+     * @return devolvemos un UserEntityDmDTO, sólo con el id y username, información
+     *         básica para poder enviar DM's
+     */
+    public UserEntityDmDTO toDTOforDM() {
+        return UserEntityDmDTO.builder()
+                .id(this.id)
+                .username(this.username)
                 .build();
     }
 

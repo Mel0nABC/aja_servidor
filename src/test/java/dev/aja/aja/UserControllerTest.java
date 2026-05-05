@@ -711,4 +711,23 @@ public class UserControllerTest {
         }
     }
 
+    @Test
+    public void getUserListToSendDM() {
+        try {
+
+            mockMvc.perform(get("/api/user/dm")
+                    .cookie(this.userCookie))
+                    .andExpect(status().isOk())
+                    .andDo(print())
+                    .andReturn();
+
+
+
+        } catch (JacksonException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 }
