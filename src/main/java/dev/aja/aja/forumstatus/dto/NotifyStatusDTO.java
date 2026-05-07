@@ -10,10 +10,9 @@ import lombok.Builder;
  */
 @Builder
 public record NotifyStatusDTO(
-        Long userId,
-        String username,
-        Long topicId,
-        String topicTitle,
-        Instant lastUpdate) {
+                Long userId,
+                String username,
+                Long topicId,
+                String topicTitle) {
 
 }

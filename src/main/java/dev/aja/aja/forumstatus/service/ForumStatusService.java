@@ -50,6 +50,11 @@ public class ForumStatusService {
 
         notificationList.put(notify, Instant.now());
 
+        System.out.println("####################### ADD #######################");
+        System.out.println("####################### " + notificationList.size() + " #######################");
+        System.out.println(notify);
+        System.out.println("###################################################");
+
         notifyToBroker();
     }
 
@@ -63,6 +68,11 @@ public class ForumStatusService {
         NotifyStatusDTO notify = convertStringToObject(info);
 
         notificationList.remove(notify);
+
+        System.out.println("####################### DEL #######################");
+        System.out.println("####################### " + notificationList.size() + " #######################");
+        System.out.println(notify);
+        System.out.println("###################################################");
 
         notifyToBroker();
     }
@@ -120,6 +130,12 @@ public class ForumStatusService {
     public void checkActivityNotificationList() {
         notificationList.entrySet()
                 .removeIf(n -> (Instant.now().getEpochSecond() - n.getValue().getEpochSecond()) > CHECK_TIME_SECONDS);
+
+        System.out.println("CHECK LIST OF ACTIVITY");
+        notificationList.entrySet().forEach(n -> {
+            System.out.println(n.getKey() + " - " + n.getValue());
+        });
+
     }
 
 }
