@@ -20,7 +20,7 @@ public class ForumStatusController {
     }
 
     @MessageMapping("/notify")
-    public void getForumActivity(String info) {
+    public void addForumActivity(String info) {
         forumstatusService.addNotify(info);
     }
 

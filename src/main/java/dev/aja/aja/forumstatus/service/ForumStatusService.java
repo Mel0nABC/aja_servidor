@@ -1,10 +1,14 @@
 package dev.aja.aja.forumstatus.service;
 
+import java.time.Instant;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -16,12 +20,15 @@ import dev.aja.aja.forumstatus.dto.NotifyStatusDTO;
 /**
  * Service con toda la lógica empresarial
  */
+@EnableScheduling
 @Service
 public class ForumStatusService {
 
     private final SimpMessagingTemplate messagingTemplate;
     private final ObjectMapper mapper = new ObjectMapper();
-    private List<NotifyStatusDTO> notificationList = new ArrayList<>();
+    private Map<NotifyStatusDTO, Instant> notificationList = new HashMap<>();
+    private final int CHECK_TIME = 15000;
+    private final int CHECK_TIME_SECONDS = CHECK_TIME / 1000;
 
     /**
      * Constructor con inyecciónd e dependencias
@@ -39,7 +46,9 @@ public class ForumStatusService {
      */
     public void addNotify(String info) {
 
-        notificationList.add(convertStringToObject(info));
+        NotifyStatusDTO notify = convertStringToObject(info);
+
+        notificationList.put(notify, Instant.now());
 
         notifyToBroker();
     }
@@ -51,13 +60,11 @@ public class ForumStatusService {
      */
     public void delNotify(String info) {
 
-        notificationList.remove(convertStringToObject(info));
+        NotifyStatusDTO notify = convertStringToObject(info);
+
+        notificationList.remove(notify);
 
         notifyToBroker();
-    }
-
-    public List<NotifyStatusDTO> getNotificationList() {
-        return notificationList;
     }
 
     /**
@@ -86,12 +93,33 @@ public class ForumStatusService {
     public void notifyToBroker() {
         try {
 
-            String json = mapper.writeValueAsString(notificationList);
+            List<NotifyStatusDTO> filteredList = new ArrayList<>(notificationList.keySet());
+
+            String json = mapper.writeValueAsString(filteredList);
             messagingTemplate.convertAndSend("/status", json);
 
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Scheduler que se ejecuta cada los segundos indicados en CHECK_TIME
+     */
+    @Scheduled(fixedRate = CHECK_TIME)
+    public void launchScheduler() {
+        this.checkActivityNotificationList();
+    }
+
+    /**
+     * Comprobamos si el valor de notificationList es mayor a CHECK_TIME_SECONDS, si
+     * lo es, see limina esa entrada del map
+     * 
+     * Sirve para ir limpiando la lista de notificationList
+     */
+    public void checkActivityNotificationList() {
+        notificationList.entrySet()
+                .removeIf(n -> (Instant.now().getEpochSecond() - n.getValue().getEpochSecond()) > CHECK_TIME_SECONDS);
     }
 
 }
