@@ -118,6 +118,7 @@ public class ForumStatusService {
      */
     @Scheduled(fixedRate = CHECK_TIME)
     public void launchScheduler() {
+        System.out.println("SCHEDULED CHECK TIME");
         this.checkActivityNotificationList();
     }
 
@@ -135,6 +136,8 @@ public class ForumStatusService {
         notificationList.entrySet().forEach(n -> {
             System.out.println(n.getKey() + " - " + n.getValue());
         });
+
+        notifyToBroker();
 
     }
 
