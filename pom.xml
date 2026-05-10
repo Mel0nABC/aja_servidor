@@ -54,7 +54,7 @@
 		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
-			<version>42.7.8</version>
+			<version>42.7.11</version>
 		</dependency>
 
 		<!-- Source:
@@ -78,6 +78,7 @@
 		<dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-oauth2-jose</artifactId>
+			<version>7.0.5</version>
 		</dependency>
 
 		<dependency>
