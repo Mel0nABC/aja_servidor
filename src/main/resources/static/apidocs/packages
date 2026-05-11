@@ -12,6 +12,10 @@ dev.aja.aja.directmessage.controller
 dev.aja.aja.directmessage.repository
 dev.aja.aja.directmessage.dto
 dev.aja.aja.directmessage.service
+dev.aja.aja.forumstatus.controller
+dev.aja.aja.forumstatus.dto
+dev.aja.aja.forumstatus.config
+dev.aja.aja.forumstatus.service
 dev.aja.aja
 dev.aja.aja.post.entity
 dev.aja.aja.post.exception

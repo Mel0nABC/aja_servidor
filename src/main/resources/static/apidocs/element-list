@@ -18,6 +18,10 @@ dev.aja.aja.forum.entity
 dev.aja.aja.forum.exception
 dev.aja.aja.forum.repository
 dev.aja.aja.forum.service
+dev.aja.aja.forumstatus.config
+dev.aja.aja.forumstatus.controller
+dev.aja.aja.forumstatus.dto
+dev.aja.aja.forumstatus.service
 dev.aja.aja.post.controller
 dev.aja.aja.post.dto
 dev.aja.aja.post.entity
