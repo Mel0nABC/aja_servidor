@@ -711,6 +711,9 @@ public class UserControllerTest {
         }
     }
 
+    /**
+     * Obtenemos la lista de usuarios totales para poder elegira quién enviar un dm
+     */
     @Test
     public void getUserListToSendDM() {
         try {
@@ -720,8 +723,6 @@ public class UserControllerTest {
                     .andExpect(status().isOk())
                     .andDo(print())
                     .andReturn();
-
-
 
         } catch (JacksonException e) {
             e.printStackTrace();
